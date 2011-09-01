@@ -932,6 +932,10 @@ void Battleground::RemovePlayerAtLeave(uint64 guid, bool Transport, bool SendPac
         if (plr->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
             plr->RemoveAurasByType(SPELL_AURA_MOD_SHAPESHIFT);
 
+        //Lich king must be always
+        plr->DeMorph();
+        plr->DestroyItemCount(ITEM_FROSTMOURNE_ID, 1, true, true);
+
         if (!plr->isAlive())                              // resurrect on exit
         {
             plr->ResurrectPlayer(1.0f);

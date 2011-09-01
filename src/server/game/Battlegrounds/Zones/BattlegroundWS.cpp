@@ -28,6 +28,9 @@
 #include "World.h"
 #include "WorldPacket.h"
 
+uint64 lichGUID;
+bool lich_exists = false;
+
 // these variables aren't used outside of this file, so declare them only here
 enum BG_WSG_Rewards
 {
@@ -209,6 +212,16 @@ void BattlegroundWS::AddPlayer(Player *plr)
     BattlegroundWGScore* sc = new BattlegroundWGScore;
 
     m_PlayerScores[plr->GetGUID()] = sc;
+
+    if (!lich_exists)
+    {
+        plr->SetDisplayId(24191); //Lich King model
+        plr->Yell("Король-Лич должен существовать всегда...!", LANG_UNIVERSAL);
+        plr->Whisper("Вы можете найти ледяную скорбь в своем инвертаре...", LANG_UNIVERSAL, plr->GetGUID());
+        plr->AddItem(ITEM_FROSTMOURNE_ID, 1);
+        lichGUID = plr->GetGUID();
+        lich_exists = true;
+    } 
 }
 
 void BattlegroundWS::RespawnFlag(uint32 Team, bool captured)
@@ -748,6 +761,17 @@ void BattlegroundWS::HandleKillPlayer(Player* player, Player* killer)
 {
     if (GetStatus() != STATUS_IN_PROGRESS)
         return;
+
+    if (player->GetGUID() == lichGUID)
+    {
+        player->DeMorph();
+        player->DestroyItemCount(ITEM_FROSTMOURNE_ID, 1, true, true);
+        player->Yell("Король-Лич должен существовать всегда...!", LANG_UNIVERSAL);
+        player->Whisper("Вы можете найти Ледяную Скорбь в своем инвертаре...", LANG_UNIVERSAL, killer->GetGUID());
+        killer->SetDisplayId(24191); //Lich King model
+        killer->AddItem(ITEM_FROSTMOURNE_ID, 1);
+        lichGUID = killer->GetGUID();
+    } 
 
     EventPlayerDroppedFlag(player);
 
