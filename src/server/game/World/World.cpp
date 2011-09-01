@@ -1201,6 +1201,9 @@ void World::LoadConfigSettings(bool reload)
     m_int_configs[CONFIG_CONFIG_OUTDOORPVP_WINTERGRASP_ANTIFARM_ATK]  = sConfig->GetIntDefault("OutdoorPvP.Wintergrasp.Antifarm.Atk", 5);
     m_int_configs[CONFIG_CONFIG_OUTDOORPVP_WINTERGRASP_ANTIFARM_DEF]  = sConfig->GetIntDefault("OutdoorPvP.Wintergrasp.Antifarm.Def", 5);
 
+    //Gurubashi Arena
+    m_bool_configs[PvPEvent] = sConfig->GetBoolDefault("PvPEvent", false);
+
     sScriptMgr->OnConfigLoad(reload);
 }
 

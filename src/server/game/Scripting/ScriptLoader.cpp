@@ -23,6 +23,7 @@ void AddSC_example_escort();
 void AddSC_example_gossip_codebox();
 void AddSC_example_misc();
 void AddSC_example_commandscript();
+void AddSC_gmisland();
 
 // spells
 void AddSC_deathknight_spell_scripts();
@@ -623,6 +624,7 @@ void AddExampleScripts()
     AddSC_example_gossip_codebox();
     AddSC_example_misc();
     AddSC_example_commandscript();
+    AddSC_gmisland();
 }
 
 void AddSpellScripts()

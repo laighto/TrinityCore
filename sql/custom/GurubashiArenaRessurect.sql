@@ -1,0 +1,1 @@
+UPDATE creature_template SET Scriptname='mob_ressurect' WHERE entry='';

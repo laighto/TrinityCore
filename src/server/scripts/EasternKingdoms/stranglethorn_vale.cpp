@@ -28,6 +28,7 @@ mob_yenniku
 EndContentData */
 
 #include "ScriptPCH.h"
+#include "World.h"
 
 /*######
 ## mob_yenniku
@@ -117,6 +118,70 @@ public:
 
 };
 
+const Position allyPositions[3] =
+{
+    { -13272.1f, 289.904f, 42.9799f, 6.02334f },
+    { -13182.2f, 336.155f, 42.9805f, 4.37165f },
+    { -13150.6f, 229.895f, 42.9799f, 2.47335f },
+};
+
+class mob_ressurect : public PlayerScript
+{
+public:
+    mob_ressurect() : PlayerScript("mob_ressurect") { }
+
+    void OnPVPKill(Player* killer, Player* killed)
+    {
+        if (killed->GetAreaId() == 2177) /*&& killed->GetMapId() == 33*/
+        {
+            if (killed->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
+                killed->RemoveAurasByType(SPELL_AURA_MOD_SHAPESHIFT);
+
+            killed->KillPlayer();
+            killed->ResurrectPlayer(1.0f, false);
+
+            if (killer->GetAreaId() != 2177)
+            {
+                killer->CastSpell(killer, 15007, true);
+                if (Aura * aur = killer->GetAura(15007))
+                    aur->SetDuration(30*IN_MILLISECONDS); // Слабость негодникам
+            }
+
+            killed->CastSpell(killed, 48325, true);
+            if (Aura * aur = killed->GetAura(48325))
+                aur->SetDuration(7*IN_MILLISECONDS); //  Божественный щит
+
+            if (sWorld->getBoolConfig(PvPEvent))
+            {
+                killed->CastSpell(killed, 9454, true);
+                if (Aura * freeze = killed->GetAura(9454))
+                freeze->SetDuration(300*IN_MILLISECONDS); //  Заморозка
+            }
+
+            uint32 rnd = urand(0,2);
+            killed->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
+        }
+    }
+
+    /* void OnPVPKill(Creature* killer, Player* killed)
+    {
+        if (killed->GetAreaId() == 2177) //&& killed->GetMapId() == 33
+        {
+            if (killed->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
+                killed->RemoveAurasByType(SPELL_AURA_MOD_SHAPESHIFT);
+
+            killed->KillPlayer();
+            killed->ResurrectPlayer(1.0f, false);
+
+            killed->CastSpell(killed, 13874, true);
+            if (Aura * aur = killed->GetAura(13874))
+                aur->SetDuration(5*IN_MILLISECONDS); // Божественный щит
+
+            uint32 rnd = urand(0,2);
+            killed->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
+        }
+    }*/
+};
 /*######
 ##
 ######*/
@@ -124,4 +189,5 @@ public:
 void AddSC_stranglethorn_vale()
 {
     new mob_yenniku();
+    new mob_ressurect();
 }

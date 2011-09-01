@@ -1,0 +1,1 @@
+UPDATE creature_template SET Scriptname='gmisland_protector' WHERE entry='';
