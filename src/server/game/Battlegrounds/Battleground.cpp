@@ -933,8 +933,12 @@ void Battleground::RemovePlayerAtLeave(uint64 guid, bool Transport, bool SendPac
             plr->RemoveAurasByType(SPELL_AURA_MOD_SHAPESHIFT);
 
         //Lich king must be always
-        plr->DeMorph();
-        plr->DestroyItemCount(ITEM_FROSTMOURNE_ID, 1, true, true);
+        if (lich_exists && plr->GetGUID() == lichGUID)
+        {
+            lich_exists = false;
+            plr->DeMorph();
+            plr->DestroyItemCount(ITEM_FROSTMOURNE_ID, 1, true, true);
+        }
 
         if (!plr->isAlive())                              // resurrect on exit
         {

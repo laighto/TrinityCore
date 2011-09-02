@@ -28,9 +28,6 @@
 #include "World.h"
 #include "WorldPacket.h"
 
-uint64 lichGUID;
-bool lich_exists = false;
-
 // these variables aren't used outside of this file, so declare them only here
 enum BG_WSG_Rewards
 {
@@ -216,8 +213,8 @@ void BattlegroundWS::AddPlayer(Player *plr)
     if (!lich_exists)
     {
         plr->SetDisplayId(24191); //Lich King model
-        plr->Yell("Король-Лич должен существовать всегда...!", LANG_UNIVERSAL);
-        plr->Whisper("Вы можете найти ледяную скорбь в своем инвертаре...", LANG_UNIVERSAL, plr->GetGUID());
+        plr->Yell("The Lich King must always exist...!", LANG_UNIVERSAL);
+        plr->Whisper("You can find Frostmourne in your bag ...", LANG_UNIVERSAL, plr->GetGUID());
         plr->AddItem(ITEM_FROSTMOURNE_ID, 1);
         lichGUID = plr->GetGUID();
         lich_exists = true;
@@ -719,6 +716,7 @@ void BattlegroundWS::Reset()
     //call parent's class reset
     Battleground::Reset();
 
+    lich_exists = false;
     m_FlagKeepers[BG_TEAM_ALLIANCE]     = 0;
     m_FlagKeepers[BG_TEAM_HORDE]        = 0;
     m_DroppedFlagGUID[BG_TEAM_ALLIANCE] = 0;
@@ -766,8 +764,8 @@ void BattlegroundWS::HandleKillPlayer(Player* player, Player* killer)
     {
         player->DeMorph();
         player->DestroyItemCount(ITEM_FROSTMOURNE_ID, 1, true, true);
-        player->Yell("Король-Лич должен существовать всегда...!", LANG_UNIVERSAL);
-        player->Whisper("Вы можете найти Ледяную Скорбь в своем инвертаре...", LANG_UNIVERSAL, killer->GetGUID());
+        player->Yell("The Lich King must always exist...!", LANG_UNIVERSAL);
+        player->Whisper("You can find Frostmourne in your bag ...", LANG_UNIVERSAL, killer->GetGUID());
         killer->SetDisplayId(24191); //Lich King model
         killer->AddItem(ITEM_FROSTMOURNE_ID, 1);
         lichGUID = killer->GetGUID();
