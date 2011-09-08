@@ -78,6 +78,7 @@ class BattlegroundDS : public Battleground
     private:
         uint32 m_waterTimer;
         bool m_waterfallActive;
+        void KnockBackPlayer(Unit *pPlayer, float angle, float horizontalSpeed, float verticalSpeed);
 
         virtual void PostUpdateImpl(uint32 diff);
     protected:

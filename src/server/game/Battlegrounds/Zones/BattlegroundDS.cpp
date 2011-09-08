@@ -46,6 +46,24 @@ BattlegroundDS::~BattlegroundDS()
 
 void BattlegroundDS::PostUpdateImpl(uint32 diff)
 {
+    if (GetStartTime() >= 75*IN_MILLISECONDS)
+    {
+        for(BattlegroundPlayerMap::const_iterator itr = GetPlayers().begin(); itr != GetPlayers().end();itr++)
+        {
+            Player * plr = ObjectAccessor::FindPlayer(itr->first);
+            if (plr && plr->isAlive() && plr->GetPositionX() < 1260 && plr->GetPositionY() >755 && plr->GetPositionY() < 775 && plr->GetPositionZ() > 13)
+            {
+                KnockBackPlayer(plr, 6.15f, 50.00f, 5.00f);
+                plr->RemoveAurasDueToSpell(48018);
+            } 
+            if (plr && plr->isAlive() && plr->GetPositionX() > 1330 && plr->GetPositionY() >805 && plr->GetPositionY() < 825 && plr->GetPositionZ() > 13)
+            {
+                KnockBackPlayer(plr, 3.10f, 50.00f, 5.00f);
+                plr->RemoveAurasDueToSpell(48018);
+            }
+        }
+    }
+
     if (getWaterFallTimer() < diff)
     {
         if (isWaterFallActive())
@@ -177,4 +195,21 @@ bool BattlegroundDS::SetupBattleground()
     }
 
     return true;
+}
+
+void BattlegroundDS::KnockBackPlayer(Unit *pPlayer, float angle, float horizontalSpeed, float verticalSpeed)
+{
+    if(pPlayer->GetTypeId() == TYPEID_PLAYER)
+    {
+        WorldPacket data(SMSG_MOVE_KNOCK_BACK, 8+4+4+4+4+2);
+        data.append(pPlayer->GetPackGUID());
+        data << uint32(0);
+        data << float(cos(angle));
+        data << float(sin(angle));
+        data << float(horizontalSpeed);
+        data << float(-verticalSpeed);
+        ((Player*)pPlayer)->GetSession()->SendPacket(&data);
+    }
+    else
+        sLog->outError("BatteGroundDS: The target of KnockBackPlayer must be a player!");
 }
