@@ -6224,6 +6224,19 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                     triggered_spell_id = 28810;
                     break;
                 }
+                // Item - Priest T10 Healer 4P Bonus
+                case 70798:
+                {
+                    if (GetTypeId() != TYPEID_PLAYER)
+                        return false;
+
+                    // Circle of Healing
+                    this->ToPlayer()->RemoveSpellCategoryCooldown(1204, true);
+                    // Penance
+                    this->ToPlayer()->RemoveSpellCategoryCooldown(1230, true);
+                    return true;
+                    break;
+                }
                 // Priest T10 Healer 2P Bonus
                 case 70770:
                     // Flash Heal
@@ -6726,6 +6739,19 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
             }
             switch (dummySpell->Id)
             {
+                //Item - Icecrown 25 Normal Healer Weapon Proc
+                case 71865: 
+                    triggered_spell_id = 71864; 
+                    break; 
+                //Item - Icecrown 25 Heroic Healer Weapon Proc
+                case 71868: 
+                    triggered_spell_id = 71866; 
+                    break; 
+                // Item - Paladin T10 Holy 2P Bonus
+                case 70755:
+                    if(procSpell->Id == 31842)
+                        triggered_spell_id = 71166;
+                    break;
                 // Heart of the Crusader
                 case 20335: // rank 1
                     triggered_spell_id = 21183;
@@ -6920,6 +6946,16 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                 {
                     triggered_spell_id = 64891;
                     basepoints0 = triggerAmount * damage / 300;
+                    break;
+                }
+                // Item - Paladin T10 Retribution 2P Bonus
+                case 70765:
+                {
+                    if (GetTypeId() != TYPEID_PLAYER)
+                        return false;
+
+                    this->ToPlayer()->RemoveSpellCooldown(53385, true);
+                    return true;
                     break;
                 }
                 case 71406: // Tiny Abomination in a Jar
@@ -7665,6 +7701,16 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                 triggered_spell_id = 50526;
                 break;
             }
+            // Item - Death Knight T10 Melee 4P Bonus
+            if (dummySpell->Id == 70656)
+            {
+                if (!this->ToPlayer())
+                    return false;
+
+                for (uint32 i = 0; i < MAX_RUNES; ++i)
+                    if (this->ToPlayer()->GetRuneCooldown(i) == 0)
+                        return false;
+            }
             // Sudden Doom
             if (dummySpell->SpellIconID == 1939 && GetTypeId() == TYPEID_PLAYER)
             {
@@ -7965,6 +8011,17 @@ bool Unit::HandleAuraProc(Unit* victim, uint32 damage, Aura* triggeredByAura, Sp
                     CastCustomSpell(this, 59913, &bp0, NULL, NULL, true);
                     *handled = true;
                     break;
+                }
+                // Vigilance - original proc picking wrong target
+                case 50720:
+                {
+                    *handled = true;
+                    if (Unit * caster = triggeredByAura->GetCaster())
+                    {
+                        CastSpell(caster, 50725, true);
+                        return true;
+                    }
+                    return false;
                 }
             }
 
@@ -8380,6 +8437,16 @@ bool Unit::HandleProcTriggerSpell(Unit* victim, uint32 damage, AuraEffect* trigg
                     }
                     default:
                         break;
+                }
+                break;
+            }
+            case SPELLFAMILY_ROGUE:
+            {
+               // Item - Rogue T10 2P Bonus
+                if (auraSpellInfo->Id == 70805)
+                {
+                    if (victim != this)
+                        return false;
                 }
                 break;
             }
