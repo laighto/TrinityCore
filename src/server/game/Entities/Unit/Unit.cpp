@@ -5088,6 +5088,20 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
         {
             switch (dummySpell->Id)
             {
+                //Item - Icecrown 25 Normal Caster Weapon Proc 
+                case 71845: 
+                { 
+                    triggered_spell_id = 71843; 
+                    target = this; 
+                    break; 
+                } 
+                //Item - Icecrown 25 Heroic Caster Weapon Proc 
+                case 71846: 
+                { 
+                    triggered_spell_id = 71844; 
+                    target = this; 
+                    break; 
+                }
                 // Bloodworms Health Leech
                 case 50453:
                 {
