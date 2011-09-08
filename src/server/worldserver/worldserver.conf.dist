@@ -2888,5 +2888,11 @@ OutdoorPvP.Wintergrasp.Antifarm.Def = 5
 # Enable /Disable Freeze (5 min stun after PVP die at Arena Gurubashi)
 PvPEvent = 0
 
+#   DuelResetCooldown
+#	Reseting cooldown and restore health after duel
+#	Default: 0 - Disable
+#		     1 - Enable
+
+DuelResetCooldown = 1
 #
 ##############################################################################

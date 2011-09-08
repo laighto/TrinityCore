@@ -1203,6 +1203,8 @@ void World::LoadConfigSettings(bool reload)
 
     //Gurubashi Arena
     m_bool_configs[PvPEvent] = sConfig->GetBoolDefault("PvPEvent", false);
+    // Duel Reset Cooldown 
+    m_bool_configs[CONFIG_DUEL_RESET_COOLDOWN] = sConfig->GetBoolDefault("DuelResetCooldown", false);
 
     sScriptMgr->OnConfigLoad(reload);
 }
