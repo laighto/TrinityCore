@@ -47,6 +47,8 @@ enum DataTypes
     DATA_BURNING_TREE_3                     = 12,
     DATA_BURNING_TREE_4                     = 13,
     DATA_FLAME_RING                         = 14,
+    DATA_DAMAGE                             = 15,
+    DATA_TWILIGHT_HALION                    = 16,
 };
 
 enum SharedActions
@@ -105,6 +107,7 @@ enum GameObjectsIds
     GO_BURNING_TREE_2                       = 203035,
     GO_BURNING_TREE_3                       = 203036,
     GO_BURNING_TREE_4                       = 203037,
+    GO_FLAME_WALLS3                         = 203624,
 };
 
 enum WorldStatesRS
