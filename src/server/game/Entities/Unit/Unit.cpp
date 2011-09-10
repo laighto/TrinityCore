@@ -6972,6 +6972,16 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                     return true;
                     break;
                 }
+                // Divine Storm Helper (SERVERSIDE)
+                case 99999:
+                {
+                   if (victim == this)
+                        return false;
+
+                    triggeredByAura->SetAmount(triggeredByAura->GetAmount() + damage);
+                    return true;
+                    break;
+                }
                 case 71406: // Tiny Abomination in a Jar
                 case 71545: // Tiny Abomination in a Jar (Heroic)
                 {
