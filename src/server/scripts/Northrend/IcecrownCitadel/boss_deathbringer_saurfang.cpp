@@ -310,6 +310,10 @@ class boss_deathbringer_saurfang : public CreatureScript
                 instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_MARK_OF_THE_FALLEN_CHAMPION);
                 if (Creature* creature = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_SAURFANG_EVENT_NPC)))
                     creature->AI()->DoAction(ACTION_START_OUTRO);
+
+                instance->SetBossState(DATA_COLDFLAME_JETS, DONE);
+                instance->SetBossState(DATA_GUNSHIP_EVENT, DONE);
+                instance->SetBossState(DATA_DEATHBRINGER_SAURFANG, DONE);
             }
 
             void AttackStart(Unit* victim)
@@ -653,9 +657,9 @@ class npc_high_overlord_saurfang_icc : public CreatureScript
                         case POINT_CORPSE:
                             if (Creature* deathbringer = ObjectAccessor::GetCreature(*me, _instance->GetData64(DATA_DEATHBRINGER_SAURFANG)))
                             {
+                                deathbringer->setDeathState(ALIVE);
                                 deathbringer->CastSpell(me, SPELL_RIDE_VEHICLE, true);  // for the packet logs.
                                 deathbringer->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
-                                deathbringer->setDeathState(ALIVE);
                             }
                             _events.ScheduleEvent(EVENT_OUTRO_HORDE_5, 1000);    // move
                             _events.ScheduleEvent(EVENT_OUTRO_HORDE_6, 4000);    // say

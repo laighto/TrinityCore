@@ -135,6 +135,7 @@ class boss_festergut : public CreatureScript
                     professor->AI()->DoAction(ACTION_FESTERGUT_DEATH);
 
                 RemoveBlight();
+                instance->SetBossState(DATA_FESTERGUT, DONE);
             }
 
             void JustReachedHome()

@@ -333,6 +333,7 @@ class boss_lady_deathwhisper : public CreatureScript
                 }
 
                 _JustDied();
+                instance->SetBossState(DATA_LADY_DEATHWHISPER, DONE);
             }
 
             void JustReachedHome()

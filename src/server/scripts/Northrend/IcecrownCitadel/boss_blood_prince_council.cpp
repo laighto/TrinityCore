@@ -241,23 +241,7 @@ class boss_blood_council_controller : public CreatureScript
                 }
 
                 if (IsHeroic())
-                {
-                    Map::PlayerList const &PlList = me->GetMap()->GetPlayers();
-                    if (PlList.isEmpty())
-                        return;
-
-                    for (Map::PlayerList::const_iterator i = PlList.begin(); i != PlList.end(); ++i)
-                    {
-                        if (Player* player = i->getSource())
-                        {
-                            if (player->isGameMaster())
-                                continue;
-
-                            if (player->isAlive())
-                                player->AddAura(SPELL_SHADOW_PRISON_DUMMY, player);
-                        }
-                    }
-                }
+                    me->AddAura(SPELL_SHADOW_PRISON_DUMMY, me);
             }
 
             void SetData(uint32 /*type*/, uint32 data)
@@ -278,6 +262,8 @@ class boss_blood_council_controller : public CreatureScript
 
                 if (Creature* valanar = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_PRINCE_VALANAR_GUID)))
                     valanar->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+
+                instance->HandleGameObject(instance->GetData64(BLOODWING_DOOR), true);
             }
 
             void JustDied(Unit* killer)
@@ -299,6 +285,7 @@ class boss_blood_council_controller : public CreatureScript
                 }
 
                 instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_SHADOW_PRISON_DUMMY);
+                instance->SetBossState(DATA_BLOOD_PRINCE_COUNCIL, DONE);
             }
 
             void UpdateAI(uint32 const diff)
@@ -411,6 +398,7 @@ class boss_prince_keleseth_icc : public CreatureScript
                 me->SetReactState(REACT_DEFENSIVE);
                 if (IsHeroic())
                     DoCast(me, SPELL_SHADOW_PRISON);
+                me->SetVisible(true);
             }
 
             void EnterCombat(Unit* /*who*/)
@@ -442,18 +430,25 @@ class boss_prince_keleseth_icc : public CreatureScript
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     controller->AI()->SetData(0, 1);
                 }
+                me->AI()->DoAction(ACTION_STAND_UP);
+                me->SetVisible(true);
             }
 
             void JustRespawned()
             {
                 DoCast(me, SPELL_FEIGN_DEATH);
                 me->SetHealth(_spawnHealth);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                me->SetVisible(true);
             }
 
             void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
             {
                 if (spell->Id == SPELL_INVOCATION_OF_BLOOD_KELESETH)
                     DoAction(ACTION_CAST_INVOCATION);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
             }
 
             void JustSummoned(Creature* summon)
@@ -631,6 +626,7 @@ class boss_prince_taldaram_icc : public CreatureScript
                 me->SetReactState(REACT_DEFENSIVE);
                 if (IsHeroic())
                     DoCast(me, SPELL_SHADOW_PRISON);
+                me->SetVisible(true);
             }
 
             void MoveInLineOfSight(Unit* /*who*/)
@@ -666,12 +662,17 @@ class boss_prince_taldaram_icc : public CreatureScript
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     controller->AI()->SetData(0, 1);
                 }
+                me->AI()->DoAction(ACTION_STAND_UP);
+                me->SetVisible(true);
             }
 
             void JustRespawned()
             {
                 DoCast(me, SPELL_FEIGN_DEATH);
                 me->SetHealth(_spawnHealth);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                me->SetVisible(true);
             }
 
             void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
@@ -854,6 +855,7 @@ class boss_prince_valanar_icc : public CreatureScript
                 me->SetReactState(REACT_DEFENSIVE);
                 if (IsHeroic())
                     DoCast(me, SPELL_SHADOW_PRISON);
+                me->SetVisible(true);
             }
 
             void MoveInLineOfSight(Unit* /*who*/)
@@ -877,6 +879,7 @@ class boss_prince_valanar_icc : public CreatureScript
 
                 Talk(SAY_VALANAR_DEATH);
                 instance->SendEncounterUnit(ENCOUNTER_FRAME_REMOVE, me);
+                instance->SetBossState(DATA_BLOOD_PRINCE_COUNCIL, DONE);
             }
 
             void JustReachedHome()
@@ -889,12 +892,17 @@ class boss_prince_valanar_icc : public CreatureScript
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     controller->AI()->SetData(0, 1);
                 }
+                me->AI()->DoAction(ACTION_STAND_UP);
+                me->SetHealth(me->GetMaxHealth());
+                me->SetVisible(true);
             }
 
             void JustRespawned()
             {
                 DoCast(me, SPELL_FEIGN_DEATH);
                 me->SetHealth(_spawnHealth);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
             }
 
             void JustSummoned(Creature* summon)

@@ -54,10 +54,10 @@ enum Spells
     SPELL_GASEOUS_BLIGHT_LARGE          = 69157,
     SPELL_GASEOUS_BLIGHT_MEDIUM         = 69162,
     SPELL_GASEOUS_BLIGHT_SMALL          = 69164,
-    SPELL_MALLABLE_GOO_H                = 70852,
+    SPELL_MALLABLE_GOO_H                = 69240,
 
     // Rotface
-    SPELL_VILE_GAS_H                    = 69240,
+    SPELL_VILE_GAS_H                    = 70852,
 
     // Professor Putricide
     SPELL_SLIME_PUDDLE_TRIGGER          = 70341,
@@ -243,6 +243,25 @@ class boss_professor_putricide : public CreatureScript
             {
                 _JustDied();
                 Talk(SAY_DEATH);
+
+                instance->HandleGameObject(instance->GetData64(GO_CRIMSON_HALL_DOOR), true);
+                instance->HandleGameObject(instance->GetData64(BLOODWING_DOOR), true);
+                instance->SetBossState(DATA_PROFESSOR_PUTRICIDE, DONE);
+                if (Is25ManRaid())
+                {
+                    int a = urand(0,2);
+                    if (a == 1)
+                    {
+                        Map* pMap = me->GetMap();
+                        InstanceMap::PlayerList const &PlayerList = pMap->GetPlayers();
+                        for (InstanceMap::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                        {
+                            if (i->getSource()->GetQuestStatus(24749) == QUEST_STATUS_INCOMPLETE)
+                                i->getSource()->CompleteQuest(24749);
+                        }
+                       //instance->DoCastSpellOnPlayers(71516); instance->DoCastSpellOnPlayers(71518);
+                    }
+                }
             }
 
             void JustSummoned(Creature* summon)
@@ -365,6 +384,7 @@ class boss_professor_putricide : public CreatureScript
                         me->GetMotionMaster()->MovePoint(POINT_FESTERGUT, festergutWatchPos);
                         me->SetReactState(REACT_PASSIVE);
                         DoZoneInCombat(me);
+                        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
                         if (IsHeroic())
                             events.ScheduleEvent(EVENT_FESTERGUT_GOO, urand(15000, 20000), 0, PHASE_FESTERGUT);
                         break;
@@ -373,6 +393,7 @@ class boss_professor_putricide : public CreatureScript
                         DoCast(me, SPELL_RELEASE_GAS_VISUAL, true);
                         break;
                     case ACTION_FESTERGUT_DEATH:
+                        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
                         events.ScheduleEvent(EVENT_FESTERGUT_DIES, 4000, 0, PHASE_FESTERGUT);
                         break;
                     case ACTION_ROTFACE_COMBAT:
@@ -383,6 +404,7 @@ class boss_professor_putricide : public CreatureScript
                         me->SetReactState(REACT_PASSIVE);
                         _oozeFloodStage = 0;
                         DoZoneInCombat(me);
+                        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
                         if (IsHeroic())
                             events.ScheduleEvent(EVENT_ROTFACE_VILE_GAS, urand(15000, 20000), 0, PHASE_ROTFACE);
                         // init random sequence of floods
@@ -418,6 +440,7 @@ class boss_professor_putricide : public CreatureScript
                             _oozeFloodStage = 0;
                         break;
                     case ACTION_ROTFACE_DEATH:
+                        me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE|UNIT_FLAG_NOT_SELECTABLE);
                         events.ScheduleEvent(EVENT_ROTFACE_DIES, 4500, 0, PHASE_ROTFACE);
                         break;
                     case ACTION_CHANGE_PHASE:

@@ -207,6 +207,23 @@ class boss_sindragosa : public CreatureScript
             {
                 BossAI::JustDied(killer);
                 Talk(SAY_DEATH);
+
+                if (Is25ManRaid())
+                {
+                    int a = urand(0,2);
+                    if (a == 1)
+                    {
+                        Map* pMap = me->GetMap();
+                        InstanceMap::PlayerList const &PlayerList = pMap->GetPlayers();
+                        for (InstanceMap::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                        {
+                            if (i->getSource()->GetQuestStatus(24757) == QUEST_STATUS_INCOMPLETE)
+                                i->getSource()->CompleteQuest(24757);
+                        }
+	                    //instance->DoCastSpellOnPlayers(72290); instance->DoCastSpellOnPlayers(72289);
+                    }
+                }
+                instance->SetBossState(DATA_SINDRAGOSA, DONE);
             }
 
             void EnterCombat(Unit* victim)
@@ -230,6 +247,12 @@ class boss_sindragosa : public CreatureScript
                 instance->SetBossState(DATA_SINDRAGOSA, FAIL);
                 me->SetFlying(false);
                 me->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
+
+                summons.DespawnAll();
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                me->RemoveByteFlag(UNIT_FIELD_BYTES_1, 3, 0x02);
+                me->RemoveUnitMovementFlag(MOVEMENTFLAG_FLYING); 
             }
 
             void KilledUnit(Unit* victim)
@@ -253,6 +276,10 @@ class boss_sindragosa : public CreatureScript
                     me->m_Events.AddEvent(new FrostwyrmLandEvent(*me, SindragosaLandPos), me->m_Events.CalculateTime(uint64(moveTime) + 250));
                     me->GetMotionMaster()->MovePoint(POINT_FROSTWYRM_FLY_IN, SindragosaFlyPos);
                     DoCast(me, SPELL_SINDRAGOSA_S_FURY);
+
+                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                    me->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
                 }
             }
 
@@ -285,8 +312,10 @@ class boss_sindragosa : public CreatureScript
                         events.ScheduleEvent(EVENT_AIR_MOVEMENT, 1);
                         break;
                     case POINT_AIR_PHASE:
+                        me->RemoveAurasDueToSpell(SPELL_FROST_AURA);
+                        instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_FROST_AURA);
                         me->CastCustomSpell(SPELL_ICE_TOMB_TARGET, SPELLVALUE_MAX_TARGETS, RAID_MODE<int32>(2, 5, 2, 6), NULL);
-                        events.ScheduleEvent(EVENT_FROST_BOMB, 8000);
+                        events.ScheduleEvent(EVENT_FROST_BOMB, 10000);
                         break;
                     case POINT_LAND:
                         me->SetFlying(false);
@@ -422,6 +451,8 @@ class boss_sindragosa : public CreatureScript
                         {
                             _isInAirPhase = true;
                             Talk(SAY_AIR_PHASE);
+                            me->RemoveAurasDueToSpell(SPELL_FROST_AURA);
+                            instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_FROST_AURA);
                             me->SetFlying(true);
                             me->AddUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
                             me->SetReactState(REACT_PASSIVE);
