@@ -24,6 +24,7 @@ void AddSC_example_escort();
 void AddSC_example_gossip_codebox();
 void AddSC_example_misc();
 void AddSC_example_commandscript();
+void AddSC_DuelReset();
 void AddSC_gmisland();
 void AddSC_anticheat_commandscript();
 
@@ -629,6 +630,7 @@ void AddExampleScripts()
     AddSC_example_gossip_codebox();
     AddSC_example_misc();
     AddSC_example_commandscript();
+    AddSC_DuelReset();
     AddSC_gmisland();
 }
 
