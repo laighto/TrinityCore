@@ -1364,6 +1364,9 @@ void Aura::HandleAuraSpecificMods(AuraApplication const* aurApp, Unit* caster, b
                             }
                         }
                         break;
+                    case 12281: // Sword Specialization
+                        target->CastSpell(target, 16459, true); // effect's Sword Specialization
+                        break;
                 }
                 break;
             case SPELLFAMILY_MAGE:
