@@ -1223,6 +1223,11 @@ void World::LoadConfigSettings(bool reload)
     m_int_configs[CONFIG_ANTICHEAT_DETECTIONS_ENABLED] = sConfig->GetIntDefault("Anticheat.DetectionsEnabled",31);
     m_int_configs[CONFIG_ANTICHEAT_MAX_REPORTS_FOR_DAILY_REPORT] = sConfig->GetIntDefault("Anticheat.MaxReportsForDailyReport",70);
 
+    // chatlog
+    m_bool_configs[CONFIG_ChatLog_Lexics_Action_Custom] = sConfig->GetBoolDefault("ChatLog.Lexics.Action.Custom", false);
+    m_int_configs[CONFIG_ChatLog_Lexics_Action_Custom_MODE] = sConfig->GetIntDefault("ChatLog.Lexics.Action.Custom.Mode", 0);
+    m_int_configs[CONFIG_ChatLog_Lexics_Action_Custom_Spell] = sConfig->GetIntDefault("ChatLog.Lexics.Action.Custom.Punish.Spell", 0);
+
     sScriptMgr->OnConfigLoad(reload);
 }
 

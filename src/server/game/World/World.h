@@ -165,6 +165,7 @@ enum WorldBoolConfigs
     CONFIG_DUEL_RESET_COOLDOWN,
     CONFIG_ANTICHEAT_ENABLE,
     CONFIG_BOOL_WARDEN_ENABLED,
+    CONFIG_ChatLog_Lexics_Action_Custom,
     BOOL_CONFIG_VALUE_COUNT
 };
 
@@ -331,6 +332,8 @@ enum WorldIntConfigs
     CONFIG_WARDEN_CLIENT_CHECK_PERIOD,
     CONFIG_WARDEN_CLIENT_FAIL_ACTION,
     CONFIG_WARDEN_CLIENT_BAN_DURATION,
+    CONFIG_ChatLog_Lexics_Action_Custom_MODE,
+    CONFIG_ChatLog_Lexics_Action_Custom_Spell,
     INT_CONFIG_VALUE_COUNT
 };
 
