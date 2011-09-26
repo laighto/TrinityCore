@@ -1045,6 +1045,18 @@ void Log::outChat(const char * str, ...)
     }
 }
 
+void Log::outErrorST(const char * str, ...)
+{
+    va_list ap;
+    va_start(ap, str);
+    char nnew_str[MAX_QUERY_LEN];
+    vsnprintf(nnew_str, MAX_QUERY_LEN, str, ap);
+    va_end(ap);
+
+    ACE_Stack_Trace st;
+    outError("%s [Stacktrace: %s]", nnew_str, st.c_str());
+}
+
 void Log::outWarden(const char * str, ...)
 {
     if (!str)
