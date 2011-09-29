@@ -1734,8 +1734,8 @@ void Spell::EffectTriggerSpell(SpellEffIndex effIndex)
                 if (unitTarget->ToPlayer()->HasSpellCooldown(1784))
                     unitTarget->ToPlayer()->RemoveSpellCooldown(1784);
 
-                triggered_spell_id = 1784;
-                break;
+                unitTarget->CastSpell(unitTarget, 1784, true);
+                return;
             }
             // Demonic Empowerment -- succubus
             case 54437:
@@ -1745,8 +1745,8 @@ void Spell::EffectTriggerSpell(SpellEffIndex effIndex)
                 unitTarget->RemoveAurasByType(SPELL_AURA_MOD_STUN);
 
                 // Cast Lesser Invisibility
-                triggered_spell_id = 7870;
-                break;
+                unitTarget->CastSpell(unitTarget, 7870, true);
+                return;
             }
             // just skip
             case 23770:                                         // Sayge's Dark Fortune of *
@@ -1830,7 +1830,7 @@ void Spell::EffectTriggerSpell(SpellEffIndex effIndex)
     }
     else //if (effectHandleMode == SPELL_EFFECT_HANDLE_LAUNCH)
     {
-        if (spellInfo->NeedsToBeTriggeredByCaster() && !(m_spellInfo->Effects[effIndex].GetProvidedTargetMask() & TARGET_FLAG_UNIT_MASK))
+        if (spellInfo->NeedsToBeTriggeredByCaster() && (m_spellInfo->Effects[effIndex].GetProvidedTargetMask() & TARGET_FLAG_UNIT_MASK))
             return;
 
         if (spellInfo->GetExplicitTargetMask() & TARGET_FLAG_DEST_LOCATION)
@@ -1883,7 +1883,7 @@ void Spell::EffectTriggerMissileSpell(SpellEffIndex effIndex)
     }
     else //if (effectHandleMode == SPELL_EFFECT_HANDLE_HIT)
     {
-        if (spellInfo->NeedsToBeTriggeredByCaster() && !(m_spellInfo->Effects[effIndex].GetProvidedTargetMask() & TARGET_FLAG_UNIT_MASK))
+        if (spellInfo->NeedsToBeTriggeredByCaster() && (m_spellInfo->Effects[effIndex].GetProvidedTargetMask() & TARGET_FLAG_UNIT_MASK))
             return;
 
         if (spellInfo->GetExplicitTargetMask() & TARGET_FLAG_DEST_LOCATION)
