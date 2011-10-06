@@ -35,12 +35,12 @@ ChatLogInfo::ChatLogInfo(ChatLogType type, bool chat, bool lexics, uint32 flushL
     std::string strType = ChatLog::GetChatNameByType(type);
     if (chat)
     {
-        _name = sConfig->GetStringDefault(std::string("ChatLog." + strType + ".File").c_str(), "");
-        _screenFlag = sConfig->GetBoolDefault(std::string("ChatLog." + strType + ".Screen").c_str(), false);
+        _name = ConfigMgr::GetStringDefault(std::string("ChatLog." + strType + ".File").c_str(), "");
+        _screenFlag = ConfigMgr::GetBoolDefault(std::string("ChatLog." + strType + ".Screen").c_str(), false);
     }
 
     if (lexics)
-        _cutFlag = sConfig->GetBoolDefault(std::string("ChatLog.Lexics." + strType + ".Cut").c_str(), true);
+        _cutFlag = ConfigMgr::GetBoolDefault(std::string("ChatLog.Lexics." + strType + ".Cut").c_str(), true);
 }
 
 void ChatLogInfo::OpenFile(bool dateSplit, const std::string& date, bool utfHeader)
@@ -143,17 +143,17 @@ ChatLog::~ChatLog()
 void ChatLog::_Initialize()
 {
     // Load config settings
-    _enable = sConfig->GetBoolDefault("ChatLog.Enable", true);
-    _dateSplit = sConfig->GetBoolDefault("ChatLog.DateSplit", true);
-    _utfHeader = sConfig->GetBoolDefault("ChatLog.UTFHeader", true);
-    _ignoreUnprintable = sConfig->GetBoolDefault("ChatLog.Ignore.Unprintable", true);
-    _flushLength = sConfig->GetIntDefault("ChatLog.FlushAfterNumberOfBytes", 1024); // 1 kB
+    _enable = ConfigMgr::GetBoolDefault("ChatLog.Enable", true);
+    _dateSplit = ConfigMgr::GetBoolDefault("ChatLog.DateSplit", true);
+    _utfHeader = ConfigMgr::GetBoolDefault("ChatLog.UTFHeader", true);
+    _ignoreUnprintable = ConfigMgr::GetBoolDefault("ChatLog.Ignore.Unprintable", true);
+    _flushLength = ConfigMgr::GetIntDefault("ChatLog.FlushAfterNumberOfBytes", 1024); // 1 kB
 
-    _lexicsEnable = sConfig->GetBoolDefault("ChatLog.Lexics.Enable", true);
+    _lexicsEnable = ConfigMgr::GetBoolDefault("ChatLog.Lexics.Enable", true);
     if (_lexicsEnable)
     {
-        std::string analogsFileName = sConfig->GetStringDefault("ChatLog.Lexics.AnalogsFile", "");
-        std::string innormativeWordsFileName = sConfig->GetStringDefault("ChatLog.Lexics.WordsFile", "");
+        std::string analogsFileName = ConfigMgr::GetStringDefault("ChatLog.Lexics.AnalogsFile", "");
+        std::string innormativeWordsFileName = ConfigMgr::GetStringDefault("ChatLog.Lexics.WordsFile", "");
 
         _innormativeLog = new ChatLogInfo(CHAT_LOG_INNORMATIVE, true, false, 0);
         if (analogsFileName.empty() || innormativeWordsFileName.empty())
@@ -161,18 +161,18 @@ void ChatLog::_Initialize()
         else
         {
             // Initialize lexics cutter parameters
-            _lexicsInnormativeCut = sConfig->GetBoolDefault("ChatLog.Lexics.Cut.Enable", true);
-            _lexicsCutReplacement = sConfig->GetStringDefault("ChatLog.Lexics.Cut.Replacement", "&!@^%!^&*!!!");
-            _lexicsAction = LexicsActions(sConfig->GetIntDefault("ChatLog.Lexics.Action", LEXICS_ACTION_LOG));
-            _lexicsActionDuration = sConfig->GetIntDefault("ChatLog.Lexics.Action.Duration", 0);
+            _lexicsInnormativeCut = ConfigMgr::GetBoolDefault("ChatLog.Lexics.Cut.Enable", true);
+            _lexicsCutReplacement = ConfigMgr::GetStringDefault("ChatLog.Lexics.Cut.Replacement", "&!@^%!^&*!!!");
+            _lexicsAction = LexicsActions(ConfigMgr::GetIntDefault("ChatLog.Lexics.Action", LEXICS_ACTION_LOG));
+            _lexicsActionDuration = ConfigMgr::GetIntDefault("ChatLog.Lexics.Action.Duration", 0);
 
             // Initialize lexics cutter object
             _lexics = new LexicsCutter(analogsFileName, innormativeWordsFileName,
-                sConfig->GetBoolDefault("ChatLog.Lexics.Ignore.Spaces", true),
-                sConfig->GetBoolDefault("ChatLog.Lexics.Ignore.Repeats", true));
+                ConfigMgr::GetBoolDefault("ChatLog.Lexics.Ignore.Spaces", true),
+                ConfigMgr::GetBoolDefault("ChatLog.Lexics.Ignore.Repeats", true));
 
             // Read additional parameters
-            _lexicsIgnoreGm = sConfig->GetBoolDefault("ChatLog.Lexics.Ignore.GM", true);
+            _lexicsIgnoreGm = ConfigMgr::GetBoolDefault("ChatLog.Lexics.Ignore.GM", true);
         }
     }
 

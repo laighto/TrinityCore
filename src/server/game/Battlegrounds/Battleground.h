@@ -582,6 +582,8 @@ class Battleground
         void RewardXPAtKill(Player* killer, Player* victim);
         bool CanAwardArenaPoints() const { return m_LevelMin >= BG_AWARD_ARENA_POINTS_MIN_LEVEL; }
 
+        virtual uint64 GetFlagPickerGUID(int32 /*team*/ = -1) const { return 0; }
+
         bool lich_exists;
         uint64 lichGUID;
     protected:
