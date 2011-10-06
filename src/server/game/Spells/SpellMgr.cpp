@@ -3352,207 +3352,155 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectRadiusIndex[0] = 52;
                 spellInfo->EffectRadiusIndex[1] = 52;
                 break;
-            //Lich King custom script spells
-            case 72762:
-                spellInfo->DurationIndex = 3;
-                break;
-            case 71614:
-                spellInfo->Targets = 6;
-                break;
-            case 69410:
-                spellInfo->Targets = 1;
-                break;
-            case 74074:
-                spellInfo->Targets = 18;
-                break;
-            case 73529:
-                spellInfo->EffectRadiusIndex[1] = 13;
-                break;
-            case 69200:
-                spellInfo->DurationIndex = 28;
-                spellInfo->Effect[0] = 6;
-                break;
-            case 72350:
-                spellInfo->Effect[1] = SPELL_EFFECT_INSTAKILL;
-                spellInfo->EffectRadiusIndex[0] = 22;
-                spellInfo->EffectRadiusIndex[1] = 22;
-                spellInfo->EffectImplicitTargetA[0] = TARGET_SRC_CASTER;
-                spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_SRC_AREA_ENEMY;
-                spellInfo->EffectAmplitude[0] = 50000;
-                break;
-            case 72351:
-                spellInfo->EffectRadiusIndex[0] = 22;
-                break;
-            case 72429:
-                spellInfo->EffectRadiusIndex[0] = 4;
-                spellInfo->AttributesEx3 |= SPELL_ATTR3_ONLY_TARGET_GHOSTS;
-                break;
-            case 72754:
-                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ENEMY;
-                spellInfo->EffectImplicitTargetB[1] = TARGET_UNIT_TARGET_ENEMY;
-                break;
-            case 68981:
-                spellInfo->Effect[2] = 0;
-                break;
-            case 73159:
-                spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_SRC_AREA_ENEMY;
-                spellInfo->EffectRadiusIndex[0] = 22;
-                break;
-            case 72376:
-                spellInfo->EffectRadiusIndex[0] = 22;
-                break;
-            case 74276:
-                spellInfo->AttributesEx3 = SPELL_ATTR3_DEATH_PERSISTENT;
-            // End Lich King spells
-        case 62661: // Searing Flames
-        case 61915: // Lightning Whirl 10
-        case 63483: // Lightning Whirl 25
-        case 55098: // Transformation
+            case 62661: // Searing Flames
+            case 61915: // Lightning Whirl 10
+            case 63483: // Lightning Whirl 25
+            case 55098: // Transformation
             spellInfo->InterruptFlags = 47;
-            break;
-        case 62713: // Ironbranch's Essence
-        case 62968: // Brightleaf's Essence
+                break;
+            case 62713: // Ironbranch's Essence
+            case 62968: // Brightleaf's Essence
             spellInfo->DurationIndex = 39;
-            break;
-        case 38790:
+                break;
+            case 38790:
             spellInfo->Effect[1] = SPELL_EFFECT_KILL_CREDIT;
             spellInfo->EffectMiscValue[1] = 22112;
+                break;
+            case 18754: // Improved succubus - problems with apply if target is pet
+                spellInfo->EffectApplyAuraName[0] = SPELL_AURA_ADD_FLAT_MODIFIER;    // it's affects duration of seduction, let's minimize affection
+                spellInfo->EffectBasePoints[0] = int32(-1.5*IN_MILLISECONDS*0.22);           // reduce cast time of seduction by 22% 
+                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
+                break;
+            case 18755:
+                spellInfo->EffectApplyAuraName[0] = SPELL_AURA_ADD_FLAT_MODIFIER;
+                spellInfo->EffectBasePoints[0] = int32(-1.5*IN_MILLISECONDS*0.44);           //  reduce cast time of seduction by 44%
+                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
+                break;
+            case 18756:
+                spellInfo->EffectApplyAuraName[0] = SPELL_AURA_ADD_FLAT_MODIFIER;
+                spellInfo->EffectBasePoints[0] = int32(-1.5*IN_MILLISECONDS*0.66);           //  reduce cast time of seduction by 66%
+                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
+                break;
+            case 52916:
+                spellInfo->AttributesEx3 |= SPELL_ATTR3_NO_INITIAL_AGGRO;
+                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
+                break;
+            case 25742:
+                spellInfo->SpellFamilyFlags[0] |= 0x400;
+                break;
+            case 12051:
+                spellInfo->InterruptFlags |= SPELL_INTERRUPT_FLAG_INTERRUPT;
+                break;
+            case 60551: //Furious Gladiator`s Libram
+            // Blade barrier ranks 2-5 - Effect 1 (dummy) has invalid target - disable effect (we don't use it)
+            case 49500:
+            case 49501:
+            case 55225:
+            case 55226:
+                spellInfo->Effect[1] = 0;
+                break;
+            case 33778:
+            {
+                SpellEntry const* spellInf = sSpellStore.LookupEntry(33763);
+                spellInfo->SpellFamilyFlags[0] = spellInf->SpellFamilyFlags[0];
+                spellInfo->SpellFamilyFlags[1] = spellInf->SpellFamilyFlags[1];
+                spellInfo->SpellFamilyFlags[2] = spellInf->SpellFamilyFlags[2];
+                break;
+            }
+            case 55689: // Glyph of Shadow (to prevent glyph aura loss)
+                spellInfo->AttributesEx2 |= SPELL_ATTR2_NOT_NEED_SHAPESHIFT;
+                break;
+            case 53257: // Cobra Strikes
+                spellInfo->procCharges = 2;
+                spellInfo->StackAmount = 0;
+                break;
+            case 42650: // Army of the Dead - now we can interrupt this
+                spellInfo->InterruptFlags = SPELL_INTERRUPT_FLAG_INTERRUPT;
+                break;
+            case 45524: // Chains of Ice
+                // this will fix self-damage caused by Glyph of Chains of Ice
+                spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_TARGET_ENEMY;
+                break;
+            case 16493:     // Impale Rank 1
+                spellInfo->EffectBasePoints[0] = 10;
+                break;
+            case 16494:     // Impale rank 2
+                spellInfo->EffectBasePoints[0] = 20;
+                break;
+            case 63944: // Renewed Hope hack
+                spellInfo->EffectApplyAuraName[0] = SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN;;
+                spellInfo->EffectMiscValue[0] = 127;
+                break;
+            case 61607: // Mark of Blood
+                spellInfo->AttributesEx |= SPELL_ATTR1_NO_THREAT;
+                break;
+            case 67201: // Item - Priest T9 Healing 2P Bonus
+                spellInfo->EffectApplyAuraName[0] = SPELL_AURA_ADD_PCT_MODIFIER;
+                spellInfo->EffectMiscValue[0] = 0;
+                break;
+            case 67202: // Item - Priest T9 Healing 4P Bonus
+                spellInfo->EffectApplyAuraName[0] = SPELL_AURA_ADD_PCT_MODIFIER;
+                spellInfo->EffectMiscValue[0] = 0;
+                spellInfo->EffectSpellClassMask[0] = flag96(0x00000000, 0x01000000, 0x00001000);
+                break;
+            case 35098: // Rapid Killing
+            case 35099:
+                // just a temp solution to make Rapid Recuperation proc from this
+                spellInfo->AttributesEx2 |= SPELL_ATTR2_TRIGGERED_CAN_TRIGGER_PROC;
+                break;
+            // VAULT OF ARCHAVON SPELLS
+            case 58963: // Crushing Leap
+            case 60895: // Crushing Leap (heroic)
+                // don't have better idea for now
+                spellInfo->rangeIndex = 134;
+                break;
+            case 71267: //Swarming Shadows Periodic Damage Aura Huck
+                spellInfo->DurationIndex = 9; // Add 15 seconds cd instead inf
+                break;
+            case 71189: // Dreamwalker's Rage
+                spellInfo->EffectImplicitTargetA[0] = TARGET_SRC_CASTER;
+                spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_SRC_AREA_ENEMY;
+                spellInfo->EffectRadiusIndex[0] = 12;
+                break;
+            case 70127: // Mystic Buffet
+            case 72528:
+            case 72529:
+            case 72530:
+                spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_CASTER;
+                spellInfo->EffectImplicitTargetB[1] = TARGET_UNIT_SRC_AREA_ENEMY;
+                break;
+            case 51590: // Toss Ice Boulder
+                spellInfo->MaxAffectedTargets = 1;
             break;
-        case 18754: // Improved succubus - problems with apply if target is pet
-            spellInfo->EffectApplyAuraName[0] = SPELL_AURA_ADD_FLAT_MODIFIER;    // it's affects duration of seduction, let's minimize affection
-            spellInfo->EffectBasePoints[0] = int32(-1.5*IN_MILLISECONDS*0.22);           // reduce cast time of seduction by 22% 
-            spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
-            break;
-        case 18755:
-            spellInfo->EffectApplyAuraName[0] = SPELL_AURA_ADD_FLAT_MODIFIER;
-            spellInfo->EffectBasePoints[0] = int32(-1.5*IN_MILLISECONDS*0.44);           //  reduce cast time of seduction by 44%
-            spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
-            break;
-        case 18756:
-            spellInfo->EffectApplyAuraName[0] = SPELL_AURA_ADD_FLAT_MODIFIER;
-            spellInfo->EffectBasePoints[0] = int32(-1.5*IN_MILLISECONDS*0.66);           //  reduce cast time of seduction by 66%
-            spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
-            break;
-        case 52916:
-            spellInfo->AttributesEx3 |= SPELL_ATTR3_NO_INITIAL_AGGRO;
-            spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_CASTER;
-            break;
-        case 25742:
-            spellInfo->SpellFamilyFlags[0] |= 0x400;
-            break;
-        case 12051:
-            spellInfo->InterruptFlags |= SPELL_INTERRUPT_FLAG_INTERRUPT;
-            break;
-        case 60551: //Furious Gladiator`s Libram
-        // Blade barrier ranks 2-5 - Effect 1 (dummy) has invalid target - disable effect (we don't use it)
-        case 49500:
-        case 49501:
-        case 55225:
-        case 55226:
-            spellInfo->Effect[1] = 0;
-            break;
-        case 33778:
-        {
-            SpellEntry const* spellInf = sSpellStore.LookupEntry(33763);
-            spellInfo->SpellFamilyFlags[0] = spellInf->SpellFamilyFlags[0];
-            spellInfo->SpellFamilyFlags[1] = spellInf->SpellFamilyFlags[1];
-            spellInfo->SpellFamilyFlags[2] = spellInf->SpellFamilyFlags[2];
-            break;
-        }
-        case 55689: // Glyph of Shadow (to prevent glyph aura loss)
-            spellInfo->AttributesEx2 |= SPELL_ATTR2_NOT_NEED_SHAPESHIFT;
-            break;
-        case 53257: // Cobra Strikes
-            spellInfo->procCharges = 2;
-            spellInfo->StackAmount = 0;
-            break;
-        case 42650: // Army of the Dead - now we can interrupt this
-            spellInfo->InterruptFlags = SPELL_INTERRUPT_FLAG_INTERRUPT;
-            break;
-        case 45524: // Chains of Ice
-            // this will fix self-damage caused by Glyph of Chains of Ice
-            spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_TARGET_ENEMY;
-            break;
-        case 16493:     // Impale Rank 1
-            spellInfo->EffectBasePoints[0] = 10;
-            break;
-        case 16494:     // Impale rank 2
-            spellInfo->EffectBasePoints[0] = 20;
-            break;
-        case 63944: // Renewed Hope hack
-            spellInfo->EffectApplyAuraName[0] = SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN;;
-            spellInfo->EffectMiscValue[0] = 127;
-            break;
-        case 61607: // Mark of Blood
-            spellInfo->AttributesEx |= SPELL_ATTR1_NO_THREAT;
-            break;
-        case 67201: // Item - Priest T9 Healing 2P Bonus
-            spellInfo->EffectApplyAuraName[0] = SPELL_AURA_ADD_PCT_MODIFIER;
-            spellInfo->EffectMiscValue[0] = 0;
-            break;
-        case 67202: // Item - Priest T9 Healing 4P Bonus
-            spellInfo->EffectApplyAuraName[0] = SPELL_AURA_ADD_PCT_MODIFIER;
-            spellInfo->EffectMiscValue[0] = 0;
-            spellInfo->EffectSpellClassMask[0] = flag96(0x00000000, 0x01000000, 0x00001000);
-            break;
-        case 35098: // Rapid Killing
-        case 35099:
-            // just a temp solution to make Rapid Recuperation proc from this
-            spellInfo->AttributesEx2 |= SPELL_ATTR2_TRIGGERED_CAN_TRIGGER_PROC;
-            break;
-        // VAULT OF ARCHAVON SPELLS
-        case 58963: // Crushing Leap
-        case 60895: // Crushing Leap (heroic)
-            // don't have better idea for now
-            spellInfo->rangeIndex = 134;
-            break;
-        case 71267: //Swarming Shadows Periodic Damage Aura Huck
-            spellInfo->DurationIndex = 9; // Add 15 seconds cd instead inf
-            break;
-        case 71189: // Dreamwalker's Rage
-            spellInfo->EffectImplicitTargetA[0] = TARGET_SRC_CASTER;
-            spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_SRC_AREA_ENEMY;
-            spellInfo->EffectRadiusIndex[0] = 12;
-            break;
-        case 70127: // Mystic Buffet
-        case 72528:
-        case 72529:
-        case 72530:
-            spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_CASTER;
-            spellInfo->EffectImplicitTargetB[1] = TARGET_UNIT_SRC_AREA_ENEMY;
-            break;
-        case 51590: // Toss Ice Boulder
-            spellInfo->MaxAffectedTargets = 1;
-            break;
-        case 74412: // Emergency Recall [Final]
-            for (int8 i = 0; i < 3; ++i)
-                spellInfo->EffectImplicitTargetB[i] = TARGET_UNIT_TARGET_ANY;
-            break;
-        case 75545: 
-        case 75536: // Explosion (prevent error message in console)
-        case 75553: // Emergency Recall [Camera trigger]
-            spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_TARGET_ANY;
-            break;
-        case 74174: // Shoot
-        case 74182: // Shoot
-            spellInfo->EffectRadiusIndex[0] = 40;
-            break;
-        case 53651: // Light's Beacon
-            // aura casted on a whole raid and shouldn't put caster in combat
-            spellInfo->AttributesEx3 |= SPELL_ATTR3_NO_INITIAL_AGGRO;
-            break;
-        case 62488: // Activate Construct
-        case 62016: // Charge Orb
-            spellInfo->MaxAffectedTargets = 1;
-            break;
-        case 66588: // Flaming Spear
-            spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ENEMY;
-            spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_TARGET_ENEMY;
-            spellInfo->MaxAffectedTargets = 3;
-            break;
-        case 50526: // Wandering Plague
-            spellInfo->AttributesEx3 |= SPELL_ATTR3_NO_DONE_BONUS;
-            break;
+            case 74412: // Emergency Recall [Final]
+                for (int8 i = 0; i < 3; ++i)
+                    spellInfo->EffectImplicitTargetB[i] = TARGET_UNIT_TARGET_ANY;
+                break;
+            case 75545: 
+            case 75536: // Explosion (prevent error message in console)
+            case 75553: // Emergency Recall [Camera trigger]
+                spellInfo->EffectImplicitTargetB[0] = TARGET_UNIT_TARGET_ANY;
+                break;
+            case 74174: // Shoot
+            case 74182: // Shoot
+                spellInfo->EffectRadiusIndex[0] = 40;
+                break;
+            case 53651: // Light's Beacon
+                // aura casted on a whole raid and shouldn't put caster in combat
+                spellInfo->AttributesEx3 |= SPELL_ATTR3_NO_INITIAL_AGGRO;
+                break;
+            case 62488: // Activate Construct
+            case 62016: // Charge Orb
+                spellInfo->MaxAffectedTargets = 1;
+                break;
+            case 66588: // Flaming Spear
+                spellInfo->EffectImplicitTargetA[0] = TARGET_UNIT_TARGET_ENEMY;
+                spellInfo->EffectImplicitTargetA[1] = TARGET_UNIT_TARGET_ENEMY;
+                spellInfo->MaxAffectedTargets = 3;
+                    break;
+            case 50526: // Wandering Plague
+                spellInfo->AttributesEx3 |= SPELL_ATTR3_NO_DONE_BONUS;
+                break;
             default:
                 break;
         }
