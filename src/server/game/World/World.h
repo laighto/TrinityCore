@@ -158,6 +158,8 @@ enum WorldBoolConfigs
     CONFIG_ALLOW_TICKETS,
     CONFIG_DBC_ENFORCE_ITEM_ATTRIBUTES,
     CONFIG_PRESERVE_CUSTOM_CHANNELS,
+    CONFIG_PDUMP_NO_PATHS,
+    CONFIG_PDUMP_NO_OVERWRITE,
     CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED,
     CONFIG_OUTDOORPVP_WINTERGRASP_CUSTOM_HONOR,
     CONFIG_CONFIG_OUTDOORPVP_WINTERGRASP_ANTIFARM_ENABLE,
@@ -540,6 +542,14 @@ struct CliCommandHolder
 
 typedef UNORDERED_MAP<uint32, WorldSession*> SessionMap;
 
+struct CharacterNameData
+{
+    std::string m_name;
+    uint8 m_class;
+    uint8 m_race;
+    uint8 m_gender;
+};
+
 /// The World
 class World
 {
@@ -758,6 +768,11 @@ class World
 
         bool isEventKillStart;
 
+        const CharacterNameData* GetCharacterNameData(uint32 guid) const;
+        void AddCharacterNameData(uint32 guid, const std::string& name, uint8 gender, uint8 race, uint8 playerClass);
+        void UpdateCharacterNameData(uint32 guid, const std::string& name, uint8 gender, uint8 race = RACE_NONE);
+        void DeleteCharaceterNameData(uint32 guid) { _characterNameDataMap.erase(guid); }
+
         // Wintergrasp
         uint32 GetWintergrapsTimer() { return m_WintergrapsTimer; }
         uint32 GetWintergrapsState() { return m_WintergrapsState; }
@@ -857,7 +872,9 @@ class World
 
         std::list<std::string> m_Autobroadcasts;
 
-    private:
+        std::map<uint32, CharacterNameData> _characterNameDataMap;
+        void LoadCharacterNameData();
+
         void ProcessQueryCallbacks();
         ACE_Future_Set<PreparedQueryResult> m_realmCharCallbacks;
 };
