@@ -7904,6 +7904,9 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                 // Guard Dog
                 case 201:
                 {
+                    if (!victim)
+                        return false;
+
                     triggered_spell_id = 54445;
                     target = this;
                     float addThreat = float(CalculatePctN(procSpell->Effects[0].CalcValue(this), triggerAmount));
@@ -12635,9 +12638,9 @@ int32 Unit::ModifyPowerPct(Powers power, float pct, bool apply)
     return ModifyPower(power, (int32)amount - (int32)GetMaxPower(power));
 }
 
-bool Unit::isAlwaysVisibleFor(WorldObject const* seer) const
+bool Unit::IsAlwaysVisibleFor(WorldObject const* seer) const
 {
-    if (WorldObject::isAlwaysVisibleFor(seer))
+    if (WorldObject::IsAlwaysVisibleFor(seer))
         return true;
 
     // Always seen by owner
@@ -12648,9 +12651,9 @@ bool Unit::isAlwaysVisibleFor(WorldObject const* seer) const
     return false;
 }
 
-bool Unit::isAlwaysDetectableFor(WorldObject const* seer) const
+bool Unit::IsAlwaysDetectableFor(WorldObject const* seer) const
 {
-    if (WorldObject::isAlwaysDetectableFor(seer))
+    if (WorldObject::IsAlwaysDetectableFor(seer))
         return true;
 
     if (HasAuraTypeWithCaster(SPELL_AURA_MOD_STALKED, seer->GetGUID()))
