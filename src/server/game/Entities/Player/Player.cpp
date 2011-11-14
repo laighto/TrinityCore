@@ -11404,6 +11404,11 @@ InventoryResult Player::CanEquipItem(uint8 slot, uint16 &dest, Item* pItem, bool
             // check this only in game
             if (not_loading)
             {
+                // Fix Exploit 100% crit chance y 100% ARP (when Disarmed).
+                if (HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISARMED) && (getClass() == CLASS_ROGUE || getClass() == CLASS_WARRIOR))
+                    if (pProto->Class == ITEM_CLASS_WEAPON || pProto->Class == ITEM_CLASS_ARMOR)
+                        return EQUIP_ERR_CANT_DO_RIGHT_NOW;
+
                 // May be here should be more stronger checks; STUNNED checked
                 // ROOT, CONFUSED, DISTRACTED, FLEEING this needs to be checked.
                 if (HasUnitState(UNIT_STAT_STUNNED))
