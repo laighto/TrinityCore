@@ -653,7 +653,7 @@ class instance_icecrown_citadel : public InstanceMapScript
                                 for (Map::PlayerList::const_iterator it = PlayerList.begin(); it != PlayerList.end(); ++it)
                                     if (Player* player = it->getSource())
                                         if(!player->GetGroup())
-                                            instance->RemovePlayerFromMap(player);
+                                            instance->RemovePlayerFromMap(player, true);
                             }
                             case NOT_STARTED:
                                 if (GameObject* teleporter = instance->GetGameObject(SaurfangTeleportGUID))
