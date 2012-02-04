@@ -70,7 +70,7 @@ class instance_ruby_sanctum : public InstanceMapScript
                             creature->SetVisible(true);
                             creature->SetReactState(REACT_AGGRESSIVE);
                             creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                            creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE); 
+                            creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC); 
                         }
                         else
                         {
@@ -230,7 +230,7 @@ class instance_ruby_sanctum : public InstanceMapScript
                                 halion->SetVisible(true);
                                 halion->SetReactState(REACT_AGGRESSIVE);
                                 halion->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                                halion->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                                halion->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
                             }
                         }
                         break;
@@ -256,7 +256,7 @@ class instance_ruby_sanctum : public InstanceMapScript
                                 halion->SetVisible(true);
                                 halion->SetReactState(REACT_AGGRESSIVE);
                                 halion->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                                halion->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                                halion->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
                             }
                          }
                          break;

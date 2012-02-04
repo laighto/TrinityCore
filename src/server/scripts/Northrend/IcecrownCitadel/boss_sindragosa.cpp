@@ -250,7 +250,7 @@ class boss_sindragosa : public CreatureScript
 
                 summons.DespawnAll();
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
                 me->RemoveByteFlag(UNIT_FIELD_BYTES_1, 3, 0x02);
                 me->RemoveUnitMovementFlag(MOVEMENTFLAG_FLYING); 
             }
@@ -281,7 +281,7 @@ class boss_sindragosa : public CreatureScript
                     DoCast(me, SPELL_SINDRAGOSA_S_FURY);
 
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_OOC_NOT_ATTACKABLE);
+                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
                     me->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
                 }
             }

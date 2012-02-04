@@ -3696,6 +3696,9 @@ void SpellMgr::LoadDbcDataCorrections()
             case 50526: // Wandering Plague
                 spellInfo->AttributesEx3 |= SPELL_ATTR3_NO_DONE_BONUS;
                 break;
+           case 24259: // Felhunter's Spell Lock
+                spellInfo->speed = 80;
+                break;
             default:
                 break;
         }
