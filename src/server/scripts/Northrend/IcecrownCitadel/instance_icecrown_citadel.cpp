@@ -649,16 +649,7 @@ class instance_icecrown_citadel : public InstanceMapScript
                         switch (state)
                         {
                             case DONE:
-                            {
                                 DoRespawnGameObject(DeathbringersCacheGUID, 7*DAY);
-
-                                Map::PlayerList const &PlayerList = instance->GetPlayers();
-
-                                for (Map::PlayerList::const_iterator it = PlayerList.begin(); it != PlayerList.end(); ++it)
-                                    if (Player* player = it->getSource())
-                                        if(!player->GetGroup())
-                                            instance->RemovePlayerFromMap(player, true);
-                            }
                             case NOT_STARTED:
                                 if (GameObject* teleporter = instance->GetGameObject(SaurfangTeleportGUID))
                                 {
