@@ -646,7 +646,6 @@ class instance_icecrown_citadel : public InstanceMapScript
                         {
                             case DONE:
                                 DoRespawnGameObject(DeathbringersCacheGUID, 7*DAY);
-                                break;
                             case NOT_STARTED:
                                 if (GameObject* teleporter = instance->GetGameObject(SaurfangTeleportGUID))
                                 {

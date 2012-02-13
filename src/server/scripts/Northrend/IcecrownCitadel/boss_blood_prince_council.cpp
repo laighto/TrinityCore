@@ -391,7 +391,6 @@ class boss_prince_keleseth_icc : public CreatureScript
                 me->SetHealth(_spawnHealth);
                 instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, uint32(true));
                 me->SetReactState(REACT_DEFENSIVE);
-                me->SetVisible(true);
             }
 
             void EnterCombat(Unit* /*who*/)
@@ -429,8 +428,6 @@ class boss_prince_keleseth_icc : public CreatureScript
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     controller->AI()->SetData(0, 1);
                 }
-                me->AI()->DoAction(ACTION_STAND_UP);
-                me->SetVisible(true);
             }
 
             void JustRespawned()
@@ -439,7 +436,6 @@ class boss_prince_keleseth_icc : public CreatureScript
                 me->SetHealth(_spawnHealth);
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
-                me->SetVisible(true);
             }
 
             void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
@@ -623,7 +619,6 @@ class boss_prince_taldaram_icc : public CreatureScript
                 me->SetHealth(_spawnHealth);
                 instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, uint32(true));
                 me->SetReactState(REACT_DEFENSIVE);
-                me->SetVisible(true);
             }
 
             void MoveInLineOfSight(Unit* /*who*/)
@@ -661,8 +656,6 @@ class boss_prince_taldaram_icc : public CreatureScript
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     controller->AI()->SetData(0, 1);
                 }
-                me->AI()->DoAction(ACTION_STAND_UP);
-                me->SetVisible(true);
             }
 
             void JustRespawned()
@@ -671,7 +664,6 @@ class boss_prince_taldaram_icc : public CreatureScript
                 me->SetHealth(_spawnHealth);
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
-                me->SetVisible(true);
             }
 
             void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
@@ -852,7 +844,6 @@ class boss_prince_valanar_icc : public CreatureScript
                 me->SetHealth(me->GetMaxHealth());
                 instance->SetData(DATA_ORB_WHISPERER_ACHIEVEMENT, uint32(true));
                 me->SetReactState(REACT_DEFENSIVE);
-                me->SetVisible(true);
             }
 
             void MoveInLineOfSight(Unit* /*who*/)
@@ -891,9 +882,6 @@ class boss_prince_valanar_icc : public CreatureScript
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     controller->AI()->SetData(0, 1);
                 }
-                me->AI()->DoAction(ACTION_STAND_UP);
-                me->SetHealth(me->GetMaxHealth());
-                me->SetVisible(true);
             }
 
             void JustRespawned()
