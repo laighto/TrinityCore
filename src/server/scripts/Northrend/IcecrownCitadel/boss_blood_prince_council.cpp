@@ -429,6 +429,8 @@ class boss_prince_keleseth_icc : public CreatureScript
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     controller->AI()->SetData(0, 1);
                 }
+                me->AI()->DoAction(ACTION_STAND_UP);
+                me->SetVisible(true);
             }
 
             void JustRespawned()
@@ -659,6 +661,8 @@ class boss_prince_taldaram_icc : public CreatureScript
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     controller->AI()->SetData(0, 1);
                 }
+                me->AI()->DoAction(ACTION_STAND_UP);
+                me->SetVisible(true);
             }
 
             void JustRespawned()
@@ -887,6 +891,9 @@ class boss_prince_valanar_icc : public CreatureScript
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     controller->AI()->SetData(0, 1);
                 }
+                me->AI()->DoAction(ACTION_STAND_UP);
+                me->SetHealth(me->GetMaxHealth());
+                me->SetVisible(true);
             }
 
             void JustRespawned()
@@ -909,7 +916,7 @@ class boss_prince_valanar_icc : public CreatureScript
                     {
                         float x, y, z;
                         summon->GetPosition(x, y, z);
-                        float ground_Z = summon->GetMap()->GetHeight(x, y, z, true, 500.0f);
+                        float ground_Z = summon->GetMap()->GetHeight(summon->GetPhaseMask(), x, y, z, true, 500.0f);
                         summon->GetMotionMaster()->MovePoint(POINT_KINETIC_BOMB_IMPACT, x, y, ground_Z);
                         break;
                     }
@@ -1255,7 +1262,7 @@ class npc_kinetic_bomb : public CreatureScript
                 me->SetReactState(REACT_PASSIVE);
                 me->SetSpeed(MOVE_FLIGHT, IsHeroic() ? 0.3f : 0.15f, true);
                 me->GetPosition(_x, _y, _groundZ);
-                _groundZ = me->GetMap()->GetHeight(_x, _y, _groundZ, true, 500.0f);
+                _groundZ = me->GetMap()->GetHeight(me->GetPhaseMask(), _x, _y, _groundZ, true, 500.0f);
             }
 
             void DoAction(int32 const action)
