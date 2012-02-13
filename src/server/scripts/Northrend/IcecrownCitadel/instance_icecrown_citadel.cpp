@@ -280,9 +280,13 @@ class instance_icecrown_citadel : public InstanceMapScript
                         break;
                     case NPC_SPINESTALKER:
                         SpinestalkerGUID = creature->GetGUID();
+                        if (!creature->isDead())
+                            ++FrostwyrmCount;
                         break;
                     case NPC_RIMEFANG:
                         RimefangGUID = creature->GetGUID();
+                        if (!creature->isDead())
+                            ++FrostwyrmCount;
                         break;
                     case NPC_THE_LICH_KING:
                         TheLichKingGUID = creature->GetGUID();
@@ -646,7 +650,6 @@ class instance_icecrown_citadel : public InstanceMapScript
                         {
                             case DONE:
                                 DoRespawnGameObject(DeathbringersCacheGUID, 7*DAY);
-                                break;
                             case NOT_STARTED:
                                 if (GameObject* teleporter = instance->GetGameObject(SaurfangTeleportGUID))
                                 {
