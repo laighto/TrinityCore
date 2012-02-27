@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2012 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2011 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -40,42 +40,6 @@ Warden::~Warden()
     delete _module;
     _module = NULL;
     _initialized = false;
-}
-
-void Warden::Init(WorldSession* /*session*/, BigNumber* /*k*/)
-{
-    ASSERT(false);
-}
-
-ClientWardenModule* Warden::GetModuleForClient()
-{
-    ASSERT(false);
-    return NULL;
-}
-
-void Warden::InitializeModule()
-{
-    ASSERT(false);
-}
-
-void Warden::RequestHash()
-{
-    ASSERT(false);
-}
-
-void Warden::HandleHashResult(ByteBuffer& /*buff*/)
-{
-    ASSERT(false);
-}
-
-void Warden::RequestData()
-{
-    ASSERT(false);
-}
-
-void Warden::HandleData(ByteBuffer& /*buff*/)
-{
-    ASSERT(false);
 }
 
 void Warden::SendModuleToClient()
@@ -239,7 +203,7 @@ void WorldSession::HandleWardenDataOpcode(WorldPacket& recvData)
     _warden->DecryptData(const_cast<uint8*>(recvData.contents()), recvData.size());
     uint8 opcode;
     recvData >> opcode;
-    sLog->outDebug(LOG_FILTER_WARDEN, "Got packet, opcode %02X, size %u", opcode, recvData.size());
+    sLog->outDebug(LOG_FILTER_WARDEN, "Got packet, opcode %02X, size %u", opcode, uint32(recvData.size()));
     recvData.hexlike();
 
     switch(opcode)
@@ -264,7 +228,7 @@ void WorldSession::HandleWardenDataOpcode(WorldPacket& recvData)
             sLog->outDebug(LOG_FILTER_WARDEN, "NYI WARDEN_CMSG_MODULE_FAILED received!");
             break;
         default:
-            sLog->outDebug(LOG_FILTER_WARDEN, "Got unknown warden opcode %02X of size %u.", opcode, recvData.size() - 1);
+            sLog->outDebug(LOG_FILTER_WARDEN, "Got unknown warden opcode %02X of size %u.", opcode, uint32(recvData.size() - 1));
             break;
     }
 }

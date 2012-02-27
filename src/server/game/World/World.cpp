@@ -76,6 +76,7 @@
 #include "Channel.h"
 #include "WardenCheckMgr.h"
 #include "Warden.h"
+#include "CalendarMgr.h"
 #include "OutdoorPvPWG.h"
 #include "AnticheatMgr.h"
 
@@ -1629,6 +1630,9 @@ void World::SetInitialWorldSettings()
     sLog->outString("Loading Creature Formations...");
     FormationMgr::LoadCreatureFormations();
 
+    sLog->outString("Loading World States...");              // must be loaded before battleground, outdoor PvP and conditions
+    LoadWorldStates();
+
     sLog->outString("Loading Conditions...");
     sConditionMgr->LoadConditions();
 
@@ -1695,6 +1699,9 @@ void World::SetInitialWorldSettings()
     sLog->outString("Loading SmartAI scripts...");
     sSmartScriptMgr->LoadSmartAIFromDB();
 
+    sLog->outString("Loading Calendar data...");
+    sCalendarMgr->LoadFromDB();
+
     ///- Initialize game time and timers
     sLog->outString("Initialize game time and timers");
     m_gameTime = time(NULL);
@@ -1756,9 +1763,6 @@ void World::SetInitialWorldSettings()
 
     sTicketMgr->Initialize();
 
-    sLog->outString("Loading World States...");              // must be loaded before battleground and outdoor PvP
-    LoadWorldStates();
-
     ///- Initialize Battlegrounds
     sLog->outString("Starting Battleground System");
     sBattlegroundMgr->CreateInitialBattlegrounds();
@@ -1777,6 +1781,9 @@ void World::SetInitialWorldSettings()
     ///- Initialize Warden
     sLog->outString("Loading Warden Checks..." );
     sWardenCheckMgr->LoadWardenChecks();
+
+    sLog->outString("Loading Warden Action Overrides..." );
+    sWardenCheckMgr->LoadWardenOverrides();
 
     sLog->outString("Deleting expired bans...");
     LoginDatabase.Execute("DELETE FROM ip_banned WHERE unbandate <= UNIX_TIMESTAMP() AND unbandate<>bandate");
