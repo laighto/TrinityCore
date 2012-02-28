@@ -44,9 +44,9 @@ INSERT INTO `outdoorpvp_template` (`TypeId`, `ScriptName`, `comment`) VALUES
 /* Teleport WG SPELLs*/
 DELETE FROM `spell_target_position` WHERE id IN ('59096', '58632', '58633');
 INSERT INTO `spell_target_position` (`id`, `target_map`, `target_position_x`, `target_position_y`, `target_position_z`, `target_orientation`) VALUES
-('59096', '571', '5325.06', '2843.36', '409.285', '3.20278'),
-('58632', '571', '5097.79', '2180.29', '365.61', '2.41'),
-('58633', '571', '5026.80', '3676.69', '362.58', '3.94');
+('59096', '571', '4561.58', '2835.33', '389.79', '0.34'),
+('58632', '571', '5025.71', '3673.41', '362.687', '0'),
+('58633', '571', '5094.67', '2170.33', '365.601', '0');
 
 /* Defender's Portal Activate Proper Spell */
 DELETE FROM `spell_linked_spell` WHERE spell_trigger=54640;
