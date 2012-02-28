@@ -310,6 +310,7 @@ class boss_valithria_dreamwalker : public CreatureScript
                 _over75PercentTalkDone = false;
                 _justDied = false;
                 _done = false;
+                _instance->SetBossState(DATA_VALITHRIA_DREAMWALKER, NOT_STARTED);
             }
 
             void AttackStart(Unit* /*target*/)
@@ -397,7 +398,7 @@ class boss_valithria_dreamwalker : public CreatureScript
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     me->DespawnOrUnsummon(4000);
                    // if (Creature* lichKing = ObjectAccessor::GetCreature(*me, _instance->GetData64(DATA_VALITHRIA_LICH_KING)))
-                   //     lichKing->CastSpell(lichKing, SPELL_SPAWN_CHEST, false);
+                   //     lichKing->CastSpell(lichKing, SPELL_SPAWN_CHEST, false); 
 
                     if (Creature* trigger = ObjectAccessor::GetCreature(*me, _instance->GetData64(DATA_VALITHRIA_TRIGGER)))
                         me->Kill(trigger);
@@ -615,6 +616,7 @@ class npc_the_lich_king_controller : public CreatureScript
             {
                 Talk(SAY_LICH_KING_INTRO);
                 me->setActive(true);
+                _instance->SetBossState(DATA_VALITHRIA_DREAMWALKER, IN_PROGRESS);
             }
 
             void JustSummoned(Creature* summon)
