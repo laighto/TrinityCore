@@ -735,6 +735,7 @@ class boss_sister_svalna : public CreatureScript
             {
                 _Reset();
                 me->SetReactState(REACT_DEFENSIVE);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_IMMUNE_TO_PC);
                 _isEventInProgress = false;
             }
 
@@ -797,6 +798,7 @@ class boss_sister_svalna : public CreatureScript
                 _JustReachedHome();
                 me->SetReactState(REACT_PASSIVE);
                 me->SetFlying(false);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_IMMUNE_TO_PC);
             }
 
             void DoAction(int32 const action)
@@ -887,6 +889,7 @@ class boss_sister_svalna : public CreatureScript
                         case EVENT_SVALNA_RESURRECT:
                             Talk(SAY_SVALNA_RESURRECT_CAPTAINS);
                             me->CastSpell(me, SPELL_REVIVE_CHAMPION, false);
+                            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_IMMUNE_TO_PC);
                             break;
                         case EVENT_SVALNA_COMBAT:
                             me->SetReactState(REACT_DEFENSIVE);
@@ -1939,14 +1942,16 @@ class spell_svalna_revive_champion : public SpellScriptLoader
                 Creature* caster = GetCaster()->ToCreature();
                 if (!caster)
                     return;
-
+                
+                caster->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_IMMUNE_TO_PC);
+                
                 Position pos;
                 caster->GetPosition(&pos);
                 caster->GetNearPosition(pos, 5.0f, 0.0f);
                 pos.m_positionZ = caster->GetBaseMap()->GetHeight(caster->GetPhaseMask(), pos.GetPositionX(), pos.GetPositionY(), pos.GetPositionZ(), true, 20.0f);
                 pos.m_positionZ += 0.05f;
                 caster->SetHomePosition(pos);
-                caster->GetMotionMaster()->MovePoint(POINT_LAND, pos);
+                //caster->GetMotionMaster()->MovePoint(POINT_LAND, pos);
             }
 
             void Register()
