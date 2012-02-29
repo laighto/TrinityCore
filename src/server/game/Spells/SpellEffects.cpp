@@ -799,7 +799,8 @@ void Spell::EffectDummy(SpellEffIndex effIndex)
                 }
             }
             break;
-        case SPELLFAMILY_DEATHKNIGHT:            switch (m_spellInfo->Id)
+        case SPELLFAMILY_DEATHKNIGHT:
+            switch (m_spellInfo->Id)
             {
                 case 46584: // Raise Dead
                     if (m_caster->GetTypeId() != TYPEID_PLAYER)
@@ -3550,8 +3551,10 @@ void Spell::EffectWeaponDmg(SpellEffIndex effIndex)
             }
             // Rune Strike
             if (m_spellInfo->SpellFamilyFlags[1] & 0x20000000)
+            {
                 m_damage += int32(m_caster->GetTotalAttackPowerValue(BASE_ATTACK) * 0.15f);
-
+                break;
+            }
             break;
         }
     }

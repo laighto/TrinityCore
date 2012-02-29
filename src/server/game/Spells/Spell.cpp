@@ -2998,7 +2998,8 @@ struct ChainHealingOrder : public std::binary_function<const Unit*, const Unit*,
     }
 };
 
-void Spell::prepare(SpellCastTargets const* targets, AuraEffect const* triggeredByAura){
+void Spell::prepare(SpellCastTargets const* targets, AuraEffect const* triggeredByAura)
+{
     if (m_CastItem)
         m_castItemGUID = m_CastItem->GetGUID();
     else
@@ -4910,7 +4911,7 @@ SpellCastResult Spell::CheckCast(bool strict)
     // those spells may have incorrect target entries or not filled at all (for example 15332)
     // such spells when learned are not targeting anyone using targeting system, they should apply directly to caster instead
     // also, such casts shouldn't be sent to client
-    if (!((m_spellInfo->Attributes & SPELL_ATTR0_PASSIVE) && !m_targets.GetUnitTarget() || m_targets.GetUnitTarget() == m_caster) || m_caster->isSummon())
+    if (!((m_spellInfo->Attributes & SPELL_ATTR0_PASSIVE) && (!m_targets.GetUnitTarget() || m_targets.GetUnitTarget() == m_caster) || m_caster->isSummon()))
     {
         // Check explicit target for m_originalCaster - todo: get rid of such workarounds
         SpellCastResult castResult = m_spellInfo->CheckExplicitTarget(m_originalCaster ? m_originalCaster : m_caster, m_targets.GetObjectTarget(), m_targets.GetItemTarget());
@@ -5230,6 +5231,7 @@ SpellCastResult Spell::CheckCast(bool strict)
 
                 if (!dispelAura)
                     return SPELL_FAILED_NOTHING_TO_DISPEL;
+
                 break;
             }
             case SPELL_EFFECT_POWER_BURN:

@@ -1661,7 +1661,7 @@ void Aura::HandleAuraSpecificMods(AuraApplication const* aurApp, Unit* caster, b
             // Enrage
             if ((GetSpellInfo()->SpellFamilyFlags[0] & 0x80000) && GetSpellInfo()->SpellIconID == 961)
             {
-                if (target->HasAura(70726)) // Druid T10 Feral 4P Bonus
+                if (target->HasAura(70726)) // Item - Druid T10 Feral 4P Bonus
                 {
                     if (apply)
                         target->CastSpell(target, 70725, true);
