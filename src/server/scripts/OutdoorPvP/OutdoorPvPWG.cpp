@@ -1057,6 +1057,21 @@ bool OutdoorPvPWG::UpdateCreatureInfo(Creature *creature)
             {
                 creature->SetVisible(false);
                 creature->setFaction(35);
+
+                // Prevent from hiding
+                switch (entry)
+                {
+                    case 30560: // The RP-GG
+                    case 27852: // This creature is neded for spell_target in workshops while building siege machines
+                    case 27869: // Wintergrasp Detection Unit
+                    case 23472: // World Trigger (Large AOI, Not Immune PC/NPC)
+                    {
+                        creature->SetPhaseMask(1, true);
+                        creature->RestoreFaction();
+                        creature->SetVisible(true);
+                    }
+                    break;
+                }
             } else {
                 creature->RestoreFaction();
                 creature->SetVisible(true);
@@ -1104,7 +1119,7 @@ bool OutdoorPvPWG::UpdateCreatureInfo(Creature *creature)
         case CREATURE_GUARD:
         case CREATURE_SPECIAL:
         {
-            //TDB users comment this block if your guards doesn't spawn by pairs A+H at fortress
+            //TDB users comment this block if your guards doesn't spawned by pairs A+H at fortress
             if (creature->GetAreaId()==4575)
             {
                 switch (entry)
