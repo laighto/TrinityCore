@@ -1128,18 +1128,30 @@ bool OutdoorPvPWG::UpdateCreatureInfo(Creature *creature)
                     case 32308://Alliance guard
                     {
                         if (getDefenderTeam() == TEAM_ALLIANCE)
+                        {
                             creature->SetPhaseMask(1, true);
+                            creature->SetVisible(true);
+                        }
                         else 
+                        {
                             creature->SetPhaseMask(2, true);
+                            creature->SetVisible(false);
+                        }
                         break;
                     }
                     case 30739://Horde champion
                     case 32307://Horde guard
                     {
                         if (getDefenderTeam() == TEAM_ALLIANCE)
+                        {
                             creature->SetPhaseMask(2, true);
+                            creature->SetVisible(false);
+                        }
                         else 
+                        {
                             creature->SetPhaseMask(1, true);
+                            creature->SetVisible(true);
+                        }
                         break;
                     }
                 }
