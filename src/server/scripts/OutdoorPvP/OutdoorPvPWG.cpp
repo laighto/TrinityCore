@@ -1193,7 +1193,9 @@ bool OutdoorPvPWG::UpdateQuestGiverPosition(uint32 guid, Creature *creature)
         {
             creature->CombatStop(true);
             creature->getHostileRefManager().deleteReferences();
+            creature->AI()->EnterEvadeMode();
         }
+
         creature->SetHomePosition(pos);
         if (creature->GetEntry() != 30400 || creature->GetEntry() != 30499)
             creature->SetReactState(REACT_AGGRESSIVE);
