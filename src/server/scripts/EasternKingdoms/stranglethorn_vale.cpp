@@ -115,7 +115,6 @@ public:
             DoMeleeAttackIfReady();
         }
     };
-
 };
 
 const Position allyPositions[3] =
