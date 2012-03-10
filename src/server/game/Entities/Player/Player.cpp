@@ -11559,7 +11559,7 @@ InventoryResult Player::CanBankItem(uint8 bag, uint8 slot, ItemPosCountVec &dest
 
     uint32 count = pItem->GetCount();
 
-    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  CanBankItem bag = %u, slot = %u, item = %u, count = %u", bag, slot, pItem->GetEntry(), pItem->GetCount());
+    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: CanBankItem bag = %u, slot = %u, item = %u, count = %u", bag, slot, pItem->GetEntry(), pItem->GetCount());
     ItemTemplate const* pProto = pItem->GetTemplate();
     if (!pProto)
         return swap ? EQUIP_ERR_ITEMS_CANT_BE_SWAPPED : EQUIP_ERR_ITEM_NOT_FOUND;
@@ -11743,7 +11743,7 @@ InventoryResult Player::CanUseItem(Item* pItem, bool not_loading) const
 {
     if (pItem)
     {
-        sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  CanUseItem item = %u", pItem->GetEntry());
+        sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: CanUseItem item = %u", pItem->GetEntry());
 
         if (!isAlive() && not_loading)
             return EQUIP_ERR_YOU_ARE_DEAD;
@@ -11926,7 +11926,7 @@ InventoryResult Player::CanRollForItemInLFG(ItemTemplate const* proto, WorldObje
 
 InventoryResult Player::CanUseAmmo(uint32 item) const
 {
-    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  CanUseAmmo item = %u", item);
+    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: CanUseAmmo item = %u", item);
     if (!isAlive())
         return EQUIP_ERR_YOU_ARE_DEAD;
     //if (isStunned())
@@ -12072,7 +12072,7 @@ Item* Player::_StoreItem(uint16 pos, Item* pItem, uint32 count, bool clone, bool
     uint8 bag = pos >> 8;
     uint8 slot = pos & 255;
 
-    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  StoreItem bag = %u, slot = %u, item = %u, count = %u, guid = %u", bag, slot, pItem->GetEntry(), count, pItem->GetGUIDLow());
+    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: StoreItem bag = %u, slot = %u, item = %u, count = %u, guid = %u", bag, slot, pItem->GetEntry(), count, pItem->GetGUIDLow());
 
     Item* pItem2 = GetItemByPos(bag, slot);
 
@@ -12328,7 +12328,7 @@ void Player::VisualizeItem(uint8 slot, Item* pItem)
     if (pItem->GetTemplate()->Bonding == BIND_WHEN_EQUIPED || pItem->GetTemplate()->Bonding == BIND_WHEN_PICKED_UP || pItem->GetTemplate()->Bonding == BIND_QUEST_ITEM)
         pItem->SetBinding(true);
 
-    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  EquipItem slot = %u, item = %u", slot, pItem->GetEntry());
+    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: EquipItem slot = %u, item = %u", slot, pItem->GetEntry());
 
     m_items[slot] = pItem;
     SetUInt64Value(PLAYER_FIELD_INV_SLOT_HEAD + (slot * 2), pItem->GetGUID());
@@ -12353,7 +12353,7 @@ void Player::RemoveItem(uint8 bag, uint8 slot, bool update)
     Item* pItem = GetItemByPos(bag, slot);
     if (pItem)
     {
-        sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  RemoveItem bag = %u, slot = %u, item = %u", bag, slot, pItem->GetEntry());
+        sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: RemoveItem bag = %u, slot = %u, item = %u", bag, slot, pItem->GetEntry());
 
         RemoveEnchantmentDurations(pItem);
         RemoveItemDurations(pItem);
@@ -12472,7 +12472,7 @@ void Player::DestroyItem(uint8 bag, uint8 slot, bool update)
     Item* pItem = GetItemByPos(bag, slot);
     if (pItem)
     {
-        sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  DestroyItem bag = %u, slot = %u, item = %u", bag, slot, pItem->GetEntry());
+        sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: DestroyItem bag = %u, slot = %u, item = %u", bag, slot, pItem->GetEntry());
         // Also remove all contained items if the item is a bag.
         // This if () prevents item saving crashes if the condition for a bag to be empty before being destroyed was bypassed somehow.
         if (pItem->IsNotEmptyBag())
@@ -12563,7 +12563,7 @@ void Player::DestroyItem(uint8 bag, uint8 slot, bool update)
 
 void Player::DestroyItemCount(uint32 item, uint32 count, bool update, bool unequip_check)
 {
-    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  DestroyItemCount item = %u, count = %u", item, count);
+    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: DestroyItemCount item = %u, count = %u", item, count);
     uint32 remcount = 0;
 
     // in inventory
@@ -12692,7 +12692,7 @@ void Player::DestroyItemCount(uint32 item, uint32 count, bool update, bool unequ
 
 void Player::DestroyZoneLimitedItem(bool update, uint32 new_zone)
 {
-    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  DestroyZoneLimitedItem in map %u and area %u", GetMapId(), new_zone);
+    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: DestroyZoneLimitedItem in map %u and area %u", GetMapId(), new_zone);
 
     // in inventory
     for (uint8 i = INVENTORY_SLOT_ITEM_START; i < INVENTORY_SLOT_ITEM_END; i++)
@@ -12724,7 +12724,7 @@ void Player::DestroyConjuredItems(bool update)
 {
     // used when entering arena
     // destroys all conjured items
-    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  DestroyConjuredItems");
+    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: DestroyConjuredItems");
 
     // in inventory
     for (uint8 i = INVENTORY_SLOT_ITEM_START; i < INVENTORY_SLOT_ITEM_END; i++)
@@ -12775,7 +12775,7 @@ void Player::DestroyItemCount(Item* pItem, uint32 &count, bool update)
     if (!pItem)
         return;
 
-    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  DestroyItemCount item (GUID: %u, Entry: %u) count = %u", pItem->GetGUIDLow(), pItem->GetEntry(), count);
+    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: DestroyItemCount item (GUID: %u, Entry: %u) count = %u", pItem->GetGUIDLow(), pItem->GetEntry(), count);
 
     if (pItem->GetCount() <= count)
     {
@@ -12838,7 +12838,7 @@ void Player::SplitItem(uint16 src, uint16 dst, uint32 count)
             return;
     }
 
-    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  SplitItem bag = %u, slot = %u, item = %u, count = %u", dstbag, dstslot, pSrcItem->GetEntry(), count);
+    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: SplitItem bag = %u, slot = %u, item = %u, count = %u", dstbag, dstslot, pSrcItem->GetEntry(), count);
     Item* pNewItem = pSrcItem->CloneItem(count, this);
     if (!pNewItem)
     {
@@ -12923,7 +12923,7 @@ void Player::SwapItem(uint16 src, uint16 dst)
     if (!pSrcItem)
         return;
 
-    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  SwapItem bag = %u, slot = %u, item = %u", dstbag, dstslot, pSrcItem->GetEntry());
+    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: SwapItem bag = %u, slot = %u, item = %u", dstbag, dstslot, pSrcItem->GetEntry());
 
     if (!isAlive())
     {
@@ -12953,7 +12953,7 @@ void Player::SwapItem(uint16 src, uint16 dst)
     }
 
     // prevent put equipped/bank bag in self
-    if (IsBagPos (src) && srcslot == dstbag)
+    if (IsBagPos(src) && srcslot == dstbag)
     {
         SendEquipError(EQUIP_ERR_NONEMPTY_BAG_OVER_OTHER_BAG, pSrcItem, pDstItem);
         return;
@@ -13011,7 +13011,7 @@ void Player::SwapItem(uint16 src, uint16 dst)
             if (IsBankPos(src))
                 ItemAddedQuestCheck(pSrcItem->GetEntry(), pSrcItem->GetCount());
         }
-        else if (IsBankPos (dst))
+        else if (IsBankPos(dst))
         {
             ItemPosCountVec dest;
             InventoryResult msg = CanBankItem(dstbag, dstslot, dest, pSrcItem, false);
@@ -13025,7 +13025,7 @@ void Player::SwapItem(uint16 src, uint16 dst)
             BankItem(dest, pSrcItem, true);
             ItemRemovedQuestCheck(pSrcItem->GetEntry(), pSrcItem->GetCount());
         }
-        else if (IsEquipmentPos (dst))
+        else if (IsEquipmentPos(dst))
         {
             uint16 dest;
             InventoryResult msg = CanEquipItem(dstslot, dest, pSrcItem, false);
@@ -13051,9 +13051,9 @@ void Player::SwapItem(uint16 src, uint16 dst)
         uint16 eDest = 0;
         if (IsInventoryPos(dst))
             msg = CanStoreItem(dstbag, dstslot, sDest, pSrcItem, false);
-        else if (IsBankPos (dst))
+        else if (IsBankPos(dst))
             msg = CanBankItem(dstbag, dstslot, sDest, pSrcItem, false);
-        else if (IsEquipmentPos (dst))
+        else if (IsEquipmentPos(dst))
             msg = CanEquipItem(dstslot, eDest, pSrcItem, false);
         else
             return;
@@ -13067,9 +13067,9 @@ void Player::SwapItem(uint16 src, uint16 dst)
 
                 if (IsInventoryPos(dst))
                     StoreItem(sDest, pSrcItem, true);
-                else if (IsBankPos (dst))
+                else if (IsBankPos(dst))
                     BankItem(sDest, pSrcItem, true);
-                else if (IsEquipmentPos (dst))
+                else if (IsEquipmentPos(dst))
                 {
                     EquipItem(eDest, pSrcItem, true);
                     AutoUnequipOffhandIfNeed();
@@ -13299,7 +13299,7 @@ void Player::AddItemToBuyBackSlot(Item* pItem)
         }
 
         RemoveItemFromBuyBackSlot(slot, true);
-        sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  AddItemToBuyBackSlot item = %u, slot = %u", pItem->GetEntry(), slot);
+        sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: AddItemToBuyBackSlot item = %u, slot = %u", pItem->GetEntry(), slot);
 
         m_items[slot] = pItem;
         time_t base = time(NULL);
@@ -13307,8 +13307,8 @@ void Player::AddItemToBuyBackSlot(Item* pItem)
         uint32 eslot = slot - BUYBACK_SLOT_START;
 
         SetUInt64Value(PLAYER_FIELD_VENDORBUYBACK_SLOT_1 + (eslot * 2), pItem->GetGUID());
-        if (ItemTemplate const* pProto = pItem->GetTemplate())
-            SetUInt32Value(PLAYER_FIELD_BUYBACK_PRICE_1 + eslot, pProto->SellPrice * pItem->GetCount());
+        if (ItemTemplate const* proto = pItem->GetTemplate())
+            SetUInt32Value(PLAYER_FIELD_BUYBACK_PRICE_1 + eslot, proto->SellPrice * pItem->GetCount());
         else
             SetUInt32Value(PLAYER_FIELD_BUYBACK_PRICE_1 + eslot, 0);
         SetUInt32Value(PLAYER_FIELD_BUYBACK_TIMESTAMP_1 + eslot, (uint32)etime);
@@ -13321,7 +13321,7 @@ void Player::AddItemToBuyBackSlot(Item* pItem)
 
 Item* Player::GetItemFromBuyBackSlot(uint32 slot)
 {
-    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  GetItemFromBuyBackSlot slot = %u", slot);
+    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: GetItemFromBuyBackSlot slot = %u", slot);
     if (slot >= BUYBACK_SLOT_START && slot < BUYBACK_SLOT_END)
         return m_items[slot];
     return NULL;
@@ -13329,7 +13329,7 @@ Item* Player::GetItemFromBuyBackSlot(uint32 slot)
 
 void Player::RemoveItemFromBuyBackSlot(uint32 slot, bool del)
 {
-    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE:  RemoveItemFromBuyBackSlot slot = %u", slot);
+    sLog->outDebug(LOG_FILTER_PLAYER_ITEMS, "STORAGE: RemoveItemFromBuyBackSlot slot = %u", slot);
     if (slot >= BUYBACK_SLOT_START && slot < BUYBACK_SLOT_END)
     {
         Item* pItem = m_items[slot];
@@ -14393,7 +14393,7 @@ void Player::OnGossipSelect(WorldObject* source, uint32 gossipListId, uint32 men
                 return;
             }
 
-            GetSession()->SendBattlegGroundList(guid, bgTypeId);
+            GetSession()->SendBattleGroundList(guid, bgTypeId);
             break;
         }
     }
@@ -14448,15 +14448,15 @@ uint32 Player::GetDefaultGossipMenuForSource(WorldObject* source)
 
 void Player::PrepareQuestMenu(uint64 guid)
 {
-    QuestRelationBounds pObjectQR;
-    QuestRelationBounds pObjectQIR;
+    QuestRelationBounds objectQR;
+    QuestRelationBounds objectQIR;
 
     // pets also can have quests
     Creature* creature = ObjectAccessor::GetCreatureOrPetOrVehicle(*this, guid);
     if (creature)
     {
-        pObjectQR  = sObjectMgr->GetCreatureQuestRelationBounds(creature->GetEntry());
-        pObjectQIR = sObjectMgr->GetCreatureQuestInvolvedRelationBounds(creature->GetEntry());
+        objectQR  = sObjectMgr->GetCreatureQuestRelationBounds(creature->GetEntry());
+        objectQIR = sObjectMgr->GetCreatureQuestInvolvedRelationBounds(creature->GetEntry());
     }
     else
     {
@@ -14467,8 +14467,8 @@ void Player::PrepareQuestMenu(uint64 guid)
         GameObject* pGameObject = _map->GetGameObject(guid);
         if (pGameObject)
         {
-            pObjectQR  = sObjectMgr->GetGOQuestRelationBounds(pGameObject->GetEntry());
-            pObjectQIR = sObjectMgr->GetGOQuestInvolvedRelationBounds(pGameObject->GetEntry());
+            objectQR  = sObjectMgr->GetGOQuestRelationBounds(pGameObject->GetEntry());
+            objectQIR = sObjectMgr->GetGOQuestInvolvedRelationBounds(pGameObject->GetEntry());
         }
         else
             return;
@@ -14477,7 +14477,7 @@ void Player::PrepareQuestMenu(uint64 guid)
     QuestMenu &qm = PlayerTalkClass->GetQuestMenu();
     qm.ClearMenu();
 
-    for (QuestRelations::const_iterator i = pObjectQIR.first; i != pObjectQIR.second; ++i)
+    for (QuestRelations::const_iterator i = objectQIR.first; i != objectQIR.second; ++i)
     {
         uint32 quest_id = i->second;
         QuestStatus status = GetQuestStatus(quest_id);
@@ -14489,7 +14489,7 @@ void Player::PrepareQuestMenu(uint64 guid)
         //    qm.AddMenuItem(quest_id, 2);
     }
 
-    for (QuestRelations::const_iterator i = pObjectQR.first; i != pObjectQR.second; ++i)
+    for (QuestRelations::const_iterator i = objectQR.first; i != objectQR.second; ++i)
     {
         uint32 quest_id = i->second;
         Quest const* quest = sObjectMgr->GetQuestTemplate(quest_id);
@@ -14609,11 +14609,11 @@ bool Player::IsActiveQuest(uint32 quest_id) const
 
 Quest const* Player::GetNextQuest(uint64 guid, Quest const* quest)
 {
-    QuestRelationBounds pObjectQR;
+    QuestRelationBounds objectQR;
 
     Creature* creature = ObjectAccessor::GetCreatureOrPetOrVehicle(*this, guid);
     if (creature)
-        pObjectQR  = sObjectMgr->GetCreatureQuestRelationBounds(creature->GetEntry());
+        objectQR  = sObjectMgr->GetCreatureQuestRelationBounds(creature->GetEntry());
     else
     {
         //we should obtain map pointer from GetMap() in 99% of cases. Special case
@@ -14622,13 +14622,13 @@ Quest const* Player::GetNextQuest(uint64 guid, Quest const* quest)
         ASSERT(_map);
         GameObject* pGameObject = _map->GetGameObject(guid);
         if (pGameObject)
-            pObjectQR  = sObjectMgr->GetGOQuestRelationBounds(pGameObject->GetEntry());
+            objectQR  = sObjectMgr->GetGOQuestRelationBounds(pGameObject->GetEntry());
         else
             return NULL;
     }
 
     uint32 nextQuestID = quest->GetNextQuestInChain();
-    for (QuestRelations::const_iterator itr = pObjectQR.first; itr != pObjectQR.second; ++itr)
+    for (QuestRelations::const_iterator itr = objectQR.first; itr != objectQR.second; ++itr)
     {
         if (itr->second == nextQuestID)
             return sObjectMgr->GetQuestTemplate(nextQuestID);
@@ -23133,7 +23133,7 @@ void Player::UpdateUnderwaterState(Map* m, float x, float y, float z)
 
         if (liquid && liquid->SpellId)
         {
-            if (res & (LIQUID_MAP_UNDER_WATER | LIQUID_MAP_IN_WATER | LIQUID_MAP_WATER_WALK))
+            if (res & (LIQUID_MAP_UNDER_WATER | LIQUID_MAP_IN_WATER))
                 CastSpell(this, liquid->SpellId, this);
             else
                 RemoveAurasDueToSpell(liquid->SpellId);
