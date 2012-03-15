@@ -2840,6 +2840,9 @@ void World::ResetRandomBG()
     PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_BATTLEGROUND_RANDOM);
     CharacterDatabase.Execute(stmt);
 
+    // Reset pool quest save - fix duplicates at NPC gossip
+    QueryResult result = CharacterDatabase.Query("DELETE FROM pool_quest_save");
+
     for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
         if (itr->second->GetPlayer())
             itr->second->GetPlayer()->SetRandomWinner(false);
