@@ -330,8 +330,13 @@ class boss_valithria_dreamwalker : public CreatureScript
                     _events.ScheduleEvent(EVENT_BERSERK, 420000);
             }
 
-            void HealReceived(Unit* /*healer*/, uint32& heal)
+            void HealReceived(Unit* healer, uint32& heal)
             {
+                if (!me->hasLootRecipient())
+                    me->SetLootRecipient(healer);
+
+                me->LowerPlayerDamageReq(heal);
+
                 if (_instance->GetBossState(DATA_VALITHRIA_DREAMWALKER) != IN_PROGRESS)
                 {
                     heal = 0;
@@ -397,8 +402,8 @@ class boss_valithria_dreamwalker : public CreatureScript
                     me->SetDisplayId(11686);
                     me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                     me->DespawnOrUnsummon(4000);
-                   // if (Creature* lichKing = ObjectAccessor::GetCreature(*me, _instance->GetData64(DATA_VALITHRIA_LICH_KING)))
-                   //     lichKing->CastSpell(lichKing, SPELL_SPAWN_CHEST, false); 
+                    if (Creature* lichKing = ObjectAccessor::GetCreature(*me, _instance->GetData64(DATA_VALITHRIA_LICH_KING)))
+                        lichKing->CastSpell(lichKing, SPELL_SPAWN_CHEST, false); 
 
                     if (Creature* trigger = ObjectAccessor::GetCreature(*me, _instance->GetData64(DATA_VALITHRIA_TRIGGER)))
                         me->Kill(trigger);

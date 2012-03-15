@@ -403,12 +403,12 @@ class instance_icecrown_citadel : public InstanceMapScript
                     case GO_DEATHBRINGER_S_CACHE_25H:
                         DeathbringersCacheGUID = go->GetGUID();
                         break;
-                    case GO_VALITHRIA_S_CACHE_10N:
+                  /*  case GO_VALITHRIA_S_CACHE_10N:
                     case GO_VALITHRIA_S_CACHE_25N:
                     case GO_VALITHRIA_S_CACHE_10H:
                     case GO_VALITHRIA_S_CACHE_25H:
                         ValithriasCacheGUID = go->GetGUID();
-                        break;
+                        break;  */
                     case GO_SCOURGE_TRANSPORTER_SAURFANG:
                         SaurfangTeleportGUID = go->GetGUID();
                         break;
@@ -458,6 +458,14 @@ class instance_icecrown_citadel : public InstanceMapScript
                         break;
                     case GO_DRINK_ME:
                         PutricideTableGUID = go->GetGUID();
+                        break;
+                    case GO_CACHE_OF_THE_DREAMWALKER_10N:
+                    case GO_CACHE_OF_THE_DREAMWALKER_25N:
+                    case GO_CACHE_OF_THE_DREAMWALKER_10H:
+                    case GO_CACHE_OF_THE_DREAMWALKER_25H:
+                        if (Creature* valithria = instance->GetCreature(ValithriaDreamwalkerGUID))
+                            go->SetLootRecipient(valithria->GetLootRecipient());
+                        go->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED | GO_FLAG_NOT_SELECTABLE | GO_FLAG_NODESPAWN);
                         break;
                     case GO_ARTHAS_PLATFORM:
                         // this enables movement at The Frozen Throne, when printed this value is 0.000000f
@@ -645,7 +653,13 @@ class instance_icecrown_citadel : public InstanceMapScript
                         switch (state)
                         {
                             case DONE:
-                                DoRespawnGameObject(DeathbringersCacheGUID, 7*DAY);
+                                if (GameObject* loot = instance->GetGameObject(DeathbringersCacheGUID))
+                                {
+                                    if (Creature* deathbringer = instance->GetCreature(DeathbringerSaurfangGUID))
+                                        loot->SetLootRecipient(deathbringer->GetLootRecipient());
+                                    loot->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED | GO_FLAG_NOT_SELECTABLE | GO_FLAG_NODESPAWN);
+                                }
+                                // no break
                             case NOT_STARTED:
                                 if (GameObject* teleporter = instance->GetGameObject(SaurfangTeleportGUID))
                                 {
@@ -721,8 +735,8 @@ class instance_icecrown_citadel : public InstanceMapScript
                         if (state == DONE && sPoolMgr->IsSpawnedObject<Quest>(WeeklyQuestData[8].questId[instance->GetSpawnMode() & 1]))
                             instance->SummonCreature(NPC_VALITHRIA_DREAMWALKER_QUEST, ValithriaSpawnPos);
 
-                        if (state == DONE)
-                            DoRespawnGameObject(ValithriasCacheGUID, 7*DAY);
+                        /*if (state == DONE)
+                            DoRespawnGameObject(ValithriasCacheGUID, 7*DAY);*/
                         break;
                     case DATA_SINDRAGOSA:
                         HandleGameObject(FrostwingSigilGUID, state != DONE);

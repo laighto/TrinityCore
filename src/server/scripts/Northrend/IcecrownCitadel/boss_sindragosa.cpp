@@ -198,8 +198,8 @@ class boss_sindragosa : public CreatureScript
 
                 if (instance->GetData(DATA_SINDRAGOSA_FROSTWYRMS) != 255)
                 {
-                    me->SetFlying(true);
-                    me->SetLevitate(true);
+                    me->SetCanFly(true);
+                    me->SetDisableGravity(true);
                 }
             }
 
@@ -245,8 +245,8 @@ class boss_sindragosa : public CreatureScript
             {
                 BossAI::JustReachedHome();
                 instance->SetBossState(DATA_SINDRAGOSA, FAIL);
-                me->SetFlying(false);
-                me->SetLevitate(false);
+                me->SetCanFly(false);
+                me->SetDisableGravity(false);
 
                 summons.DespawnAll();
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
@@ -282,7 +282,7 @@ class boss_sindragosa : public CreatureScript
 
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
-                    me->RemoveUnitMovementFlag(MOVEMENTFLAG_LEVITATING);
+                    me->RemoveUnitMovementFlag(MOVEMENTFLAG_DISABLE_GRAVITY);
                 }
             }
 
@@ -302,8 +302,8 @@ class boss_sindragosa : public CreatureScript
                 {
                     case POINT_FROSTWYRM_LAND:
                         me->setActive(false);
-                        me->SetFlying(false);
-                        me->SetLevitate(false);
+                        me->SetCanFly(false);
+                        me->SetDisableGravity(false);
                         me->SetHomePosition(SindragosaLandPos);
                         me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                         me->SetSpeed(MOVE_FLIGHT, 2.0f);
@@ -321,8 +321,8 @@ class boss_sindragosa : public CreatureScript
                         events.ScheduleEvent(EVENT_FROST_BOMB, 10000);
                         break;
                     case POINT_LAND:
-                        me->SetFlying(false);
-                        me->SetLevitate(false);
+                        me->SetCanFly(false);
+                        me->SetDisableGravity(false);
                         me->SetReactState(REACT_DEFENSIVE);
                         if (me->GetMotionMaster()->GetCurrentMovementGeneratorType() == POINT_MOTION_TYPE)
                             me->GetMotionMaster()->MovementExpired();
@@ -454,10 +454,10 @@ class boss_sindragosa : public CreatureScript
                         {
                             _isInAirPhase = true;
                             Talk(SAY_AIR_PHASE);
+                            me->SetCanFly(true);
+                            me->SetDisableGravity(true);
                             me->RemoveAurasDueToSpell(SPELL_FROST_AURA);
                             instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_FROST_AURA);
-                            me->SetFlying(true);
-                            me->SetLevitate(true);
                             me->SetReactState(REACT_PASSIVE);
                             Position pos;
                             pos.Relocate(me);
@@ -648,8 +648,8 @@ class npc_spinestalker : public CreatureScript
 
                 if (_instance->GetData(DATA_SPINESTALKER) != 255)
                 {
-                    me->SetFlying(true);
-                    me->SetLevitate(true);
+                    me->SetCanFly(true);
+                    me->SetDisableGravity(true);
                 }
             }
 
@@ -691,8 +691,8 @@ class npc_spinestalker : public CreatureScript
                     return;
 
                 me->setActive(false);
-                me->SetFlying(false);
-                me->SetLevitate(false);
+                me->SetCanFly(false);
+                me->SetDisableGravity(false);
                 me->SetHomePosition(SpinestalkerLandPos);
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
             }
@@ -773,8 +773,8 @@ class npc_rimefang : public CreatureScript
 
                 if (_instance->GetData(DATA_RIMEFANG) != 255)
                 {
-                    me->SetFlying(true);
-                    me->SetLevitate(true);
+                    me->SetCanFly(true);
+                    me->SetDisableGravity(true);
                 }
             }
 
@@ -816,8 +816,8 @@ class npc_rimefang : public CreatureScript
                     return;
 
                 me->setActive(false);
-                me->SetFlying(false);
-                me->SetLevitate(false);
+                me->SetCanFly(false);
+                me->SetDisableGravity(false);
                 me->SetHomePosition(RimefangLandPos);
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
             }
@@ -850,7 +850,7 @@ class npc_rimefang : public CreatureScript
                             _icyBlastCounter = RAID_MODE<uint8>(5, 7, 6, 8);
                             me->SetReactState(REACT_PASSIVE);
                             me->AttackStop();
-                            me->SetFlying(true);
+                            me->SetCanFly(true);
                             me->GetMotionMaster()->MovePoint(POINT_FROSTWYRM_FLY_IN, RimefangFlyPos);
                             float moveTime = me->GetExactDist(&RimefangFlyPos)/(me->GetSpeed(MOVE_FLIGHT)*0.001f);
                             _events.ScheduleEvent(EVENT_ICY_BLAST, uint64(moveTime) + urand(60000, 70000));
@@ -871,7 +871,7 @@ class npc_rimefang : public CreatureScript
                             {
                                 me->SetReactState(REACT_DEFENSIVE);
                                 AttackStart(victim);
-                                me->SetFlying(false);
+                                me->SetCanFly(false);
                             }
                             break;
                         default:

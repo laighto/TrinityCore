@@ -136,9 +136,9 @@ public:
 
     struct npc_disciple_of_naralexAI : public npc_escortAI
     {
-        npc_disciple_of_naralexAI(Creature* c) : npc_escortAI(c)
+        npc_disciple_of_naralexAI(Creature* creature) : npc_escortAI(creature)
         {
-            instance = c->GetInstanceScript();
+            instance = creature->GetInstanceScript();
             eventTimer = 0;
             currentEvent = 0;
             eventProgress = 0;
@@ -315,7 +315,7 @@ public:
                                 eventTimer = 3000;
                                 if (Creature* naralex = instance->instance->GetCreature(instance->GetData64(DATA_NARALEX)))
                                 {
-                                    AchievementEntry const* AchievWC = GetAchievementStore()->LookupEntry(ACHIEVEMENT_WAILING_CAVERNS);
+                                    AchievementEntry const* AchievWC = sAchievementStore.LookupEntry(ACHIEVEMENT_WAILING_CAVERNS);
                                     if (AchievWC)
                                     {
                                         Map* map = me->GetMap();
