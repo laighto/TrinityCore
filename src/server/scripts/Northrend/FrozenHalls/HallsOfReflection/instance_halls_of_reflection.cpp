@@ -333,8 +333,12 @@ public:
                     if (GetData(DATA_FALRIC_EVENT) == DONE)
                         events.ScheduleEvent(EVENT_NEXT_WAVE, 10000);
                     else if (Creature* pFalric = instance->GetCreature(uiFalric))
+                    {
+                        pFalric->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_IMMUNE_TO_PC);
+
                         if (pFalric->AI())
                             pFalric->AI()->DoAction(ACTION_ENTER_COMBAT);
+                    }
                     break;
                 case 6:
                 case 7:
@@ -346,8 +350,12 @@ public:
                 case 10:
                     if (GetData(DATA_MARWYN_EVENT) != DONE) // wave should not have been started if DONE. Check anyway to avoid bug exploit!
                         if (Creature* pMarwyn = instance->GetCreature(uiMarwyn))
+                        {
+                            pMarwyn->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_IMMUNE_TO_PC);
+
                             if (pMarwyn->AI())
                                 pMarwyn->AI()->DoAction(ACTION_ENTER_COMBAT);
+                        }
                     break;
             }
         }
