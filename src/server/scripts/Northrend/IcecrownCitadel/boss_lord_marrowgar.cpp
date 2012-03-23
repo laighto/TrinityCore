@@ -123,7 +123,6 @@ class boss_lord_marrowgar : public CreatureScript
                 Talk(SAY_DEATH);
 
                 _JustDied();
-                instance->SetBossState(DATA_LORD_MARROWGAR, DONE);
             }
 
             void JustReachedHome()

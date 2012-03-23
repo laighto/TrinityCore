@@ -127,7 +127,6 @@ class instance_icecrown_citadel : public InstanceMapScript
                 ValithriaDreamwalkerGUID = 0;
                 ValithriaLichKingGUID = 0;
                 ValithriaTriggerGUID = 0;
-                ValithriasCacheGUID = 0;
                 SindragosaGUID = 0;
                 SpinestalkerGUID = 0;
                 RimefangGUID = 0;
@@ -403,12 +402,6 @@ class instance_icecrown_citadel : public InstanceMapScript
                     case GO_DEATHBRINGER_S_CACHE_25H:
                         DeathbringersCacheGUID = go->GetGUID();
                         break;
-                  /*  case GO_VALITHRIA_S_CACHE_10N:
-                    case GO_VALITHRIA_S_CACHE_25N:
-                    case GO_VALITHRIA_S_CACHE_10H:
-                    case GO_VALITHRIA_S_CACHE_25H:
-                        ValithriasCacheGUID = go->GetGUID();
-                        break;  */
                     case GO_SCOURGE_TRANSPORTER_SAURFANG:
                         SaurfangTeleportGUID = go->GetGUID();
                         break;
@@ -734,9 +727,6 @@ class instance_icecrown_citadel : public InstanceMapScript
                     case DATA_VALITHRIA_DREAMWALKER:
                         if (state == DONE && sPoolMgr->IsSpawnedObject<Quest>(WeeklyQuestData[8].questId[instance->GetSpawnMode() & 1]))
                             instance->SummonCreature(NPC_VALITHRIA_DREAMWALKER_QUEST, ValithriaSpawnPos);
-
-                        /*if (state == DONE)
-                            DoRespawnGameObject(ValithriasCacheGUID, 7*DAY);*/
                         break;
                     case DATA_SINDRAGOSA:
                         HandleGameObject(FrostwingSigilGUID, state != DONE);
@@ -1283,7 +1273,6 @@ class instance_icecrown_citadel : public InstanceMapScript
             uint64 ValithriaDreamwalkerGUID;
             uint64 ValithriaLichKingGUID;
             uint64 ValithriaTriggerGUID;
-            uint64 ValithriasCacheGUID;
             uint64 SindragosaGUID;
             uint64 SpinestalkerGUID;
             uint64 RimefangGUID;

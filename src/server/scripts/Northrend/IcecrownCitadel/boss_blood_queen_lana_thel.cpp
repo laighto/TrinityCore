@@ -138,19 +138,6 @@ class boss_blood_queen_lana_thel : public CreatureScript
             {
             }
 
-            void Cleanup()
-            {
-                instance->DoRemoveAurasDueToSpellOnPlayers(ESSENCE_OF_BLOOD_QUEEN);
-                instance->DoRemoveAurasDueToSpellOnPlayers(ESSENCE_OF_BLOOD_QUEEN_PLR);
-                instance->DoRemoveAurasDueToSpellOnPlayers(FRENZIED_BLOODTHIRST);
-                instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_UNCONTROLLABLE_FRENZY);
-                instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_BLOOD_MIRROR_DAMAGE);
-                instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_BLOOD_MIRROR_VISUAL);
-                instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_BLOOD_MIRROR_DUMMY);
-                instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_DELIRIOUS_SLASH);
-                instance->DoRemoveAurasDueToSpellOnPlayers(SPELL_PACT_OF_THE_DARKFALLEN);
-            }
-
             void Reset()
             {
                 _Reset();
@@ -218,23 +205,6 @@ class boss_blood_queen_lana_thel : public CreatureScript
                         minchar->GetMotionMaster()->MoveCharge(4629.3711f, 2782.6089f, 401.5301f, SPEED_CHARGE/3.0f);
                     }
                 }
-
-                instance->SetBossState(DATA_BLOOD_QUEEN_LANA_THEL, DONE);
-                if (Is25ManRaid())
-                {
-                    int a = urand(0,2);
-                    if (a == 1)
-                    {
-                        Map *pMap = me->GetMap();
-                        InstanceMap::PlayerList const &PlayerList = pMap->GetPlayers();
-                        for (InstanceMap::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                        {
-                            if (i->getSource()->GetQuestStatus(24756) == QUEST_STATUS_INCOMPLETE)
-                                i->getSource()->CompleteQuest(24756);
-                        }
-                        //instance->DoCastSpellOnPlayers(72154); instance->DoCastSpellOnPlayers(72934);
-                    }
-                }
             }
 
             void DoAction(int32 const action)
@@ -281,7 +251,6 @@ class boss_blood_queen_lana_thel : public CreatureScript
                 _JustReachedHome();
                 Talk(SAY_WIPE);
                 instance->SetBossState(DATA_BLOOD_QUEEN_LANA_THEL, FAIL);
-                Cleanup();
             }
 
             void KilledUnit(Unit* victim)

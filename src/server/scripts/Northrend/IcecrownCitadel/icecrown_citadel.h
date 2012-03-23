@@ -335,10 +335,6 @@ enum GameObjectsIds
     GO_CACHE_OF_THE_DREAMWALKER_25N         = 202339,
     GO_CACHE_OF_THE_DREAMWALKER_10H         = 202338,
     GO_CACHE_OF_THE_DREAMWALKER_25H         = 202340,
-    GO_VALITHRIA_S_CACHE_10N                = 201959,
-    GO_VALITHRIA_S_CACHE_25N                = 202339,
-    GO_VALITHRIA_S_CACHE_10H                = 202338,
-    GO_VALITHRIA_S_CACHE_25H                = 202340,
 
     // Sindragosa
     GO_SINDRAGOSA_ENTRANCE_DOOR             = 201373,
@@ -361,9 +357,8 @@ enum GameObjectsIds
     GO_FROZEN_LAVAMAN                       = 202436,
     GO_LAVAMAN_PILLARS_CHAINED              = 202437,
     GO_LAVAMAN_PILLARS_UNCHAINED            = 202438,
-
-    BLOODWING_DOOR                          = 201920,
 };
+
 enum AchievementCriteriaIds
 {
     // Lord Marrowgar
@@ -505,7 +500,5 @@ CreatureAI* GetIcecrownCitadelAI(Creature* creature)
                 return new AI(creature);
     return NULL;
 }
-
-void TeleportPlayerToFrozenThrone(Player *player);
 
 #endif // ICECROWN_CITADEL_H_

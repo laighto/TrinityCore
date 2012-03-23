@@ -259,8 +259,6 @@ class boss_blood_council_controller : public CreatureScript
 
                 if (Creature* valanar = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_PRINCE_VALANAR_GUID)))
                     valanar->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-
-                instance->HandleGameObject(instance->GetData64(BLOODWING_DOOR), true);
             }
 
             void JustDied(Unit* killer)
@@ -280,7 +278,6 @@ class boss_blood_council_controller : public CreatureScript
                         killer->Kill(prince);
                     }
                 }
-                instance->SetBossState(DATA_BLOOD_PRINCE_COUNCIL, DONE);
             }
 
             void UpdateAI(uint32 const diff)
@@ -434,16 +431,12 @@ class boss_prince_keleseth_icc : public CreatureScript
             {
                 DoCast(me, SPELL_FEIGN_DEATH);
                 me->SetHealth(_spawnHealth);
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
             }
 
             void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
             {
                 if (spell->Id == SPELL_INVOCATION_OF_BLOOD_KELESETH)
                     DoAction(ACTION_CAST_INVOCATION);
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
             }
 
             void JustSummoned(Creature* summon)
@@ -662,8 +655,6 @@ class boss_prince_taldaram_icc : public CreatureScript
             {
                 DoCast(me, SPELL_FEIGN_DEATH);
                 me->SetHealth(_spawnHealth);
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
             }
 
             void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
@@ -869,7 +860,6 @@ class boss_prince_valanar_icc : public CreatureScript
 
                 Talk(SAY_VALANAR_DEATH);
                 instance->SendEncounterUnit(ENCOUNTER_FRAME_DISENGAGE, me);
-                instance->SetBossState(DATA_BLOOD_PRINCE_COUNCIL, DONE);
             }
 
             void JustReachedHome()
@@ -888,8 +878,6 @@ class boss_prince_valanar_icc : public CreatureScript
             {
                 DoCast(me, SPELL_FEIGN_DEATH);
                 me->SetHealth(_spawnHealth);
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
             }
 
             void JustSummoned(Creature* summon)

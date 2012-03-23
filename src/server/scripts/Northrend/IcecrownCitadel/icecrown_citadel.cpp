@@ -735,7 +735,6 @@ class boss_sister_svalna : public CreatureScript
             {
                 _Reset();
                 me->SetReactState(REACT_DEFENSIVE);
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_IMMUNE_TO_PC);
                 _isEventInProgress = false;
             }
 
@@ -1900,28 +1899,6 @@ class AliveCheck
         }
 };
 
-class TeleportToFrozenThrone : public BasicEvent
-{
-    public:
-        TeleportToFrozenThrone(Player *player, uint8 attempts): pPlayer(player), attemptsLeft(attempts) { }
-
-        bool Execute(uint64 /*eventTime*/, uint32 /*updateTime*/)
-        {
-            pPlayer->CastSpell(pPlayer, FROZEN_THRONE_TELEPORT, true);
-            if (--attemptsLeft)
-                pPlayer->m_Events.AddEvent(new TeleportToFrozenThrone(pPlayer, attemptsLeft), pPlayer->m_Events.CalculateTime(uint64(1500)));
-            return true;
-        }
-    private:
-        Player *pPlayer;
-        uint8 attemptsLeft;
-};
-
-void TeleportPlayerToFrozenThrone(Player *player)
-{
-    player->m_Events.AddEvent(new TeleportToFrozenThrone(player, 2), player->m_Events.CalculateTime(uint64(5000)));
-}
-
 class spell_svalna_revive_champion : public SpellScriptLoader
 {
     public:
@@ -1942,9 +1919,7 @@ class spell_svalna_revive_champion : public SpellScriptLoader
                 Creature* caster = GetCaster()->ToCreature();
                 if (!caster)
                     return;
-                
-                caster->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_IMMUNE_TO_PC);
-                
+
                 Position pos;
                 caster->GetPosition(&pos);
                 caster->GetNearPosition(pos, 5.0f, 0.0f);

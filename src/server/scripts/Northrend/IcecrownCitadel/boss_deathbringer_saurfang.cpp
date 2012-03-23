@@ -309,10 +309,9 @@ class boss_deathbringer_saurfang : public CreatureScript
 
             void JustDied(Unit* /*killer*/)
             {
-
                 instance->SetBossState(DATA_COLDFLAME_JETS, DONE);
                 instance->SetBossState(DATA_GUNSHIP_EVENT, DONE);
-                instance->SetBossState(DATA_DEATHBRINGER_SAURFANG, DONE);
+                //instance->SetBossState(DATA_DEATHBRINGER_SAURFANG, DONE);
             }
 
             void AttackStart(Unit* victim)
