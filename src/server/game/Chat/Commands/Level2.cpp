@@ -42,6 +42,7 @@
 #include "Transport.h"
 #include "TargetedMovementGenerator.h"                      // for HandleNpcUnFollowCommand
 #include "CreatureGroups.h"
+#include "ace/INET_Addr.h"
 #include "OutdoorPvPWG.h"
 
 //mute player for some times
@@ -176,7 +177,6 @@ bool ChatHandler::HandleItemMoveCommand(const char* args)
 {
     if (!*args)
         return false;
-    uint8 srcslot, dstslot;
 
     char* pParam1 = strtok((char*)args, " ");
     if (!pParam1)
@@ -186,8 +186,8 @@ bool ChatHandler::HandleItemMoveCommand(const char* args)
     if (!pParam2)
         return false;
 
-    srcslot = (uint8)atoi(pParam1);
-    dstslot = (uint8)atoi(pParam2);
+    uint8 srcslot = (uint8)atoi(pParam1);
+    uint8 dstslot = (uint8)atoi(pParam2);
 
     if (srcslot == dstslot)
         return true;
@@ -280,7 +280,6 @@ bool ChatHandler::HandlePInfoCommand(const char* args)
     uint32 areaId;
     uint32 phase = 0;
 
-
     // get additional information from Player object
     if (target)
     {
@@ -350,6 +349,20 @@ bool ChatHandler::HandlePInfoCommand(const char* args)
         {
             last_ip = fields[3].GetString();
             last_login = fields[4].GetString();
+
+            uint32 ip = inet_addr(last_ip.c_str());
+#if TRINITY_ENDIAN == BIGENDIAN
+            EndianConvertReverse(ip);
+#endif
+
+            if (QueryResult result2 = WorldDatabase.PQuery("SELECT c.country FROM ip2nationCountries c, ip2nation i WHERE "
+                                                         "i.ip < %u AND c.code = i.country ORDER BY i.ip DESC LIMIT 0,1", ip))
+            {
+                Field* fields2 = result2->Fetch();
+                last_ip.append(" (");
+                last_ip.append(fields2[0].GetString());
+                last_ip.append(")");
+            }
         }
         else
         {
@@ -757,7 +770,6 @@ bool ChatHandler::HandleLookupPlayerAccountCommand(const char* args)
 
 bool ChatHandler::HandleLookupPlayerEmailCommand(const char* args)
 {
-
     if (!*args)
         return false;
 
@@ -769,7 +781,7 @@ bool ChatHandler::HandleLookupPlayerEmailCommand(const char* args)
 
     QueryResult result = LoginDatabase.PQuery ("SELECT id, username FROM account WHERE email = '%s'", email.c_str ());
 
-    return LookupPlayerSearchCommand (result, limit);
+    return LookupPlayerSearchCommand(result, limit);
 }
 
 bool ChatHandler::LookupPlayerSearchCommand(QueryResult result, int32 limit)
