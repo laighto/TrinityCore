@@ -993,6 +993,11 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
 
             CAST_AI(SmartAI, me->AI())->SetDespawnTime(e.action.forceDespawn.delay + 1);//next tick
             CAST_AI(SmartAI, me->AI())->StartDespawn();
+
+            //Fix respawn point
+            if (me && !me->isDead())
+                me->Kill(me);
+
             break;
         }
         case SMART_ACTION_SET_INGAME_PHASE_MASK:
