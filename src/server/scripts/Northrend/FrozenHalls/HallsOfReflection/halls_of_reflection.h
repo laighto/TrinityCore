@@ -126,7 +126,7 @@ struct boss_horAI : ScriptedAI
     {
         summons.Summon(summoned);
 
-        if (Unit* target = summoned->SelectNearestTarget())
+        if (Unit* target = summoned->SelectNearestPlayer(1000))
         {
             if (summoned->AI())
                 summoned->AI()->AttackStart(target);
