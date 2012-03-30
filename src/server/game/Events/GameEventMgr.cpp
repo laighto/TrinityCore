@@ -80,7 +80,7 @@ uint32 GameEventMgr::NextCheck(uint16 entry) const
     if (mGameEvent[entry].state == GAMEEVENT_WORLD_CONDITIONS)
     {
         if (mGameEvent[entry].length)
-            return mGameEvent[entry].length * 60 ;
+            return mGameEvent[entry].length * 60;
         else
             return max_ge_check_delay;
     }
@@ -205,7 +205,7 @@ void GameEventMgr::LoadFromDB()
 {
     {
         uint32 oldMSTime = getMSTime();
-
+                                                //       1           2                           3                         4          5       6        7            8
         QueryResult result = WorldDatabase.Query("SELECT eventEntry, UNIX_TIMESTAMP(start_time), UNIX_TIMESTAMP(end_time), occurence, length, holiday, description, world_event FROM game_event");
         if (!result)
         {
@@ -220,7 +220,7 @@ void GameEventMgr::LoadFromDB()
         {
             Field* fields = result->Fetch();
 
-            uint16 event_id = fields[0].GetUInt8();
+            uint8 event_id = fields[0].GetUInt8();
             if (event_id == 0)
             {
                 sLog->outErrorDb("`game_event` game event entry 0 is reserved and can't be used.");
@@ -283,7 +283,7 @@ void GameEventMgr::LoadFromDB()
             {
                 Field* fields = result->Fetch();
 
-                uint16 event_id = fields[0].GetUInt8();
+                uint8 event_id = fields[0].GetUInt8();
 
                 if (event_id >= mGameEvent.size())
                 {
@@ -691,7 +691,7 @@ void GameEventMgr::LoadFromDB()
             {
                 Field* fields = result->Fetch();
 
-                uint16 event_id  = fields[0].GetUInt16();
+                uint16 event_id  = fields[0].GetUInt8();
                 uint32 condition = fields[1].GetUInt32();
 
                 if (event_id >= mGameEvent.size())
@@ -823,7 +823,7 @@ void GameEventMgr::LoadFromDB()
             {
                 Field* fields = result->Fetch();
 
-                int8 event_id  = fields[0].GetInt8();
+                uint8 event_id  = fields[0].GetUInt8();
 
                 if (event_id >= mGameEventVendors.size())
                 {
