@@ -12984,7 +12984,7 @@ void Unit::setDeathState(DeathState s)
         // remove aurastates allowing special moves
         ClearAllReactives();
         ClearDiminishings();
-        //GetMotionMaster()->Clear(false);
+        GetMotionMaster()->Clear(false);
         GetMotionMaster()->MoveIdle();
         StopMoving();
         DisableSpline();
