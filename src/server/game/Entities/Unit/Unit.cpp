@@ -12985,7 +12985,7 @@ void Unit::setDeathState(DeathState s)
         ClearAllReactives();
         ClearDiminishings();
 
-        if (!isPet() || (isPet() && IsInWorld()))
+        if (!isPet()/* || (isPet() && IsInWorld())*/)
         {
             // Only clear MotionMaster for non-pet entities OR if pet and in world
             // Fixes crash when:
@@ -12995,6 +12995,8 @@ void Unit::setDeathState(DeathState s)
             GetMotionMaster()->Clear(false);
             GetMotionMaster()->MoveIdle();
         }
+        else
+           GetMotionMaster()->MoveIdle();
 
         StopMoving();
         DisableSpline();
