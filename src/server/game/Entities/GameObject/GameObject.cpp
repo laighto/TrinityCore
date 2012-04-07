@@ -1847,7 +1847,7 @@ void GameObject::SetDestructibleState(GameObjectDestructibleState state, Player*
                 if (modelData->DamagedDisplayId)
                     modelId = modelData->DamagedDisplayId;
             //WG Temporary hack for Fortress towers when it cannot be damaged after been half damaged
-            if (m_goInfo->entry != 190378 && m_goInfo->entry != 190377 && m_goInfo->entry != 190373 && m_goInfo->entry != 190221)
+            //if (m_goInfo->entry != 190378 && m_goInfo->entry != 190377 && m_goInfo->entry != 190373 && m_goInfo->entry != 190221)
             SetDisplayId(modelId);
 
             if (setHealth)

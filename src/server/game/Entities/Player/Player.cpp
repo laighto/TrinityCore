@@ -4877,7 +4877,7 @@ void Player::DeleteFromDB(uint64 playerguid, uint32 accountId, bool updateRealmC
                                 }
 
                                 Item* pItem = NewItemOrBag(itemProto);
-                                if (!pItem->LoadFromDB(item_guidlow, MAKE_NEW_GUID(guid, 0, HIGHGUID_PLAYER), fields, item_template))
+                                if (!pItem->LoadFromDB(item_guidlow, MAKE_NEW_GUID(guid, 0, HIGHGUID_PLAYER), fields2, item_template))
                                 {
                                     pItem->FSetState(ITEM_REMOVED);
                                     pItem->SaveToDB(trans);              // it also deletes item object!
@@ -23819,7 +23819,7 @@ void Player::RestoreBaseRune(uint8 index)
     ConvertRune(index, GetBaseRune(index));
     SetRuneConvertAura(index, NULL);
     // Don't drop passive talents providing rune convertion
-    if (!aura || !aura->GetAuraType() || aura->GetAuraType() != SPELL_AURA_CONVERT_RUNE)
+    if (!aura || aura->GetAuraType() != SPELL_AURA_CONVERT_RUNE)
         return;
 
     for (uint8 i = 0; i < MAX_RUNES; ++i)

@@ -907,9 +907,6 @@ bool Guardian::InitStatsForLevel(uint8 petlevel)
 
     SetBonusDamage(0);
 
-    if (m_owner->GetTypeId() == TYPEID_PLAYER)
-        LoadCreaturesAddon(true);
-
     switch (petType)
     {
         case SUMMON_PET:
@@ -1056,6 +1053,9 @@ bool Guardian::InitStatsForLevel(uint8 petlevel)
             break;
         }
     }
+
+    if (m_owner->GetTypeId() == TYPEID_PLAYER)
+        LoadCreaturesAddon(true);
 
     UpdateAllStats();
 
