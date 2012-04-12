@@ -8618,16 +8618,6 @@ bool Unit::HandleProcTriggerSpell(Unit* victim, uint32 damage, AuraEffect* trigg
                 }
                 break;
             }
-            case SPELLFAMILY_ROGUE:
-            {
-               // Item - Rogue T10 2P Bonus
-                if (auraSpellInfo->Id == 70805)
-                {
-                    if (victim != this)
-                        return false;
-                }
-                break;
-            }
             case SPELLFAMILY_HUNTER:
             {
                 if (auraSpellInfo->SpellIconID == 3247)     // Piercing Shots
