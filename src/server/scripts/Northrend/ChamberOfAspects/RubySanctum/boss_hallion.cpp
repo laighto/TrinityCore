@@ -559,7 +559,7 @@ class boss_twilight_halion : public CreatureScript
                     pInstance->SetBossState(DATA_HALION,FAIL);
                 CAST_AI(boss_halion::boss_halionAI, pHalion->AI())->Reset();
                 pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_AURE_TWILIGHT);
-                me->ForcedDespawn(10);
+                me->DespawnOrUnsummon(10);
                 pInstance->DoRemoveAurasDueToSpellOnPlayers(SPELL_AURE_TWILIGHT);
             }
 
@@ -626,7 +626,7 @@ class npc_meteor_strike : public CreatureScript
                 events.Reset();
                 events.ScheduleEvent(EVENT_METEOR_DAMAGE, 7000);
                 events.ScheduleEvent(EVENT_METEOR_STRIKE, 1000);
-                me->ForcedDespawn(15000);
+                me->DespawnOrUnsummon(15000);
                 angle = (float)(urand(0,62)/10);
                 dist = 0;
                 count = 0;
@@ -693,7 +693,7 @@ class npc_spell_meteor_strike : public CreatureScript
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
                 me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 me->SetReactState(REACT_PASSIVE);
-                me->ForcedDespawn(10000);
+                me->DespawnOrUnsummon(10000);
             }
 
         };
@@ -720,7 +720,7 @@ class npc_meteor_flame : public CreatureScript
                 me->SetReactState(REACT_PASSIVE);
                 DoCast(me,SPELL_METEOR_FLAME);
  
-                me->ForcedDespawn(10000);
+                me->DespawnOrUnsummon(10000);
             }
         };
         
@@ -751,7 +751,7 @@ class npc_summon_halion : public CreatureScript
                 events.ScheduleEvent(EVENT_FIRE_PILLAR, 10000);
                 DoCast(me,SPELL_FIRE_PILLAR);
  
-                me->ForcedDespawn(20000);
+                me->DespawnOrUnsummon(20000);
             }
 
             void UpdateAI(const uint32 diff)
