@@ -1665,6 +1665,14 @@ void Player::Update(uint32 p_time)
         }
     }
 
+    // Fix Sum Of Enrage and trigger_spell Wrecking Crew (Enrage too)
+    if (HasAura(14204) && HasAura(57522))
+        RemoveAura(57522);
+
+    //Remove Mount When Used Dispersion (ShadowForm + Dispersion Mount Exploit)
+    if (HasAura(47585) && HasAuraType(SPELL_AURA_MOUNTED))
+        RemoveAurasByType(SPELL_AURA_MOUNTED);
+
     if (HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_RESTING))
     {
         if (roll_chance_i(3) && GetTimeInnEnter() > 0)      // freeze update
