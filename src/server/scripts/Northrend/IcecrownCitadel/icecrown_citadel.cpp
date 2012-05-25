@@ -1619,6 +1619,13 @@ class npc_frostwing_vrykul : public CreatureScript
             {
             }
 
+            //Block spells in YTDB creature addon
+            void Reset()
+            {
+                me->RemoveAura(65985);
+                me->RemoveAura(29266);
+            }
+
             bool CanAIAttack(Unit const* target) const
             {
                 // do not see targets inside Frostwing Halls when we are not there
