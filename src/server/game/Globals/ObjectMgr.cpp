@@ -2114,9 +2114,9 @@ void ObjectMgr::LoadItemTemplates()
     //                                            118             119             120             121             122            123              124            125
                                              "TotemCategory, socketColor_1, socketContent_1, socketColor_2, socketContent_2, socketColor_3, socketContent_3, socketBonus, "
     //                                            126                 127                     128            129            130            131         132         133
-                                             "GemProperties, RequiredDisenchantSkill, ArmorDamageModifier, Duration, ItemLimitCategory, HolidayId, ScriptName, DisenchantID, "
+                                             "GemProperties, RequiredDisenchantSkill, ArmorDamageModifier, duration, ItemLimitCategory, HolidayId, ScriptName, DisenchantID, "
     //                                           134        135            136
-                                             "FoodType, minMoneyLoot, maxMoneyLoot FROM item_template");
+                                             "FoodType, minMoneyLoot, maxMoneyLoot, flagsCustom FROM item_template");
 
     if (!result)
     {
@@ -2233,7 +2233,7 @@ void ObjectMgr::LoadItemTemplates()
         itemTemplate.GemProperties           = fields[126].GetUInt32();
         itemTemplate.RequiredDisenchantSkill = uint32(fields[127].GetInt16());
         itemTemplate.ArmorDamageModifier     = fields[128].GetFloat();
-        itemTemplate.Duration                = fields[129].GetInt32();
+        itemTemplate.Duration                = fields[129].GetUInt32();
         itemTemplate.ItemLimitCategory       = uint32(fields[130].GetInt16());
         itemTemplate.HolidayId               = fields[131].GetUInt32();
         itemTemplate.ScriptId                = sObjectMgr->GetScriptId(fields[132].GetCString());
@@ -2241,6 +2241,7 @@ void ObjectMgr::LoadItemTemplates()
         itemTemplate.FoodType                = uint32(fields[134].GetUInt8());
         itemTemplate.MinMoneyLoot            = fields[135].GetUInt32();
         itemTemplate.MaxMoneyLoot            = fields[136].GetUInt32();
+        itemTemplate.FlagsCu                 = fields[137].GetUInt32();
 
         // Checks
 
@@ -2648,6 +2649,12 @@ void ObjectMgr::LoadItemTemplates()
             itemTemplate.HolidayId = 0;
         }
 
+        if (itemTemplate.FlagsCu & ITEM_FLAGS_CU_DURATION_REAL_TIME && !itemTemplate.Duration)
+        {
+            sLog->outErrorDb("Item (Entry %u) has flag ITEM_FLAGS_CU_DURATION_REAL_TIME but it does not have duration limit", entry);
+            itemTemplate.FlagsCu &= ~ITEM_FLAGS_CU_DURATION_REAL_TIME;
+        }
+
         ++count;
     }
     while (result->NextRow());
@@ -2734,7 +2741,7 @@ void ObjectMgr::LoadItemSetNames()
             if (setEntry->itemId[i])
                 itemSetItems.insert(setEntry->itemId[i]);
     }
-    
+
     //                                                  0        1            2
     QueryResult result = WorldDatabase.Query("SELECT `entry`, `name`, `InventoryType` FROM `item_set_names`");
 
