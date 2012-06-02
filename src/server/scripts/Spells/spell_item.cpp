@@ -2060,6 +2060,48 @@ public:
     }
 };
 
+class spell_toss_your_luck : public SpellScriptLoader
+{
+    public:
+        spell_toss_your_luck() : SpellScriptLoader("spell_toss_your_luck") { }
+
+
+        class spell_toss_your_luck_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_toss_your_luck_SpellScript);
+            uint8 side;
+
+            void HandleScript(SpellEffIndex effIndex)
+            {
+                Player* caster = GetCaster()->ToPlayer();
+                ChatHandler handler = ChatHandler(caster);
+                handler.PSendSysMessage("%s roughly rolled the Titanium Seal of Dalaran",caster->GetName());
+
+                side = rand() % 2;
+
+                switch(side)
+                {
+                    case 0:
+                        handler.PSendSysMessage("%s gets heads!",caster->GetName());
+                        break;
+                    case 1:
+                        handler.PSendSysMessage("%s gets tails!",caster->GetName());
+                        break;
+                }
+            }
+
+            void Register()
+            {
+                OnEffectHitTarget += SpellEffectFn(spell_toss_your_luck_SpellScript::HandleScript, EFFECT_0, SPELL_EFFECT_SCRIPT_EFFECT);
+            }
+        };
+
+        SpellScript* GetSpellScript() const
+        {
+            return new spell_toss_your_luck_SpellScript();
+        }
+};
+
 void AddSC_item_spell_scripts()
 {
     // 23074 Arcanite Dragonling
@@ -2113,4 +2155,5 @@ void AddSC_item_spell_scripts()
     new spell_item_chicken_cover();
     new spell_item_muisek_vessel();
     new spell_item_greatmothers_soulcatcher();
+    new spell_toss_your_luck();
 }
