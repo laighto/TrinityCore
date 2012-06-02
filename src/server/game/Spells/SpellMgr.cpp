@@ -3713,6 +3713,9 @@ void SpellMgr::LoadDbcDataCorrections()
            case 24259: // Felhunter's Spell Lock
                 spellInfo->speed = 80;
                 break;
+           case 49206: // Summon Gargoyle
+               spellInfo->DurationIndex = 587;
+               break;
             default:
                 break;
         }
