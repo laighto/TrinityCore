@@ -212,7 +212,7 @@ public:
             MemoryGUID = 0;
             creature->SetReactState(REACT_PASSIVE);
             creature->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-            creature->RestoreFaction();
+            creature->SetFaction(14);
         }
 
         InstanceScript* instance;
