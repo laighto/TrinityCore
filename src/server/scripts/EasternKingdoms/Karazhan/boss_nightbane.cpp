@@ -127,9 +127,9 @@ public:
 
             if (instance)
             {
-                if (instance->GetData(TYPE_NIGHTBANE) == DONE || instance->GetData(TYPE_NIGHTBANE) == IN_PROGRESS)
+              /*  if (instance->GetData(TYPE_NIGHTBANE) == DONE || instance->GetData(TYPE_NIGHTBANE) == IN_PROGRESS)
                     me->DisappearAndDie();
-                else
+                else*/
                     instance->SetData(TYPE_NIGHTBANE, NOT_STARTED);
             }
 
@@ -256,14 +256,14 @@ public:
 
         void UpdateAI(const uint32 diff)
         {
-            /* The timer for this was never setup apparently, not sure if the code works properly:
+            // The timer for this was never setup apparently, not sure if the code works properly:
             if (WaitTimer <= diff)
             {
                 if (Intro)
                 {
                     if (MovePhase >= 7)
                     {
-                        me->SetLevitate(false);
+                        me->SetCanFly(false);
                         me->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
                         me->GetMotionMaster()->MovePoint(8, IntroWay[7][0], IntroWay[7][1], IntroWay[7][2]);
                     }
@@ -277,7 +277,7 @@ public:
                 {
                     if (MovePhase >= 7)
                     {
-                        me->SetLevitate(false);
+                        me->SetCanFly(false);
                         me->HandleEmoteCommand(EMOTE_ONESHOT_LAND);
                         me->GetMotionMaster()->MovePoint(8, IntroWay[7][0], IntroWay[7][1], IntroWay[7][2]);
                     }
@@ -290,7 +290,7 @@ public:
 
                 WaitTimer = 0;
             } else WaitTimer -= diff;
-            */
+            
 
             if (!UpdateVictim())
                 return;
