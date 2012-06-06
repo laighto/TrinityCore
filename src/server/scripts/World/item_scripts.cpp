@@ -410,6 +410,20 @@ public:
     }
 };
 
+class mass_revive : public ItemScript
+{
+public:
+    mass_revive() : ItemScript("mass_revive") { }
+
+    bool OnUse(Player* player, Item* /*item*/, SpellCastTargets const & /*targets*/)
+    {
+        ChatHandler handler = ChatHandler(player);
+        //player->CastSpell(player, 72429, NULL);
+        handler.PSendSysMessage("Rise my minions!");
+        return false;
+    }
+};
+
 void AddSC_item_scripts()
 {
     new item_only_for_flight();
@@ -423,4 +437,5 @@ void AddSC_item_scripts()
     new item_dehta_trap_smasher();
     new item_trident_of_nazjan();
     new item_captured_frog();
+    new mass_revive();
 }
