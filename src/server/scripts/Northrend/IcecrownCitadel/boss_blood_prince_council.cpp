@@ -397,7 +397,7 @@ class boss_prince_keleseth_icc : public CreatureScript
                     DoZoneInCombat(controller);
 
                 events.ScheduleEvent(EVENT_BERSERK, 600000);
-                events.ScheduleEvent(EVENT_SHADOW_RESONANCE, urand(10000, 15000));
+                events.ScheduleEvent(EVENT_SHADOW_RESONANCE, urand(20000, 30000));
                 events.ScheduleEvent(EVENT_SHADOW_LANCE, 2000);
 
                 if (IsHeroic())
@@ -542,14 +542,14 @@ class boss_prince_keleseth_icc : public CreatureScript
                         case EVENT_SHADOW_RESONANCE:
                             Talk(SAY_KELESETH_SPECIAL);
                             DoCast(me, SPELL_SHADOW_RESONANCE);
-                            events.ScheduleEvent(EVENT_SHADOW_RESONANCE, urand(10000, 15000));
+                            events.ScheduleEvent(EVENT_SHADOW_RESONANCE, urand(20000, 30000));
                             break;
                         case EVENT_SHADOW_LANCE:
                             if (_isEmpowered)
                                 DoCastVictim(SPELL_EMPOWERED_SHADOW_LANCE);
                             else
                                 DoCastVictim(SPELL_SHADOW_LANCE);
-                            events.ScheduleEvent(EVENT_SHADOW_LANCE, 2000);
+                            events.ScheduleEvent(EVENT_SHADOW_LANCE, urand(5000, 10000));
                             break;
                         default:
                             break;
