@@ -3720,9 +3720,6 @@ void SpellMgr::LoadDbcDataCorrections()
            case 49206: // Summon Gargoyle
                spellInfo->DurationIndex = 587;
                break;
-           case 29142: // Eyesore Blaster
-               spellInfo->EffectBasePoints[0] = 100;
-               break;
             default:
                 break;
         }
