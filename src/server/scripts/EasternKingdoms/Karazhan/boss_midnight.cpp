@@ -96,6 +96,20 @@ public:
                 pMidnight->Kill(pMidnight);
         }
 
+        void JustReachedHome()
+        {
+            ResetTimer = 0;
+            Unit* pMidnight = Unit::GetUnit(*me, Midnight);
+            if (pMidnight)
+            {
+                pMidnight->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                pMidnight->SetVisible(true);
+            }
+            Midnight = 0;
+            me->SetVisible(false);
+            me->Kill(me);
+        }
+
         void UpdateAI(const uint32 diff);
 
         void SpellHit(Unit* /*source*/, const SpellInfo* spell)
@@ -160,7 +174,7 @@ public:
                     pAttumen->AI()->AttackStart(me->getVictim());
                     SetMidnight(pAttumen, me->GetGUID());
                     DoScriptText(RAND(SAY_APPEAR1, SAY_APPEAR2, SAY_APPEAR3), pAttumen);
-                }
+                 }
             }
             else if (Phase == 2 && HealthBelowPct(25))
             {
@@ -230,7 +244,7 @@ public:
 
 void boss_attumen::boss_attumenAI::UpdateAI(const uint32 diff)
 {
-    if (ResetTimer)
+    /*if (ResetTimer)
     {
         if (ResetTimer <= diff)
         {
@@ -245,7 +259,7 @@ void boss_attumen::boss_attumenAI::UpdateAI(const uint32 diff)
             me->SetVisible(false);
             me->Kill(me);
         } else ResetTimer -= diff;
-    }
+    }*/
 
     //Return since we have no target
     if (!UpdateVictim())
