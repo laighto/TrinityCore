@@ -2075,17 +2075,16 @@ class spell_toss_your_luck : public SpellScriptLoader
             {
                 Player* caster = GetCaster()->ToPlayer();
                 ChatHandler handler = ChatHandler(caster);
-                handler.PSendSysMessage("%s roughly rolled the Titanium Seal of Dalaran",caster->GetName());
-
+                handler.PSendSysMessage(604761, caster->GetName());
                 side = rand() % 2;
 
                 switch(side)
                 {
                     case 0:
-                        handler.PSendSysMessage("%s gets heads!",caster->GetName());
+                        handler.PSendSysMessage(604762, caster->GetName());
                         break;
                     case 1:
-                        handler.PSendSysMessage("%s gets tails!",caster->GetName());
+                        handler.PSendSysMessage(604763, caster->GetName());
                         break;
                 }
             }
