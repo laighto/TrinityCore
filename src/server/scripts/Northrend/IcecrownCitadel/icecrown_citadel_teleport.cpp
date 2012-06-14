@@ -20,6 +20,7 @@
 #include "InstanceScript.h"
 #include "icecrown_citadel.h"
 #include "Spell.h"
+#include "World.h"
 
 #define GOSSIP_SENDER_ICC_PORT 631
 
@@ -95,6 +96,8 @@ class at_frozen_throne_teleport : public AreaTriggerScript
                     instance->GetBossState(DATA_BLOOD_QUEEN_LANA_THEL) == DONE &&
                     instance->GetBossState(DATA_SINDRAGOSA) == DONE &&
                     instance->GetBossState(DATA_THE_LICH_KING) != IN_PROGRESS)
+                    player->CastSpell(player, FROZEN_THRONE_TELEPORT, true);
+                else if (sWorld->getBoolConfig(CONFIG_ALLOW_LICH_KING_ENTRANCE) == 1)
                     player->CastSpell(player, FROZEN_THRONE_TELEPORT, true);
 
             return true;

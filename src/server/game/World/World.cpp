@@ -1038,7 +1038,7 @@ void World::LoadConfigSettings(bool reload)
     m_bool_configs[CONFIG_ARENA_2v2_TEAM_ENABLE]                     = ConfigMgr::GetBoolDefault("Arena.2v2.Team", true);
     m_bool_configs[CONFIG_ARENA_3v3_TEAM_ENABLE]                     = ConfigMgr::GetBoolDefault("Arena.3v3.Team", true);
     m_bool_configs[CONFIG_ARENA_5v5_TEAM_ENABLE]                     = ConfigMgr::GetBoolDefault("Arena.5v5.Team", true);
-
+    m_bool_configs[CONFIG_ALLOW_LICH_KING_ENTRANCE]                  = ConfigMgr::GetBoolDefault("AllowEnterRaidFrozenThrone", false);
     m_bool_configs[CONFIG_OFFHAND_CHECK_AT_SPELL_UNLEARN]            = ConfigMgr::GetBoolDefault("OffhandCheckAtSpellUnlearn", true);
 
     if (int32 clientCacheId = ConfigMgr::GetIntDefault("ClientCacheVersion", 0))
