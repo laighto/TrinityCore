@@ -3400,7 +3400,7 @@ void AuraEffect::HandleModStateImmunityMask(AuraApplication const* aurApp, uint8
         case 96:
         case 1615:
         {
-            if (GetBaseAmount())
+            if (GetAmount())
             {
                 mechanic_immunity_list = (1 << MECHANIC_SNARE) | (1 << MECHANIC_ROOT)
                     | (1 << MECHANIC_FEAR) | (1 << MECHANIC_STUN)
@@ -3509,7 +3509,7 @@ void AuraEffect::HandleModStateImmunityMask(AuraApplication const* aurApp, uint8
         }
         case 1630:
         {
-            if (!GetBaseAmount())
+            if (!GetAmount())
             {
                 target->ApplySpellImmune(GetId(), IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, apply);
                 aura_immunity_list.push_back(SPELL_AURA_MOD_TAUNT);
@@ -3547,7 +3547,7 @@ void AuraEffect::HandleModStateImmunityMask(AuraApplication const* aurApp, uint8
         case 477:
         case 1733:
         {
-            if (!GetBaseAmount())
+            if (!GetAmount())
             {
                 mechanic_immunity_list = (1 << MECHANIC_SNARE) | (1 << MECHANIC_ROOT)
                     | (1 << MECHANIC_FEAR) | (1 << MECHANIC_STUN)
@@ -3581,7 +3581,7 @@ void AuraEffect::HandleModStateImmunityMask(AuraApplication const* aurApp, uint8
         }
         case 878:
         {
-            if (GetBaseAmount() == 1)
+            if (GetAmount() == 1)
             {
                 mechanic_immunity_list = (1 << MECHANIC_SNARE) | (1 << MECHANIC_STUN)
                     | (1 << MECHANIC_DISORIENTED) | (1 << MECHANIC_FREEZE);
