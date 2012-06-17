@@ -162,7 +162,7 @@ class boss_lord_marrowgar : public CreatureScript
                     switch (eventId)
                     {
                         case EVENT_BONE_SPIKE_GRAVEYARD:
-                            if (IsHeroic() || !me->HasAura(SPELL_BONE_STORM))
+                            if (/*IsHeroic() || */ !me->HasAura(SPELL_BONE_STORM))
                                 DoCast(me, SPELL_BONE_SPIKE_GRAVEYARD);
                             events.ScheduleEvent(EVENT_BONE_SPIKE_GRAVEYARD, urand(15000, 20000), EVENT_GROUP_SPECIAL);
                             break;

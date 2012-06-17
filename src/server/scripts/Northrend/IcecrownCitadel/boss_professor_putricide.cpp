@@ -244,7 +244,7 @@ class boss_professor_putricide : public CreatureScript
 
                 me->setActive(true);
                 events.Reset();
-                events.ScheduleEvent(EVENT_BERSERK, 600000);
+                events.ScheduleEvent(EVENT_BERSERK, 660000);
                 events.ScheduleEvent(EVENT_SLIME_PUDDLE, 10000);
                 events.ScheduleEvent(EVENT_UNSTABLE_EXPERIMENT, urand(25000, 30000));
                 if (IsHeroic())

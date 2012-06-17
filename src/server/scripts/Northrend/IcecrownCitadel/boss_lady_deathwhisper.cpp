@@ -517,9 +517,9 @@ class boss_lady_deathwhisper : public CreatureScript
                 Summon(SummonEntries[addIndex], SummonPositions[addIndex * 3 + 2]);
                 if (Is25ManRaid())
                 {
-                    Summon(SummonEntries[addIndexOther], SummonPositions[addIndexOther * 3]);
-                    Summon(SummonEntries[addIndex], SummonPositions[addIndexOther * 3 + 1]);
-                    Summon(SummonEntries[addIndexOther], SummonPositions[addIndexOther * 3 + 2]);
+                    Summon(SummonEntries[addIndexOther], SummonPositions[addIndexOther * 2]);
+                    Summon(SummonEntries[addIndex], SummonPositions[addIndexOther * 2 + 1]);
+                    Summon(SummonEntries[addIndexOther], SummonPositions[addIndexOther * 2 + 2]);
                     Summon(SummonEntries[urand(0, 1)], SummonPositions[6]);
                 }
 
@@ -532,9 +532,9 @@ class boss_lady_deathwhisper : public CreatureScript
                 if (Is25ManRaid())
                 {
                     uint8 addIndex = _waveCounter & 1;
-                    Summon(SummonEntries[addIndex], SummonPositions[addIndex * 3]);
-                    Summon(SummonEntries[addIndex ^ 1], SummonPositions[addIndex * 3 + 1]);
-                    Summon(SummonEntries[addIndex], SummonPositions[addIndex * 3+ 2]);
+                    Summon(SummonEntries[addIndex], SummonPositions[addIndex * 2]);
+                    Summon(SummonEntries[addIndex ^ 1], SummonPositions[addIndex * 2 + 1]);
+                    Summon(SummonEntries[addIndex], SummonPositions[addIndex * 2+ 2]);
                 }
                 else
                     Summon(SummonEntries[urand(0, 1)], SummonPositions[6]);
