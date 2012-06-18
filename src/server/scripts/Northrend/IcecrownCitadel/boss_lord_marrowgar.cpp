@@ -102,7 +102,7 @@ class boss_lord_marrowgar : public CreatureScript
                 me->RemoveAurasDueToSpell(SPELL_BONE_STORM);
                 me->RemoveAurasDueToSpell(SPELL_BERSERK);
                 events.ScheduleEvent(EVENT_ENABLE_BONE_SLICE, 10000);
-                events.ScheduleEvent(EVENT_BONE_SPIKE_GRAVEYARD, urand(10000, 15000), EVENT_GROUP_SPECIAL);
+                events.ScheduleEvent(EVENT_BONE_SPIKE_GRAVEYARD, urand(200000, 25000), EVENT_GROUP_SPECIAL);
                 events.ScheduleEvent(EVENT_COLDFLAME, 5000, EVENT_GROUP_SPECIAL);
                 events.ScheduleEvent(EVENT_WARN_BONE_STORM, urand(45000, 50000));
                 events.ScheduleEvent(EVENT_ENRAGE, 600000);
@@ -164,7 +164,7 @@ class boss_lord_marrowgar : public CreatureScript
                         case EVENT_BONE_SPIKE_GRAVEYARD:
                             if (/*IsHeroic() || */ !me->HasAura(SPELL_BONE_STORM))
                                 DoCast(me, SPELL_BONE_SPIKE_GRAVEYARD);
-                            events.ScheduleEvent(EVENT_BONE_SPIKE_GRAVEYARD, urand(15000, 20000), EVENT_GROUP_SPECIAL);
+                            events.ScheduleEvent(EVENT_BONE_SPIKE_GRAVEYARD, urand(30000, 32000), EVENT_GROUP_SPECIAL);
                             break;
                         case EVENT_COLDFLAME:
                             _coldflameLastPos.Relocate(me);
@@ -208,8 +208,8 @@ class boss_lord_marrowgar : public CreatureScript
                             me->SetSpeed(MOVE_RUN, _baseSpeed, true);
                             events.CancelEvent(EVENT_BONE_STORM_MOVE);
                             events.ScheduleEvent(EVENT_ENABLE_BONE_SLICE, 10000);
-                            if (!IsHeroic())
-                                events.RescheduleEvent(EVENT_BONE_SPIKE_GRAVEYARD, urand(15000, 20000), EVENT_GROUP_SPECIAL);
+                            //if (!IsHeroic())
+                                events.RescheduleEvent(EVENT_BONE_SPIKE_GRAVEYARD, urand(30000, 32000), EVENT_GROUP_SPECIAL);
                             break;
                         case EVENT_ENABLE_BONE_SLICE:
                             _boneSlice = true;

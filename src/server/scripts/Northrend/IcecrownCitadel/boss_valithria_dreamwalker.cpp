@@ -296,7 +296,7 @@ class boss_valithria_dreamwalker : public CreatureScript
 
             void Reset()
             {
-                me->SetHealth(me->GetMaxHealth() * 0.75);
+                me->SetHealth((me->GetMaxHealth() * 0.60);
                 me->SetReactState(REACT_PASSIVE);
                 me->LoadCreaturesAddon(true);
                 // immune to percent heals
@@ -596,10 +596,10 @@ class npc_the_lich_king_controller : public CreatureScript
             void Reset()
             {
                 _events.Reset();
-                _events.ScheduleEvent(EVENT_GLUTTONOUS_ABOMINATION_SUMMONER, 5000);
-                _events.ScheduleEvent(EVENT_SUPPRESSER_SUMMONER, 10000);
-                _events.ScheduleEvent(EVENT_BLISTERING_ZOMBIE_SUMMONER, 15000);
-                _events.ScheduleEvent(EVENT_RISEN_ARCHMAGE_SUMMONER, 20000);
+                _events.ScheduleEvent(EVENT_GLUTTONOUS_ABOMINATION_SUMMONER, 10000);
+                _events.ScheduleEvent(EVENT_SUPPRESSER_SUMMONER, 15000);
+                _events.ScheduleEvent(EVENT_BLISTERING_ZOMBIE_SUMMONER, 20000);
+                _events.ScheduleEvent(EVENT_RISEN_ARCHMAGE_SUMMONER, 25000);
                 _events.ScheduleEvent(EVENT_BLAZING_SKELETON_SUMMONER, 30000);
                 me->SetReactState(REACT_PASSIVE);
             }

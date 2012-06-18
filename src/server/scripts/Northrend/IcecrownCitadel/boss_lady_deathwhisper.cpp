@@ -277,7 +277,7 @@ class boss_lady_deathwhisper : public CreatureScript
                 events.Reset();
                 events.SetPhase(PHASE_ONE);
                 // phase-independent events
-                events.ScheduleEvent(EVENT_BERSERK, 600000);
+                events.ScheduleEvent(EVENT_BERSERK, 900000);
                 events.ScheduleEvent(EVENT_DEATH_AND_DECAY, 10000);
                 // phase one only
                 events.ScheduleEvent(EVENT_P1_SUMMON_WAVE, 5000, 0, PHASE_ONE);
@@ -375,7 +375,7 @@ class boss_lady_deathwhisper : public CreatureScript
                     {
                         me->ApplySpellImmune(0, IMMUNITY_STATE, SPELL_AURA_MOD_TAUNT, true);
                         me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_ATTACK_ME, true);
-                        events.ScheduleEvent(EVENT_P2_SUMMON_WAVE, 45000, 0, PHASE_TWO);
+                        events.ScheduleEvent(EVENT_P2_SUMMON_WAVE, 75000, 0, PHASE_TWO);
                     }
                 }
             }
@@ -449,7 +449,7 @@ class boss_lady_deathwhisper : public CreatureScript
                             break;
                         case EVENT_P1_SUMMON_WAVE:
                             SummonWaveP1();
-                            events.ScheduleEvent(EVENT_P1_SUMMON_WAVE, IsHeroic() ? 45000 : 60000, 0, PHASE_ONE);
+                            events.ScheduleEvent(EVENT_P1_SUMMON_WAVE, IsHeroic() ? 90000 : 120000, 0, PHASE_ONE);
                             break;
                         case EVENT_P1_SHADOW_BOLT:
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM))
@@ -485,7 +485,7 @@ class boss_lady_deathwhisper : public CreatureScript
                             break;
                         case EVENT_P2_SUMMON_WAVE:
                             SummonWaveP2();
-                            events.ScheduleEvent(EVENT_P2_SUMMON_WAVE, 45000, 0, PHASE_TWO);
+                            events.ScheduleEvent(EVENT_P2_SUMMON_WAVE, 70000, 0, PHASE_TWO);
                             break;
                         case EVENT_BERSERK:
                             DoCast(me, SPELL_BERSERK);
@@ -509,12 +509,12 @@ class boss_lady_deathwhisper : public CreatureScript
 
                 // Summon first add, replace it with Darnavan if weekly quest is active
                 if (_waveCounter || !sPoolMgr->IsSpawnedObject<Quest>(QUEST_DEPROGRAMMING))
-                    Summon(SummonEntries[addIndex], SummonPositions[addIndex * 3]);
+                    Summon(SummonEntries[addIndex], SummonPositions[addIndex * 2]);
                 else
-                    Summon(NPC_DARNAVAN, SummonPositions[addIndex * 3]);
+                    Summon(NPC_DARNAVAN, SummonPositions[addIndex * 2]);
 
-                Summon(SummonEntries[addIndexOther], SummonPositions[addIndex * 3 + 1]);
-                Summon(SummonEntries[addIndex], SummonPositions[addIndex * 3 + 2]);
+                Summon(SummonEntries[addIndexOther], SummonPositions[addIndex * 2 + 1]);
+                Summon(SummonEntries[addIndex], SummonPositions[addIndex * 2 + 2]);
                 if (Is25ManRaid())
                 {
                     Summon(SummonEntries[addIndexOther], SummonPositions[addIndexOther * 2]);

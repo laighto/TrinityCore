@@ -299,7 +299,7 @@ class boss_deathbringer_saurfang : public CreatureScript
 
                 Talk(SAY_AGGRO);
                 events.ScheduleEvent(EVENT_SUMMON_BLOOD_BEAST, 30000, 0, PHASE_COMBAT);
-                events.ScheduleEvent(EVENT_BERSERK, IsHeroic() ? 480000 : 600000, 0, PHASE_COMBAT);
+                events.ScheduleEvent(EVENT_BERSERK, IsHeroic() ? 600000 : 660000, 0, PHASE_COMBAT);
                 events.ScheduleEvent(EVENT_BOILING_BLOOD, 15500, 0, PHASE_COMBAT);
                 events.ScheduleEvent(EVENT_BLOOD_NOVA, 17000, 0, PHASE_COMBAT);
                 events.ScheduleEvent(EVENT_RUNE_OF_BLOOD, 20000, 0, PHASE_COMBAT);
@@ -313,7 +313,6 @@ class boss_deathbringer_saurfang : public CreatureScript
             {
                 instance->SetBossState(DATA_COLDFLAME_JETS, DONE);
                 instance->SetBossState(DATA_GUNSHIP_EVENT, DONE);
-                //instance->SetBossState(DATA_DEATHBRINGER_SAURFANG, DONE);
             }
 
             void AttackStart(Unit* victim)

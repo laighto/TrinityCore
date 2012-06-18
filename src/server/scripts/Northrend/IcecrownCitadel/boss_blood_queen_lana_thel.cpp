@@ -141,14 +141,14 @@ class boss_blood_queen_lana_thel : public CreatureScript
             void Reset()
             {
                 _Reset();
-                events.ScheduleEvent(EVENT_BERSERK, 330000);
+                events.ScheduleEvent(EVENT_BERSERK, 900000);
                 events.ScheduleEvent(EVENT_VAMPIRIC_BITE, 15000);
                 events.ScheduleEvent(EVENT_BLOOD_MIRROR, 2500, EVENT_GROUP_CANCELLABLE);
                 events.ScheduleEvent(EVENT_DELIRIOUS_SLASH, urand(20000, 24000), EVENT_GROUP_NORMAL);
                 events.ScheduleEvent(EVENT_PACT_OF_THE_DARKFALLEN, 15000, EVENT_GROUP_NORMAL);
                 events.ScheduleEvent(EVENT_SWARMING_SHADOWS, 30500, EVENT_GROUP_NORMAL);
                 events.ScheduleEvent(EVENT_TWILIGHT_BLOODBOLT, urand(20000, 25000), EVENT_GROUP_NORMAL);
-                events.ScheduleEvent(EVENT_AIR_PHASE, 124000 + uint32(Is25ManRaid() ? 3000 : 0));
+                events.ScheduleEvent(EVENT_AIR_PHASE, 124000 + uint32(Is25ManRaid() ? 3000 : 5000));
                 CleanAuras();
                 me->SetSpeed(MOVE_FLIGHT, 0.642857f, true);
                 _offtank = NULL;
@@ -381,7 +381,7 @@ class boss_blood_queen_lana_thel : public CreatureScript
                         case EVENT_DELIRIOUS_SLASH:
                             if (_offtank && !me->HasByteFlag(UNIT_FIELD_BYTES_1, 3, UNIT_BYTE1_FLAG_ALWAYS_STAND | UNIT_BYTE1_FLAG_HOVER))
                                 DoCast(_offtank, SPELL_DELIRIOUS_SLASH);
-                            events.ScheduleEvent(EVENT_DELIRIOUS_SLASH, urand(20000, 24000), EVENT_GROUP_NORMAL);
+                            events.ScheduleEvent(EVENT_DELIRIOUS_SLASH, urand(25000, 45000), EVENT_GROUP_NORMAL);
                             break;
                         case EVENT_PACT_OF_THE_DARKFALLEN:
                         {
@@ -420,7 +420,7 @@ class boss_blood_queen_lana_thel : public CreatureScript
                             for (std::list<Player*>::iterator itr = targets.begin(); itr != targets.end(); ++itr)
                                 DoCast(*itr, SPELL_TWILIGHT_BLOODBOLT);
                             DoCast(me, SPELL_TWILIGHT_BLOODBOLT_TARGET);
-                            events.ScheduleEvent(EVENT_TWILIGHT_BLOODBOLT, urand(10000, 15000), EVENT_GROUP_NORMAL);
+                            events.ScheduleEvent(EVENT_TWILIGHT_BLOODBOLT, urand(18000, 35000), EVENT_GROUP_NORMAL);
                             break;
                         }
                         case EVENT_AIR_PHASE:

@@ -798,7 +798,6 @@ class boss_sister_svalna : public CreatureScript
                 me->SetReactState(REACT_PASSIVE);
                 me->SetDisableGravity(false);
                 me->SetHover(false);
-                //me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_IMMUNE_TO_PC);
             }
 
             void DoAction(int32 const action)
@@ -890,7 +889,6 @@ class boss_sister_svalna : public CreatureScript
                         case EVENT_SVALNA_RESURRECT:
                             Talk(SAY_SVALNA_RESURRECT_CAPTAINS);
                             me->CastSpell(me, SPELL_REVIVE_CHAMPION, false);
-                            //me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_IMMUNE_TO_PC);
                             break;
                         case EVENT_SVALNA_COMBAT:
                             me->SetReactState(REACT_DEFENSIVE);
