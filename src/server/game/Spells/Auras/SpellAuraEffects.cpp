@@ -3364,7 +3364,7 @@ void AuraEffect::HandleModStateImmunityMask(AuraApplication const* aurApp, uint8
 
     Unit* target = aurApp->GetTarget();
     std::list <AuraType> aura_immunity_list;
-    uint32 mechanic_immunity_list;
+    uint32 mechanic_immunity_list = 0;
     int32 miscVal = GetMiscValue();
 
     switch (miscVal)
@@ -3571,7 +3571,7 @@ void AuraEffect::HandleModStateImmunityMask(AuraApplication const* aurApp, uint8
             break;
     }
 
-    if (aura_immunity_list.size() == 0)
+    if (aura_immunity_list.empty())
     {
             if (miscVal & (1<<10))
                 aura_immunity_list.push_back(SPELL_AURA_MOD_STUN);
