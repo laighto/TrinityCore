@@ -2090,6 +2090,87 @@ public:
     }
 };
 
+class npc_training_dummy_low : public CreatureScript
+{
+public:
+    npc_training_dummy_low() : CreatureScript("npc_training_dummy_low") { }
+
+    struct npc_training_dummy_lowAI : Scripted_NoMovementAI
+    {
+        npc_training_dummy_lowAI(Creature* creature) : Scripted_NoMovementAI(creature)
+        {
+            entry = creature->GetEntry();
+        }
+
+        uint32 entry;
+        uint32 resetTimer;
+        uint32 despawnTimer;
+
+        void Reset()
+        {
+            me->SetControlled(true, UNIT_STATE_STUNNED);//disable rotate
+            me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);//imune to knock aways like blast wave
+            me->SetHealth(me->GetMaxHealth() * 0.23);
+            resetTimer = 5000;
+            despawnTimer = 15000;
+        }
+
+        void EnterEvadeMode()
+        {
+            if (!_EnterEvadeMode())
+                return;
+
+            Reset();
+        }
+
+        void DamageTaken(Unit* /*doneBy*/, uint32& damage)
+        {
+            resetTimer = 5000;
+            damage = 0;
+        }
+
+        void EnterCombat(Unit* /*who*/)
+        {
+            if (entry != NPC_ADVANCED_TARGET_DUMMY && entry != NPC_TARGET_DUMMY)
+                return;
+        }
+
+        void UpdateAI(uint32 const diff)
+        {
+            if (!UpdateVictim())
+                return;
+
+            if (!me->HasUnitState(UNIT_STATE_STUNNED))
+                me->SetControlled(true, UNIT_STATE_STUNNED);//disable rotate
+
+            if (entry != NPC_ADVANCED_TARGET_DUMMY && entry != NPC_TARGET_DUMMY)
+            {
+                if (resetTimer <= diff)
+                {
+                    EnterEvadeMode();
+                    resetTimer = 5000;
+                }
+                else
+                    resetTimer -= diff;
+                return;
+            }
+            else
+            {
+                if (despawnTimer <= diff)
+                    me->DespawnOrUnsummon();
+                else
+                    despawnTimer -= diff;
+            }
+        }
+        void MoveInLineOfSight(Unit* /*who*/){return;}
+    };
+
+    CreatureAI* GetAI(Creature* creature) const
+    {
+        return new npc_training_dummy_lowAI(creature);
+    }
+};
+
 /*######
 # npc_shadowfiend
 ######*/
@@ -3039,6 +3120,7 @@ void AddSC_npcs_special()
     new npc_lightwell();
     new mob_mojo();
     new npc_training_dummy();
+    new npc_training_dummy_low();
     new npc_shadowfiend();
     new npc_wormhole();
     new npc_pet_trainer();
