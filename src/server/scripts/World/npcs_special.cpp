@@ -2133,13 +2133,14 @@ public:
         {
             if (entry != NPC_ADVANCED_TARGET_DUMMY && entry != NPC_TARGET_DUMMY)
                 return;
+            me->SetHealth(me->GetMaxHealth() * 0.23);
         }
 
         void UpdateAI(uint32 const diff)
         {
             if (!UpdateVictim())
                 return;
-
+            
             if (!me->HasUnitState(UNIT_STATE_STUNNED))
                 me->SetControlled(true, UNIT_STATE_STUNNED);//disable rotate
 
