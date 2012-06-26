@@ -68,6 +68,15 @@ class boss_kurinnaxx : public CreatureScript
                 }
             }
 
+            void JustDied(Unit* killer)
+            {
+                instance->SetBossState(BOSS_KURINNAXX, DONE);
+                //summon Lieutenant General Andorov
+                Position pos;
+                killer->GetPosition(&pos);
+                instance->instance->SummonCreature(15471, pos);
+            }
+
             void UpdateAI(const uint32 diff)
             {
                 if (!UpdateVictim())
