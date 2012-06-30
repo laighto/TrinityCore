@@ -41,6 +41,7 @@ enum DeathKnightSpells
     DK_SPELL_UNHOLY_PRESENCE                    = 48265,
     DK_SPELL_IMPROVED_UNHOLY_PRESENCE_TRIGGERED = 63622,
     SPELL_DK_ITEM_T8_MALEE_4P_BONUS             = 64736,
+    DK_SPELL_BLACK_ICE_R1                       = 49140,
 };
 
 // 50462 - Anti-Magic Shell (on raid member)
@@ -349,16 +350,15 @@ class spell_dk_death_pact : public SpellScriptLoader
                 return SPELL_FAILED_NO_PET;
             }
 
-            void FilterTargets(std::list<Unit*>& unitList)
+            void FilterTargets(std::list<WorldObject*>& unitList)
             {
                 Unit* unit_to_add = NULL;
-                for (std::list<Unit*>::iterator itr = unitList.begin(); itr != unitList.end(); ++itr)
+                for (std::list<WorldObject*>::iterator itr = unitList.begin(); itr != unitList.end(); ++itr)
                 {
-                    if ((*itr)->GetTypeId() == TYPEID_UNIT
-                        && (*itr)->GetOwnerGUID() == GetCaster()->GetGUID()
-                        && (*itr)->ToCreature()->GetCreatureTemplate()->type == CREATURE_TYPE_UNDEAD)
+                    if (Unit* unit = (*itr)->ToUnit())
+                    if (unit->GetOwnerGUID() == GetCaster()->GetGUID() && unit->GetCreatureType() == CREATURE_TYPE_UNDEAD)
                     {
-                        unit_to_add = (*itr);
+                        unit_to_add = unit;
                         break;
                     }
                 }
@@ -371,7 +371,7 @@ class spell_dk_death_pact : public SpellScriptLoader
             void Register()
             {
                 OnCheckCast += SpellCheckCastFn(spell_dk_death_pact_SpellScript::CheckCast);
-                OnUnitTargetSelect += SpellUnitTargetFn(spell_dk_death_pact_SpellScript::FilterTargets, EFFECT_1, TARGET_UNIT_DEST_AREA_ALLY);
+                OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_dk_death_pact_SpellScript::FilterTargets, EFFECT_1, TARGET_UNIT_DEST_AREA_ALLY);
             }
         };
 
@@ -423,6 +423,10 @@ class spell_dk_scourge_strike : public SpellScriptLoader
                 if (Unit* unitTarget = GetHitUnit())
                 {
                     int32 bp = GetHitDamage() * multiplier;
+
+                    if (AuraEffect* aurEff = caster->GetAuraEffectOfRankedSpell(DK_SPELL_BLACK_ICE_R1, EFFECT_0))
+                        AddPctN(bp, aurEff->GetAmount());
+
                     caster->CastCustomSpell(unitTarget, DK_SPELL_SCOURGE_STRIKE_TRIGGERED, &bp, NULL, NULL, true);
                 }
             }
