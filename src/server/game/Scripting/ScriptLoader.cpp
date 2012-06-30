@@ -27,6 +27,7 @@ void AddSC_example_commandscript();
 void AddSC_DuelReset();
 void AddSC_gmisland();
 void AddSC_anticheat_commandscript();
+void AddSC_transmogrify_script();
 
 // spells
 void AddSC_deathknight_spell_scripts();
@@ -638,6 +639,7 @@ void AddExampleScripts()
     AddSC_example_commandscript();
     AddSC_DuelReset();
     AddSC_gmisland();
+    AddSC_transmogrify_script();
 }
 
 void AddSpellScripts()
