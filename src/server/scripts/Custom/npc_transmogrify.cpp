@@ -29,7 +29,7 @@ enum TransmogrifyActions {
     ACTION_TRANSMOGRIFY_REMOVE_DISPLAY
 };
 
-const int32 PriceInGold = 500 * 100 * 100; // 1k golds
+const int32 PriceInGold = 50 * 100 * 100; // 1k golds
 
 class npc_transmogrify : public CreatureScript
 {
@@ -94,9 +94,12 @@ class npc_transmogrify : public CreatureScript
                     handler.PSendSysMessage(999974);
                     break;
                 case FAKE_ERR_DIFF_CLASS:
-                case FAKE_ERR_DIFF_RACE:
                     //handler.PSendSysMessage("Items require different options!");
                     handler.PSendSysMessage(999975);
+                    break;
+                case FAKE_ERR_DIFF_RACE:
+                    //handler.PSendSysMessage("Items require different race!");
+                    handler.PSendSysMessage(999976);
                     break;
                 case FAKE_ERR_OK:
                 {
@@ -120,7 +123,7 @@ class npc_transmogrify : public CreatureScript
             if (!trItem)
             {
                 //handler.PSendSysMessage("Put item in the first slot!");
-                handler.PSendSysMessage(999976);
+                handler.PSendSysMessage(999977);
                 return;
             }
 

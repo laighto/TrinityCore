@@ -1234,7 +1234,8 @@ FakeResult Item::SetFakeDisplay(uint32 iEntry)
         return FAKE_ERR_DIFF_SLOTS;
 
     if (myTmpl->AllowableClass != otherTmpl->AllowableClass)
-        return FAKE_ERR_DIFF_CLASS;
+        if (myTmpl->Material != otherTmpl->Material)
+            return FAKE_ERR_DIFF_CLASS;
 
     if (myTmpl->AllowableRace != otherTmpl->AllowableRace)
         return FAKE_ERR_DIFF_RACE;
