@@ -2,7 +2,7 @@ SET NAMES 'UTF8';
 
 DELETE FROM creature_template WHERE entry = '99997'; 
 INSERT INTO creature_template (entry, modelid1, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, Health_mod, Mana_mod, Armor_mod, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, dmg_multiplier, unit_class, unit_flags, type, type_flags, InhabitType, RegenHealth, flags_extra, ScriptName) VALUES 
-('99997', '15998', "Alorien", "Transmogrify Master", 'Speak', '65500', 71, 71, 1.56, 1.56, 1.56, 35, 35, 3, 1, 1.14286, 1.25, 1, 1, 1, 2, 7, 138936390, 3, 1, 2, 'npc_transmogrify'); 
+('99997', '28186', "Alorien", "Transmogrify Master", 'Speak', '65500', 71, 71, 1.56, 1.56, 1.56, 35, 35, 3, 1, 1.14286, 2, 1, 1, 1, 2, 7, 138936390, 3, 1, 2, 'npc_transmogrify'); 
 DELETE FROM `locales_creature` WHERE `entry`='99997';
 INSERT INTO `locales_creature` (`entry`, `name_loc8`, `subname_loc8`) VALUES ('99997', 'Алориен', 'Мастер трансмогнификации');
 
@@ -16,7 +16,7 @@ INSERT INTO `locales_npc_text` VALUES ('65500', null, null, null, null, null, nu
 DELETE FROM `trinity_string` WHERE `entry` IN (999970, 999971, 999972, 999973, 999974, 999975, 999976);
 INSERT INTO `trinity_string` (`entry`, `content_default`, `content_loc8`) VALUES
 (999970, 'Put items in the first and second slot of main bag!', 'Поставте предметы в первый и второй слот  основной сумки!'),
-(999971, 'It costs %u gold!', 'Это стоит %u золота!'),
+(999971, 'It costs %u copper!', 'Это стоит %u меди!'),
 (999972, 'Cant find item!', 'Невозможно найти предмет!'),
 (999973, 'Item has wrong quality!', 'Предмет  не того качества!'),
 (999974, 'Items are from diffrent slot!', 'Предметы из разных слотов!'),
