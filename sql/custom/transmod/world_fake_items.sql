@@ -4,7 +4,7 @@ DELETE FROM creature_template WHERE entry = '99997';
 INSERT INTO creature_template (entry, modelid1, name, subname, IconName, gossip_menu_id, minlevel, maxlevel, Health_mod, Mana_mod, Armor_mod, faction_A, faction_H, npcflag, speed_walk, speed_run, scale, rank, dmg_multiplier, unit_class, unit_flags, type, type_flags, InhabitType, RegenHealth, flags_extra, ScriptName) VALUES 
 ('99997', '28186', "Alorien", "Transmogrify Master", 'Speak', '65500', 71, 71, 1.56, 1.56, 1.56, 35, 35, 3, 1, 1.14286, 2, 1, 1, 1, 2, 7, 138936390, 3, 1, 2, 'npc_transmogrify'); 
 DELETE FROM `locales_creature` WHERE `entry`='99997';
-INSERT INTO `locales_creature` (`entry`, `name_loc8`, `subname_loc8`) VALUES ('99997', 'Алориен', 'Мастер трансмогнификации');
+INSERT INTO `locales_creature` (`entry`, `name_loc8`, `subname_loc8`) VALUES ('99997', 'Алориен', 'Мастер трансмогрификации');
 
 REPLACE INTO `gossip_menu` VALUES (65500, 65500);
 
