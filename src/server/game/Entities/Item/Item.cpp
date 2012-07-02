@@ -1233,12 +1233,20 @@ FakeResult Item::SetFakeDisplay(uint32 iEntry)
     if (myTmpl->InventoryType != otherTmpl->InventoryType)
         return FAKE_ERR_DIFF_SLOTS;
 
-    if (myTmpl->AllowableClass != otherTmpl->AllowableClass)
-        if (myTmpl->Material != otherTmpl->Material)
+    /*if (myTmpl->Material != otherTmpl->Material)
+        return FAKE_ERR_DIFF_MATERIAL;
+
+    if (myTmpl->SubClass != otherTmpl->SubClass)
+        return FAKE_ERR_DIFF_SUBCLASS;*/
+
+    if ((myTmpl->AllowableClass != otherTmpl->AllowableClass) && (otherTmpl->AllowableClass != -1) && (otherTmpl->AllowableClass != 2047)
+        && (otherTmpl->AllowableClass != 32767) && (otherTmpl->AllowableClass != 262143))
             return FAKE_ERR_DIFF_CLASS;
 
-    if (myTmpl->AllowableRace != otherTmpl->AllowableRace)
-        return FAKE_ERR_DIFF_RACE;
+    //General masks -1, 511, 2047, 28671, 32767, 8388607
+    if ((myTmpl->AllowableRace != otherTmpl->AllowableRace) && (otherTmpl->AllowableRace != -1) && (otherTmpl->AllowableRace != 511) &&
+       (otherTmpl->AllowableRace !=  2047) && (otherTmpl->AllowableRace != 28671) && (otherTmpl->AllowableRace != 32767) && (otherTmpl->AllowableRace != 8388607))
+            return FAKE_ERR_DIFF_RACE;
 
     if (otherTmpl->Quality == ITEM_QUALITY_LEGENDARY || otherTmpl->Quality == ITEM_QUALITY_POOR)
         return FAKE_ERR_WRONG_QUALITY;

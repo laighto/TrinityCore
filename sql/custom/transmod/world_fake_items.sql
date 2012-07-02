@@ -20,6 +20,6 @@ INSERT INTO `trinity_string` (`entry`, `content_default`, `content_loc8`) VALUES
 (999972, 'Cant find item!', 'Невозможно найти предмет!'),
 (999973, 'Item has wrong quality!', 'Предмет  не того качества!'),
 (999974, 'Items are from diffrent slot!', 'Предметы из разных слотов!'),
-(999975, 'Items require different options (class/material)!', 'Предметы требуют разных опций(класс/материал)!'),
+(999975, 'Items require different class!', 'Предметы для разных классов!'),
 (999976, 'Items require different race!', 'Предметы для разных рас!'),
 (999977, 'Put item in the first slot!', 'Поставьте предмет в первый слот!');
