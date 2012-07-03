@@ -3265,6 +3265,6 @@ AllowEnterRaidFrozenThrone = 0
 # Price for Item Transmogrification
 # Default: 1 (1 gold)
 
-TransmogrifyPrice=1
+TransmogrifyPrice = 1
 #
 ##############################################################################

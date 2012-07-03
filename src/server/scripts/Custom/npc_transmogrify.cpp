@@ -30,8 +30,6 @@ enum TransmogrifyActions {
     ACTION_TRANSMOGRIFY_REMOVE_DISPLAY
 };
 
-const int32 PriceInGold = sWorld->getIntConfig(CONFIG_TRANSMOGRIFY_PRICE) * 100 * 100;
-
 class npc_transmogrify : public CreatureScript
 {
     public:
@@ -63,6 +61,7 @@ class npc_transmogrify : public CreatureScript
         void TransmogrifyItem(Player* player, Creature* creature)
         {
             ChatHandler handler(player);
+            int32 PriceInGold = sWorld->getIntConfig(CONFIG_TRANSMOGRIFY_PRICE) * 100 * 100;
             Item *trItem = player->GetItemByPos(INVENTORY_SLOT_BAG_0, INVENTORY_SLOT_ITEM_START);
             Item *displayItem = player->GetItemByPos(INVENTORY_SLOT_BAG_0, INVENTORY_SLOT_ITEM_START + 1);
             if (!trItem || !displayItem)
