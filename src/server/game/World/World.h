@@ -346,6 +346,7 @@ enum WorldIntConfigs
     CONFIG_ANTICHEAT_DETECTIONS_ENABLED,
     CONFIG_ChatLog_Lexics_Action_Custom_MODE,
     CONFIG_ChatLog_Lexics_Action_Custom_Spell,
+    CONFIG_TRANSMOGRIFY_PRICE,
     INT_CONFIG_VALUE_COUNT
 };
 

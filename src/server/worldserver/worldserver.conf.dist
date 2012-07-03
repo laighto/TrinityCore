@@ -3261,5 +3261,10 @@ DuelResetCooldown = 1
 # Allow Enter Frozen Throne in ICC without pass 3 quoters
 
 AllowEnterRaidFrozenThrone = 0
+
+# Price for Item Transmogrification
+# Default: 1 (1 gold)
+
+TransmogrifyPrice=1
 #
 ##############################################################################

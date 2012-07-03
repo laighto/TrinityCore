@@ -16,7 +16,7 @@ INSERT INTO `locales_npc_text` VALUES ('65500', null, null, null, null, null, nu
 DELETE FROM `trinity_string` WHERE `entry` IN (999970, 999971, 999972, 999973, 999974, 999975, 999976, 999976, 999977, 999978);
 INSERT INTO `trinity_string` (`entry`, `content_default`, `content_loc8`) VALUES
 (999970, 'Put items in the first and second slot of main bag!', 'Поставьте предметы в первый и второй слот основной сумки!'),
-(999971, 'It costs %u copper!', 'Это стоит %u меди!'),
+(999971, 'It costs %u gold!', 'Это стоит %u золота!'),
 (999972, 'Cant find item!', 'Невозможно найти предмет!'),
 (999973, 'Item has wrong quality!', 'Предметы запрещенного качества!'),
 (999974, 'Items are from different slot!', 'Предметы из разных слотов!'),

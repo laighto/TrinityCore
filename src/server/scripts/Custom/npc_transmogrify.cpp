@@ -23,13 +23,14 @@ Category: Custom Script
 EndScriptData */
 
 #include "ScriptPCH.h"
+#include "World.h"
 
 enum TransmogrifyActions {
     ACTION_TRANSMOGRIFY_ADD_DISPLAY,
     ACTION_TRANSMOGRIFY_REMOVE_DISPLAY
 };
 
-const int32 PriceInGold = 50 * 100 * 100; // 1k golds
+const int32 PriceInGold = sWorld->getIntConfig(CONFIG_TRANSMOGRIFY_PRICE) * 100 * 100;
 
 class npc_transmogrify : public CreatureScript
 {
@@ -74,7 +75,7 @@ class npc_transmogrify : public CreatureScript
             if (!player->HasEnoughMoney(PriceInGold))
             {
                 //handler.PSendSysMessage("It costs %u gold!", PriceInGold);
-                handler.PSendSysMessage(999971, PriceInGold);
+                handler.PSendSysMessage(999971, sWorld->getIntConfig(CONFIG_TRANSMOGRIFY_PRICE));
                 return;
             }
 
