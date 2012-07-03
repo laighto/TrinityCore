@@ -85,6 +85,10 @@ class npc_transmogrify : public CreatureScript
                     //handler.PSendSysMessage("Cant find item!");
                     handler.PSendSysMessage(999972);
                     break;
+                case FAKE_ERR_DIFF_MATERIAL:
+                    //handler.PSendSysMessage("Wrong material!");
+                    handler.PSendSysMessage(999978);
+                    break;
                 case FAKE_ERR_WRONG_QUALITY:
                     //handler.PSendSysMessage("Item has wrong quality!");
                     handler.PSendSysMessage(999973);

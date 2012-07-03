@@ -1233,10 +1233,10 @@ FakeResult Item::SetFakeDisplay(uint32 iEntry)
     if (myTmpl->InventoryType != otherTmpl->InventoryType)
         return FAKE_ERR_DIFF_SLOTS;
 
-    /*if (myTmpl->Material != otherTmpl->Material)
+    if (myTmpl->Material != otherTmpl->Material)
         return FAKE_ERR_DIFF_MATERIAL;
 
-    if (myTmpl->SubClass != otherTmpl->SubClass)
+    /*if (myTmpl->SubClass != otherTmpl->SubClass)
         return FAKE_ERR_DIFF_SUBCLASS;*/
 
     if ((myTmpl->AllowableClass != otherTmpl->AllowableClass) && (otherTmpl->AllowableClass != -1) && (otherTmpl->AllowableClass != 2047)
