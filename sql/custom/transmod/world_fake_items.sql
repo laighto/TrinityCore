@@ -13,7 +13,7 @@ REPLACE INTO npc_text (ID, text0_0, em0_1) VALUES
 DELETE FROM  `locales_npc_text` WHERE  `entry`='65500';
 INSERT INTO `locales_npc_text` VALUES ('65500', null, null, null, null, null, null, null, 'Положите в первый слот рюкзака предмет, который вы хотите исказить. Во второй слот  предмет, модель которого будет использована для трансмогрификации.', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
-DELETE FROM `trinity_string` WHERE `entry` IN (999970, 999971, 999972, 999973, 999974, 999975, 999976, 999976);
+DELETE FROM `trinity_string` WHERE `entry` IN (999970, 999971, 999972, 999973, 999974, 999975, 999976, 999976, 999977);
 INSERT INTO `trinity_string` (`entry`, `content_default`, `content_loc8`) VALUES
 (999970, 'Put items in the first and second slot of main bag!', 'Поставьте предметы в первый и второй слот  основной сумки!'),
 (999971, 'It costs %u copper!', 'Это стоит %u меди!'),
