@@ -1234,7 +1234,8 @@ FakeResult Item::SetFakeDisplay(uint32 iEntry)
         return FAKE_ERR_DIFF_SLOTS;
 
     if (myTmpl->Material != otherTmpl->Material)
-        return FAKE_ERR_DIFF_MATERIAL;
+        if(myTmpl->InventoryType != 14)//exlude shields
+            return FAKE_ERR_DIFF_MATERIAL;
 
     /*if (myTmpl->SubClass != otherTmpl->SubClass)
         return FAKE_ERR_DIFF_SUBCLASS;*/
