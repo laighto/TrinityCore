@@ -1238,6 +1238,9 @@ void World::LoadConfigSettings(bool reload)
     m_int_configs[CONFIG_ChatLog_Lexics_Action_Custom_MODE] = ConfigMgr::GetIntDefault("ChatLog.Lexics.Action.Custom.Mode", 0);
     m_int_configs[CONFIG_ChatLog_Lexics_Action_Custom_Spell] = ConfigMgr::GetIntDefault("ChatLog.Lexics.Action.Custom.Punish.Spell", 0);
 
+    //Transmogrification
+    m_int_configs[CONFIG_TRANSMOGRIFY_PRICE] = ConfigMgr::GetIntDefault("TransmogrifyPrice", 1);
+
     // call ScriptMgr if we're reloading the configuration
     if (reload)
         sScriptMgr->OnConfigLoad(reload);
@@ -1414,6 +1417,9 @@ void World::SetInitialWorldSettings()
 
     sLog->outString("Loading Equipment templates...");
     sObjectMgr->LoadEquipmentTemplates();
+
+    sLog->outString("Loading fake items...");
+    sObjectMgr->LoadFakeItems();
 
     sLog->outString("Loading Creature templates...");
     sObjectMgr->LoadCreatureTemplates();
