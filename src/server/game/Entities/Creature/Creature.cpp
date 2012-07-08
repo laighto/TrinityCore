@@ -211,7 +211,10 @@ void Creature::DisappearAndDie()
     //SetVisibility(VISIBILITY_OFF);
     //ObjectAccessor::UpdateObjectVisibility(this);
     if (isAlive())
+    {
         setDeathState(JUST_DIED);
+        this->DespawnOrUnsummon();
+    }
     RemoveCorpse(false);
 }
 
