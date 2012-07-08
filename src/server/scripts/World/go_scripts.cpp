@@ -1030,7 +1030,7 @@ public:
     {
         if (player->GetQuestStatus(QUEST_OH_NOES_THE_TADPOLES) == QUEST_STATUS_INCOMPLETE)
         {
-            Creature* pTadpole = go->FindNearestCreature(NPC_WINTERFIN_TADPOLE, 1.0f);
+            Creature* pTadpole = go->FindNearestCreature(NPC_WINTERFIN_TADPOLE, 15.1f, true);
             if (pTadpole)
             {
                 go->UseDoorOrButton();
