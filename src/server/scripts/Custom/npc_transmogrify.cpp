@@ -85,8 +85,8 @@ class npc_transmogrify : public CreatureScript
                     //handler.PSendSysMessage("Cant find item!");
                     handler.PSendSysMessage(999972);
                     break;
-                case FAKE_ERR_DIFF_MATERIAL:
-                    //handler.PSendSysMessage("Wrong material!");
+                case FAKE_ERR_DIFF_SUBCLASS:
+                    //handler.PSendSysMessage("Wrong subclass material!");
                     handler.PSendSysMessage(999978);
                     break;
                 case FAKE_ERR_WRONG_QUALITY:
@@ -98,12 +98,20 @@ class npc_transmogrify : public CreatureScript
                     handler.PSendSysMessage(999974);
                     break;
                 case FAKE_ERR_DIFF_CLASS:
+                    //handler.PSendSysMessage("Items has different class of material!");
+                    handler.PSendSysMessage(999980);
+                    break;
+                case FAKE_ERR_DIFF_PLAYER_CLASS:
                     //handler.PSendSysMessage("Items require different options!");
                     handler.PSendSysMessage(999975);
                     break;
                 case FAKE_ERR_DIFF_RACE:
                     //handler.PSendSysMessage("Items require different race!");
                     handler.PSendSysMessage(999976);
+                    break;
+                case ERR_FAKE_CANT_USE:
+                    //handler.PSendSysMessage("Player can't equip that item!");
+                    handler.PSendSysMessage(999979);
                     break;
                 case FAKE_ERR_OK:
                 {

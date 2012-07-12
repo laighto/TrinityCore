@@ -1230,27 +1230,29 @@ FakeResult Item::SetFakeDisplay(uint32 iEntry)
     if (!otherTmpl)
         return FAKE_ERR_CANT_FIND_ITEM;
 
+    if (otherTmpl->Quality == ITEM_QUALITY_POOR  || otherTmpl->Quality == ITEM_QUALITY_NORMAL || otherTmpl->Quality == ITEM_QUALITY_LEGENDARY || otherTmpl->Quality == ITEM_QUALITY_ARTIFACT)
+        return FAKE_ERR_WRONG_QUALITY;
+
+    if (myTmpl->Class != otherTmpl->Class)
+        return FAKE_ERR_DIFF_CLASS;
+
+    if (myTmpl->SubClass != otherTmpl->SubClass)
+        if ((otherTmpl->SubClass != ITEM_SUBCLASS_WEAPON_BOW || otherTmpl->SubClass != ITEM_SUBCLASS_WEAPON_GUN || otherTmpl->SubClass != ITEM_SUBCLASS_WEAPON_CROSSBOW) 
+            && (myTmpl->SubClass != ITEM_SUBCLASS_WEAPON_BOW || myTmpl->SubClass != ITEM_SUBCLASS_WEAPON_GUN || myTmpl->SubClass != ITEM_SUBCLASS_WEAPON_CROSSBOW))
+            if (myTmpl->SubClass != ITEM_SUBCLASS_WEAPON_MISC && otherTmpl->SubClass != ITEM_SUBCLASS_WEAPON_MISC)
+                return FAKE_ERR_DIFF_SUBCLASS;
+
     if (myTmpl->InventoryType != otherTmpl->InventoryType)
-        return FAKE_ERR_DIFF_SLOTS;
+        if ((otherTmpl->InventoryType != INVTYPE_CHEST && myTmpl->InventoryType != INVTYPE_ROBE) || (otherTmpl->InventoryType != INVTYPE_ROBE && myTmpl->InventoryType != INVTYPE_CHEST) || (otherTmpl->InventoryType != INVTYPE_WEAPON && (myTmpl->InventoryType != INVTYPE_WEAPONMAINHAND || myTmpl->InventoryType != INVTYPE_WEAPONOFFHAND)))
+            return FAKE_ERR_DIFF_SLOTS;
 
-    if (myTmpl->Material != otherTmpl->Material)
-        if(myTmpl->InventoryType != 14)//exlude shields
-            return FAKE_ERR_DIFF_MATERIAL;
-
-    /*if (myTmpl->SubClass != otherTmpl->SubClass)
-        return FAKE_ERR_DIFF_SUBCLASS;*/
-
-    if ((myTmpl->AllowableClass != otherTmpl->AllowableClass) && (otherTmpl->AllowableClass != -1) && (otherTmpl->AllowableClass != 2047)
-        && (otherTmpl->AllowableClass != 32767) && (otherTmpl->AllowableClass != 262143))
-            return FAKE_ERR_DIFF_CLASS;
+    if ((myTmpl->AllowableClass != otherTmpl->AllowableClass) && (otherTmpl->AllowableClass != -1) && (otherTmpl->AllowableClass != 2047) && (otherTmpl->AllowableClass != 32767) && (otherTmpl->AllowableClass != 262143))
+        return FAKE_ERR_DIFF_PLAYER_CLASS;
 
     //General masks -1, 511, 2047, 28671, 32767, 8388607
     if ((myTmpl->AllowableRace != otherTmpl->AllowableRace) && (otherTmpl->AllowableRace != -1) && (otherTmpl->AllowableRace != 511) &&
        (otherTmpl->AllowableRace !=  2047) && (otherTmpl->AllowableRace != 28671) && (otherTmpl->AllowableRace != 32767) && (otherTmpl->AllowableRace != 8388607))
             return FAKE_ERR_DIFF_RACE;
-
-    if (otherTmpl->Quality == ITEM_QUALITY_LEGENDARY || otherTmpl->Quality == ITEM_QUALITY_POOR)
-        return FAKE_ERR_WRONG_QUALITY;
 
     if (m_fakeDisplayEntry != iEntry)
     {

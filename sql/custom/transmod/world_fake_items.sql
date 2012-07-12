@@ -13,14 +13,16 @@ REPLACE INTO npc_text (ID, text0_0, em0_1) VALUES
 DELETE FROM  `locales_npc_text` WHERE  `entry`='65500';
 INSERT INTO `locales_npc_text` VALUES ('65500', null, null, null, null, null, null, null, 'Положите в первый слот рюкзака предмет, который вы хотите исказить. Во второй слот  предмет, модель которого будет использована для трансмогрификации.', null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
-DELETE FROM `trinity_string` WHERE `entry` IN (999970, 999971, 999972, 999973, 999974, 999975, 999976, 999976, 999977, 999978);
+DELETE FROM `trinity_string` WHERE `entry` IN (999970, 999971, 999972, 999973, 999974, 999975, 999976, 999976, 999977, 999978, 999979, 999980);
 INSERT INTO `trinity_string` (`entry`, `content_default`, `content_loc8`) VALUES
 (999970, 'Put items in the first and second slot of main bag!', 'Поставьте предметы в первый и второй слот основной сумки!'),
 (999971, 'It costs %u gold!', 'Это стоит %u золота!'),
 (999972, 'Cant find item!', 'Невозможно найти предмет!'),
 (999973, 'Item has wrong quality!', 'Предметы запрещенного качества!'),
 (999974, 'Items are from different slot!', 'Предметы из разных слотов!'),
-(999975, 'Items require different class!', 'Предметы для разных классов!'),
+(999975, 'Items require different player class!', 'Предметы для разных ировых классов!'),
 (999976, 'Items require different race!', 'Предметы для разных рас!'),
 (999977, 'Put item in the first slot!', 'Поставьте предмет в первый слот!'),
-(999978, 'Items made from different materials!', 'Предметы сделаны из разных материалов!');
+(999978, 'Items has different subclass material!', 'Предметы сделаны из разных материалов!'),
+(999979, 'Player can\'t equip that item!', 'Игрок не может использовать этот предмет'),
+(999980, 'Items has different class!', 'Разный класс предметов!');
