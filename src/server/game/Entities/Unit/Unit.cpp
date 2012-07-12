@@ -14041,7 +14041,9 @@ void Unit::CleanupBeforeRemoveFromMap(bool finalCleanup)
     ClearComboPointHolders();
     DeleteThreatList();
     getHostileRefManager().setOnlineOfflineState(false);
-    GetMotionMaster()->Clear(false);                    // remove different non-standard movement generators.
+
+    if (IsInWorld())
+        GetMotionMaster()->Clear(false);                    // remove different non-standard movement generators.
 }
 
 void Unit::CleanupsBeforeDelete(bool finalCleanup)
