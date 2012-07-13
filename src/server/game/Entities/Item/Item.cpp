@@ -1239,12 +1239,24 @@ FakeResult Item::SetFakeDisplay(uint32 iEntry)
     if (myTmpl->SubClass != otherTmpl->SubClass)
         if ((otherTmpl->SubClass != ITEM_SUBCLASS_WEAPON_BOW || otherTmpl->SubClass != ITEM_SUBCLASS_WEAPON_GUN || otherTmpl->SubClass != ITEM_SUBCLASS_WEAPON_CROSSBOW) 
             && (myTmpl->SubClass != ITEM_SUBCLASS_WEAPON_BOW || myTmpl->SubClass != ITEM_SUBCLASS_WEAPON_GUN || myTmpl->SubClass != ITEM_SUBCLASS_WEAPON_CROSSBOW))
-            if (myTmpl->SubClass != ITEM_SUBCLASS_WEAPON_MISC && otherTmpl->SubClass != ITEM_SUBCLASS_WEAPON_MISC)
                 return FAKE_ERR_DIFF_SUBCLASS;
 
     if (myTmpl->InventoryType != otherTmpl->InventoryType)
-        if ((otherTmpl->InventoryType != INVTYPE_CHEST && myTmpl->InventoryType != INVTYPE_ROBE) || (otherTmpl->InventoryType != INVTYPE_ROBE && myTmpl->InventoryType != INVTYPE_CHEST) || (otherTmpl->InventoryType != INVTYPE_WEAPON && (myTmpl->InventoryType != INVTYPE_WEAPONMAINHAND || myTmpl->InventoryType != INVTYPE_WEAPONOFFHAND)))
+    {
+        if (myTmpl->InventoryType == INVTYPE_ROBE)
+        {
+            if (otherTmpl->InventoryType != INVTYPE_CHEST)
+                return FAKE_ERR_DIFF_SLOTS;
+        }
+        else if (myTmpl->InventoryType == INVTYPE_CHEST)
+        {
+            if (otherTmpl->InventoryType != INVTYPE_ROBE)
+                return FAKE_ERR_DIFF_SLOTS;
+        }
+
+        if ((otherTmpl->InventoryType != INVTYPE_WEAPON && (myTmpl->InventoryType != INVTYPE_WEAPONMAINHAND || myTmpl->InventoryType != INVTYPE_WEAPONOFFHAND)))
             return FAKE_ERR_DIFF_SLOTS;
+    }
 
     if ((myTmpl->AllowableClass != otherTmpl->AllowableClass) && (otherTmpl->AllowableClass != -1) && (otherTmpl->AllowableClass != 2047) && (otherTmpl->AllowableClass != 32767) && (otherTmpl->AllowableClass != 262143))
         return FAKE_ERR_DIFF_PLAYER_CLASS;
@@ -1258,8 +1270,13 @@ FakeResult Item::SetFakeDisplay(uint32 iEntry)
     {
         sObjectMgr->SetFekeItem(GetGUIDLow(), iEntry);
 
-        (!m_fakeDisplayEntry) ? CharacterDatabase.PExecute("INSERT INTO fake_items VALUES (%u, %u)", GetGUIDLow(), iEntry) :
-                                CharacterDatabase.PExecute("UPDATE fake_items SET fakeEntry = %u WHERE guid = %u", iEntry, GetGUIDLow());
+        if (!m_fakeDisplayEntry) 
+        {
+            CharacterDatabase.PExecute("DELETE FROM fake_items WHERE guid = %u", GetGUIDLow());
+            CharacterDatabase.PExecute("INSERT INTO fake_items VALUES (%u, %u)", GetGUIDLow(), iEntry); 
+        } 
+        else CharacterDatabase.PExecute("UPDATE fake_items SET fakeEntry = %u WHERE guid = %u", iEntry, GetGUIDLow());
+
         m_fakeDisplayEntry = iEntry;
     }
 
