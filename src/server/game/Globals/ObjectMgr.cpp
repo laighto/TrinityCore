@@ -2764,6 +2764,9 @@ void ObjectMgr::LoadItemSetNames()
 
 void ObjectMgr::LoadFakeItems()
 {
+    sLog->outString("Deleting non-existing transmogrification entries...");
+    CharacterDatabase.Execute("DELETE FROM fake_items WHERE NOT EXISTS (SELECT 1 FROM item_instance WHERE item_instance.guid = fake_items.guid)");
+
     QueryResult result = CharacterDatabase.Query("SELECT `guid`, `fakeEntry` FROM `fake_items`");
 
     if (!result)
