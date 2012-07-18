@@ -3734,6 +3734,23 @@ void SpellMgr::LoadDbcDataCorrections()
 
         switch (spellInfo->SpellFamilyName)
         {
+            case SPELLFAMILY_PALADIN:
+                // Seals of the Pure should affect Seal of Righteousness
+                if (spellInfo->SpellIconID == 25 && spellInfo->Attributes & SPELL_ATTR0_PASSIVE)
+                    spellInfo->EffectSpellClassMask[0][1] |= 0x20000000;
+                else
+                // Sanctified Retribution talent fix
+                if (spellInfo->SpellFamilyFlags[2] & 0x20 && spellInfo->SpellIconID == 555)
+                {
+                    spellInfo->Effect[1] = 0;
+                    spellInfo->Effect[2] = 0;
+                }
+                break;
+            case SPELLFAMILY_DEATHKNIGHT:
+                // Icy Touch - extend FamilyFlags (unused value) for Sigil of the Frozen Conscience to use
+                if (spellInfo->SpellIconID == 2721 && spellInfo->SpellFamilyFlags[0] & 0x2)
+                    spellInfo->SpellFamilyFlags[0] |= 0x40;
+                break;
             case SPELLFAMILY_HUNTER:
                 // Monstrous Bite target fix
                 // seems we incorrectly handle spell with "no target"
@@ -3752,24 +3769,6 @@ void SpellMgr::LoadDbcDataCorrections()
                 // Divine Providence should affect at Prayer of Mending
                 else if (spellInfo->SpellIconID == 2845 && spellInfo->Id != 64844)
                     spellInfo->EffectSpellClassMask[0][1] |= 0x20;
-                else
-                    break;
-                break;
-            case SPELLFAMILY_PALADIN:                // Seals of the Pure should affect Seal of Righteousness
-                if (spellInfo->SpellIconID == 25 && spellInfo->Attributes & SPELL_ATTR0_PASSIVE)
-                    spellInfo->EffectSpellClassMask[0][1] |= 0x20000000;
-                else
-                // Sanctified Retribution talent fix
-                if (spellInfo->SpellFamilyFlags[2] & 0x20 && spellInfo->SpellIconID == 555)
-                {
-                    spellInfo->Effect[1] = 0;
-                    spellInfo->Effect[2] = 0;
-                }
-                break;
-            case SPELLFAMILY_DEATHKNIGHT:
-                // Icy Touch - extend FamilyFlags (unused value) for Sigil of the Frozen Conscience to use
-                if (spellInfo->SpellIconID == 2721 && spellInfo->SpellFamilyFlags[0] & 0x2)
-                    spellInfo->SpellFamilyFlags[0] |= 0x40;
                 break;
         }
     }
