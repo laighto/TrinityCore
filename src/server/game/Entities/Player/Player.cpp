@@ -11590,7 +11590,7 @@ InventoryResult Player::CanEquipItem(uint8 slot, uint16 &dest, Item* pItem, bool
             // check this only in game
             if (not_loading)
             {
-                // Fix Exploit 100% crit chance y 100% ARP (when Disarmed).
+                // Fix Exploit 100% crit chance with 100% ARP (when Disarmed).
                 if (HasFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_DISARMED) && (getClass() == CLASS_ROGUE || getClass() == CLASS_WARRIOR))
                     if (pProto->Class == ITEM_CLASS_WEAPON || pProto->Class == ITEM_CLASS_ARMOR)
                         return EQUIP_ERR_CANT_DO_RIGHT_NOW;
@@ -23902,16 +23902,19 @@ void Player::RemoveRunesByAuraEffect(AuraEffect const* aura)
 
 void Player::RestoreBaseRune(uint8 index)
 {
-    if(AuraEffect const* aura = m_runes->runes[index].ConvertAura)
-    {
+    AuraEffect const* aura = m_runes->runes[index].ConvertAura;
+
     // If rune was converted by a non-pasive aura that still active we should keep it converted
-    if (aura && !(aura->GetSpellInfo()->Attributes & SPELL_ATTR0_PASSIVE))
-        return;
-    if (index)
+    if (aura) 
     {
+        if(aura->GetSpellInfo()->Attributes & SPELL_ATTR0_PASSIVE)
+        {}
+        else return;
+    }
+
     ConvertRune(index, GetBaseRune(index));
     SetRuneConvertAura(index, NULL);
-    }
+
     // Don't drop passive talents providing rune convertion
     if (!aura || aura->GetAuraType() != SPELL_AURA_CONVERT_RUNE)
         return;
@@ -23922,7 +23925,6 @@ void Player::RestoreBaseRune(uint8 index)
             return;
     }
     aura->GetBase()->Remove();
-    }
 }
 
 void Player::ConvertRune(uint8 index, RuneType newType)
