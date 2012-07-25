@@ -685,15 +685,20 @@ void Map::RemoveFromMap(T *obj, bool remove)
     obj->UpdateObjectVisibility(true);
     obj->RemoveFromGrid();
 
-    obj->ResetMap();
+    //obj->ResetMap();
 
     if (remove)
     {
         // if option set then object already saved at this moment
         if (!sWorld->getBoolConfig(CONFIG_SAVE_RESPAWN_TIME_IMMEDIATELY))
             obj->SaveRespawnTime();
-        DeleteFromWorld(obj);
+        //DeleteFromWorld(obj);
     }
+
+    obj->ResetMap();
+
+    if (remove)
+        DeleteFromWorld(obj);
 }
 
 void Map::PlayerRelocation(Player* player, float x, float y, float z, float orientation)
