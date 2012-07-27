@@ -1059,6 +1059,22 @@ class go_captain_tyralius_prison : public GameObjectScript
                 tyralius->AI()->Talk(SAY_FREE);
                 tyralius->DespawnOrUnsummon(8000);
             }
+            else if (Creature* tyraliusprisson = go->FindNearestCreature(20825, 2.0f))
+            {
+                Position pos;
+                tyraliusprisson->GetPosition(&pos);
+                tyraliusprisson->SummonCreature(NPC_CAPTAIN_TYRALIUS, pos);
+
+                if (Creature* tyralius = go->FindNearestCreature(NPC_CAPTAIN_TYRALIUS, 2.0f))
+                {
+                    go->UseDoorOrButton();
+
+                    player->KilledMonsterCredit(NPC_CAPTAIN_TYRALIUS, 0);
+
+                    tyralius->AI()->Talk(SAY_FREE);
+                    tyralius->DespawnOrUnsummon(8000);
+                }
+            }
             return true;
         }
 };
