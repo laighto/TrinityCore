@@ -1334,8 +1334,10 @@ FakeResult Item::SetFakeDisplay(uint32 iEntry)
     if (diff_sub_class)
         return FAKE_ERR_DIFF_SUBCLASS;
 
-    if ((myTmpl->AllowableClass != otherTmpl->AllowableClass) && (otherTmpl->AllowableClass != -1) && (otherTmpl->AllowableClass != 2047) && (otherTmpl->AllowableClass != 32767) && (otherTmpl->AllowableClass != 262143))
-        return FAKE_ERR_DIFF_PLAYER_CLASS;
+    if (myTmpl->AllowableClass != otherTmpl->AllowableClass)
+        if((myTmpl->AllowableClass != -1) && (myTmpl->AllowableClass != 2047) && (myTmpl->AllowableClass != 32767) && (myTmpl->AllowableClass != 262143) ||
+            (otherTmpl->AllowableClass != -1) && (otherTmpl->AllowableClass != 2047) && (otherTmpl->AllowableClass != 32767) && (otherTmpl->AllowableClass != 262143))
+            return FAKE_ERR_DIFF_PLAYER_CLASS;
 
     //General masks -1, 511, 2047, 28671, 32767, 8388607
     if ((myTmpl->AllowableRace != otherTmpl->AllowableRace) && (otherTmpl->AllowableRace != -1) && (otherTmpl->AllowableRace != 511) &&
