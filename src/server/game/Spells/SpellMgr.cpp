@@ -3569,8 +3569,11 @@ void SpellMgr::LoadDbcDataCorrections()
 
             // Custom
             case 51678: // WintergraspSiegeEngine Ram set radius of damage for units to 5 yards 
-                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_5_YARDS; // SPELL_EFFECT_KNOCK_BACK
-                spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_5_YARDS; // SPELL_EFFECT_SCHOOL_DAMAGE
+                spellInfo->StartRecoveryCategory = 133;
+                spellInfo->StartRecoveryTime = 1500;
+                spellInfo->RecoveryTime = 4000;
+                spellInfo->EffectRadiusIndex[0] = EFFECT_RADIUS_13_YARDS; // SPELL_EFFECT_KNOCK_BACK
+                spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_13_YARDS; // SPELL_EFFECT_SCHOOL_DAMAGE
                 spellInfo->EffectRadiusIndex[2] = EFFECT_RADIUS_20_YARDS; // SPELL_EFFECT_WMO_DAMAGE, Huck but it must be -> Fortress towers are much bigger than original WMO damage radius of spell
                 break;
             case 62661: // Searing Flames
