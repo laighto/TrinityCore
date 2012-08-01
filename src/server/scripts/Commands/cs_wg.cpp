@@ -38,13 +38,13 @@ public:
             { "stop",           SEC_ADMINISTRATOR,  false, &HandleWintergraspStopCommand,         "", NULL },
             { "switch",         SEC_ADMINISTRATOR,  false, &HandleWintergraspSwitchTeamCommand,   "", NULL },
             { "timer",          SEC_ADMINISTRATOR,  false, &HandleWintergraspTimerCommand,        "", NULL },
-            { NULL,             0,                  false, NULL,                                                           "", NULL }
+            { NULL,             0,                  false, NULL,                                  "", NULL }
         };
 
         static ChatCommand commandTable[] =
         {
-            { "wg",             SEC_ADMINISTRATOR,  false, NULL,                                         "", wintergraspCommandTable },
-            { NULL,             0,                  false, NULL,                                                            "", NULL }
+            { "wg",             SEC_ADMINISTRATOR,  false, NULL,               "", wintergraspCommandTable },
+            { NULL,             0,                  false, NULL,                                  "", NULL }
         };
         return commandTable;
     }
@@ -53,7 +53,7 @@ public:
     {
         OutdoorPvPWG *pvpWG = (OutdoorPvPWG*)sOutdoorPvPMgr->GetOutdoorPvPToZoneId(4197);
 
-       if (!pvpWG || !sWorld->getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+        if (!pvpWG || !sWorld->getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
         {
             handler->SendSysMessage(LANG_BG_WG_DISABLE);
             handler->SetSentErrorMessage(true);
@@ -85,97 +85,97 @@ public:
     }
 
     static bool HandleWintergraspStopCommand(ChatHandler* handler, const char* /*args*/)
-{
-    OutdoorPvPWG *pvpWG = (OutdoorPvPWG*)sOutdoorPvPMgr->GetOutdoorPvPToZoneId(4197);
-
-    if (!pvpWG || !sWorld->getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
     {
-        handler->SendSysMessage(LANG_BG_WG_DISABLE);
-        handler->SetSentErrorMessage(true);
-        return false;
+        OutdoorPvPWG *pvpWG = (OutdoorPvPWG*)sOutdoorPvPMgr->GetOutdoorPvPToZoneId(4197);
+
+        if (!pvpWG || !sWorld->getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+        {
+            handler->SendSysMessage(LANG_BG_WG_DISABLE);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+        pvpWG->forceStopBattle();
+        handler->PSendSysMessage(LANG_BG_WG_BATTLE_FORCE_STOP);
+        return true;
     }
-    pvpWG->forceStopBattle();
-    handler->PSendSysMessage(LANG_BG_WG_BATTLE_FORCE_STOP);
-    return true;
-}
 
     static bool HandleWintergraspEnableCommand(ChatHandler* handler, const char* args)
-{
-    if(!*args)
-        return false;
-
-    OutdoorPvPWG *pvpWG = (OutdoorPvPWG*)sOutdoorPvPMgr->GetOutdoorPvPToZoneId(4197);
-
-    /*if (!pvpWG || !sWorld->getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
     {
-        handler->SendSysMessage(LANG_BG_WG_DISABLE);
-        handler->SetSentErrorMessage(true);
-        return false;
-    }*/
+        if(!*args)
+            return false;
 
-    if (!strncmp(args, "on", 3))
-    {
-        if (!sWorld->getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+        OutdoorPvPWG *pvpWG = (OutdoorPvPWG*)sOutdoorPvPMgr->GetOutdoorPvPToZoneId(4197);
+
+        /*if (!pvpWG || !sWorld->getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
         {
-            pvpWG->forceStopBattle();
-            sWorld->setBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED, true);
-        }
-        handler->PSendSysMessage(LANG_BG_WG_ENABLE);
-        return true;
-    }
-    else if (!strncmp(args, "off", 4))
-    {
-        if (sWorld->getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+            handler->SendSysMessage(LANG_BG_WG_DISABLE);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }*/
+
+        if (!strncmp(args, "on", 3))
         {
-            pvpWG->forceStopBattle();
-            sWorld->setBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED, false);
+            if (!sWorld->getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+            {
+                pvpWG->forceStopBattle();
+                sWorld->setBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED, true);
+            }
+            handler->PSendSysMessage(LANG_BG_WG_ENABLE);
+            return true;
         }
-        handler->PSendSysMessage(LANG_BG_WG_DISABLE);
-        return true;
+        else if (!strncmp(args, "off", 4))
+        {
+            if (sWorld->getBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED))
+            {
+                pvpWG->forceStopBattle();
+                sWorld->setBoolConfig(CONFIG_OUTDOORPVP_WINTERGRASP_ENABLED, false);
+            }
+            handler->PSendSysMessage(LANG_BG_WG_DISABLE);
+            return true;
+        }
+        else
+        {
+            handler->SendSysMessage(LANG_USE_BOL);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
     }
-    else
-    {
-        handler->SendSysMessage(LANG_USE_BOL);
-        handler->SetSentErrorMessage(true);
-        return false;
-    }
-}
 
     static bool HandleWintergraspTimerCommand(ChatHandler* handler, const char* args)
-{
-    if(!*args)
-        return false;
-
-    OutdoorPvPWG *pvpWG = (OutdoorPvPWG*)sOutdoorPvPMgr->GetOutdoorPvPToZoneId(4197);
-
-    if (!pvpWG)
     {
-        handler->SendSysMessage(LANG_BG_WG_DISABLE);
-        handler->SetSentErrorMessage(true);
-        return false;
-    }
-
-    int32 time = atoi (args);
-
-    // Min value 1 min
-    if (1 > time)
-        time = 1;
-    // Max value during wartime = 60. No wartime = 1440 (day)
-    if (pvpWG->isWarTime())
-    {
-        if (60 < time)
+        if(!*args)
             return false;
-    }
-    else
-        if (1440 < time)
-            return false;
-    time *= MINUTE * IN_MILLISECONDS;
 
-    pvpWG->setTimer((uint32)time);
-    sWorld->SendWintergraspState(); //Update WG time at bg tab
-    handler->PSendSysMessage(LANG_BG_WG_CHANGE_TIMER, secsToTimeString(pvpWG->GetTimer(), true).c_str());
-    return true;
-}
+        OutdoorPvPWG *pvpWG = (OutdoorPvPWG*)sOutdoorPvPMgr->GetOutdoorPvPToZoneId(4197);
+
+        if (!pvpWG)
+        {
+            handler->SendSysMessage(LANG_BG_WG_DISABLE);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        int32 time = atoi (args);
+
+        // Min value 1 min
+        if (1 > time)
+            time = 1;
+        // Max value during wartime = 60. No wartime = 1440 (day)
+        if (pvpWG->isWarTime())
+        {
+            if (60 < time)
+                return false;
+        }
+        else if (1440 < time)
+            return false;
+
+        time *= MINUTE * IN_MILLISECONDS;
+
+        pvpWG->setTimer((uint32)time);
+        sWorld->SendWintergraspState(); //Update WG time at bg tab
+        handler->PSendSysMessage(LANG_BG_WG_CHANGE_TIMER, secsToTimeString(pvpWG->GetTimer(), true).c_str());
+        return true;
+    }
 
     static bool HandleWintergraspSwitchTeamCommand(ChatHandler* handler, const char* /*args*/)
     {
