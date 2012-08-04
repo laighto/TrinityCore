@@ -23792,11 +23792,12 @@ void Player::RestoreBaseRune(uint8 index)
     // If rune was converted by a non-pasive aura that still active we should keep it converted
     if (aura)
     {
+        sLog->outError(LOG_FILTER_SPELLS_AURAS, "Restore Base RUNE Detected AURA -> %u", aura->GetId());
         uint32 attrib = aura->GetSpellInfo()->Attributes;
         if(attrib & SPELL_ATTR0_PASSIVE)
         {
             std::string str = "";
-            str = "|cFFFFFC00[RESTORE BASE RUNE] PASSIVE YES SKIP!|r"; //TRACE MESSAGE
+            str = "|cFFFFFC00[RBR] PASSIVE? YES - SKIP!|r"; //TRACE MESSAGE
             WorldPacket data(SMSG_NOTIFICATION, (str.size()+1));
             data << str;
             sWorld->SendGlobalGMMessage(&data);
