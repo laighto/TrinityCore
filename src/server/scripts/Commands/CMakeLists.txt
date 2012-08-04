@@ -15,10 +15,13 @@ set(scripts_STAT_SRCS
   Commands/cs_ban.cpp
   Commands/cs_cast.cpp
   Commands/cs_character.cpp
+  Commands/cs_debug.cpp
+  Commands/cs_disable.cpp
+  Commands/cs_event.cpp
   Commands/cs_anticheat.cpp
-  Commands/cs_debug.cpp  Commands/cs_event.cpp
-  Commands/cs_gm.cpp
-  Commands/cs_go.cpp
+  Commands/cs_debug.cpp
+  Commands/cs_event.cpp
+  Commands/cs_gm.cpp  Commands/cs_go.cpp
   Commands/cs_gobject.cpp
   Commands/cs_guild.cpp
   Commands/cs_honor.cpp
