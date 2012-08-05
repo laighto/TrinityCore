@@ -662,7 +662,7 @@ void WorldSession::HandleCharCreateCallback(PreparedQueryResult result, Characte
 
             std::string IP_str = GetRemoteAddress();
             sLog->outInfo(LOG_FILTER_NETWORKIO, "Account: %d (IP: %s) Create Character:[%s] (GUID: %u)", GetAccountId(), IP_str.c_str(), createInfo->Name.c_str(), newChar.GetGUIDLow());
-            sLog->outDebug(LOG_FILTER_PLAYER, "Account: %d (IP: %s) Create Character:[%s] (GUID: %u)", GetAccountId(), IP_str.c_str(), createInfo->Name.c_str(), newChar.GetGUIDLow());
+            sLog->outPlayerLog(LOG_FILTER_PLAYER, "Account: %d (IP: %s) Create Character:[%s] (GUID: %u)", GetAccountId(), IP_str.c_str(), createInfo->Name.c_str(), newChar.GetGUIDLow());
             sScriptMgr->OnPlayerCreate(&newChar);
             sWorld->AddCharacterNameData(newChar.GetGUIDLow(), std::string(newChar.GetName()), newChar.getGender(), newChar.getRace(), newChar.getClass());
 
@@ -723,7 +723,7 @@ void WorldSession::HandleCharDeleteOpcode(WorldPacket & recv_data)
 
     std::string IP_str = GetRemoteAddress();
     sLog->outInfo(LOG_FILTER_NETWORKIO, "Account: %d (IP: %s) Delete Character:[%s] (GUID: %u)", GetAccountId(), IP_str.c_str(), name.c_str(), GUID_LOPART(guid));
-    sLog->outDebug(LOG_FILTER_PLAYER, "Account: %d (IP: %s) Delete Character:[%s] (GUID: %u)", GetAccountId(), IP_str.c_str(), name.c_str(), GUID_LOPART(guid));
+    sLog->outPlayerLog(LOG_FILTER_PLAYER, "Account: %d (IP: %s) Delete Character:[%s] (GUID: %u)", GetAccountId(), IP_str.c_str(), name.c_str(), GUID_LOPART(guid));
     sScriptMgr->OnPlayerDelete(guid);
     sWorld->DeleteCharaceterNameData(GUID_LOPART(guid));
 
@@ -1026,7 +1026,7 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
         SendNotification(LANG_GM_ON);
 
     std::string IP_str = GetRemoteAddress();
-    sLog->outDebug(LOG_FILTER_PLAYER, "Account: %d (IP: %s) Login Character:[%s] (GUID: %u) Level: %d",
+    sLog->outPlayerLog(LOG_FILTER_PLAYER, "Account: %d (IP: %s) Login Character:[%s] (GUID: %u) Level: %d",
         GetAccountId(), IP_str.c_str(), pCurrChar->GetName(), pCurrChar->GetGUIDLow(), pCurrChar->getLevel());
 
     if (!pCurrChar->IsStandState() && !pCurrChar->HasUnitState(UNIT_STATE_STUNNED))
@@ -1203,7 +1203,7 @@ void WorldSession::HandleChangePlayerNameOpcodeCallBack(PreparedQueryResult resu
 
     CharacterDatabase.Execute(stmt);
 
-    sLog->outDebug(LOG_FILTER_PLAYER, "Account: %d (IP: %s) Character:[%s] (guid:%u) Changed name to: %s", GetAccountId(), GetRemoteAddress().c_str(), oldName.c_str(), guidLow, newName.c_str());
+    sLog->outPlayerLog(LOG_FILTER_PLAYER, "Account: %d (IP: %s) Character:[%s] (guid:%u) Changed name to: %s", GetAccountId(), GetRemoteAddress().c_str(), oldName.c_str(), guidLow, newName.c_str());
 
     WorldPacket data(SMSG_CHAR_RENAME, 1+8+(newName.size()+1));
     data << uint8(RESPONSE_SUCCESS);
@@ -1470,7 +1470,7 @@ void WorldSession::HandleCharCustomize(WorldPacket& recv_data)
     if (result)
     {
         std::string oldname = result->Fetch()[0].GetString();
-        sLog->outDebug(LOG_FILTER_PLAYER, "Account: %d (IP: %s), Character[%s] (guid:%u) Customized to: %s", GetAccountId(), GetRemoteAddress().c_str(), oldname.c_str(), GUID_LOPART(guid), newName.c_str());
+        sLog->outPlayerLog(LOG_FILTER_PLAYER, "Account: %d (IP: %s), Character[%s] (guid:%u) Customized to: %s", GetAccountId(), GetRemoteAddress().c_str(), oldname.c_str(), GUID_LOPART(guid), newName.c_str());
     }
 
     Player::Customize(guid, gender, skin, face, hairStyle, hairColor, facialHair);

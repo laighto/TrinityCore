@@ -161,6 +161,9 @@ void AppenderConsole::_write(LogMessage& message)
         uint8 index;
         switch (message.level)
         {
+            case LOG_LEVEL_PLAYER_LOG:
+               index = 6;
+               break;
             case LOG_LEVEL_TRACE:
                index = 5;
                break;

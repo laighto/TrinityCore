@@ -88,6 +88,8 @@ const char* Appender::getLogLevelString(LogLevel level)
             return "DEBUG";
         case LOG_LEVEL_TRACE:
             return "TRACE";
+        case LOG_LEVEL_PLAYER_LOG:
+            return "PLAYER";
         default:
             return "DISABLED";
     }
