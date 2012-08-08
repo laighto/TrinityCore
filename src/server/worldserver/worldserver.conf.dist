@@ -2729,7 +2729,6 @@ PlayerDump.DisallowOverwrite = 1
 #                     4 - (Warn)
 #                     5 - (Error)
 #                     6 - (Fatal)
-#                     7 - (Account actions for Characters loging)
 #
 #    Logger.name.Appenders
 #        Description: List of appenders linked to logger

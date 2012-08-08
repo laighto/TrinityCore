@@ -397,19 +397,6 @@ void Log::outFatal(LogFilterType filter, const char * str, ...)
     va_end(ap);
 }
 
-void Log::outPlayerLog(LogFilterType filter, const char * str, ...)
-{
-    if (!str || !ShouldLog(filter, LOG_LEVEL_PLAYER_LOG))
-        return;
-
-    va_list ap;
-    va_start(ap, str);
-
-    vlog(filter, LOG_LEVEL_PLAYER_LOG, str, ap);
-
-    va_end(ap);
-}
-
 void Log::outCommand(uint32 account, const char * str, ...)
 {
     if (!str || !ShouldLog(LOG_FILTER_GMCOMMAND, LOG_LEVEL_INFO))

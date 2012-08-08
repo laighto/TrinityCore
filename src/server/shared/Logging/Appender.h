@@ -73,7 +73,6 @@ enum LogLevel
     LOG_LEVEL_WARN                               = 4,
     LOG_LEVEL_ERROR                              = 5,
     LOG_LEVEL_FATAL                              = 6,
-    LOG_LEVEL_PLAYER_LOG                         = 7,
 };
 
 const uint8 MaxLogLevels = 6;
