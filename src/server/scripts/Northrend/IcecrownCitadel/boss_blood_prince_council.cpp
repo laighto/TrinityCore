@@ -853,6 +853,9 @@ class boss_prince_valanar_icc : public CreatureScript
 
                 Talk(SAY_VALANAR_DEATH);
                 instance->SendEncounterUnit(ENCOUNTER_FRAME_DISENGAGE, me);
+
+                instance->SetBossState(DATA_BLOOD_PRINCES_CONTROL, DONE);
+                instance->SaveToDB();
             }
 
             void JustReachedHome()

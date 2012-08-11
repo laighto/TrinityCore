@@ -230,8 +230,11 @@ class boss_sindragosa : public CreatureScript
 
             void JustDied(Unit* killer)
             {
+                instance->SetBossState(DATA_VALITHRIA_DREAMWALKER, DONE);
+                instance->SaveToDB();
                 BossAI::JustDied(killer);
                 Talk(SAY_DEATH);
+                _JustDied();
             }
 
             void EnterCombat(Unit* victim)
