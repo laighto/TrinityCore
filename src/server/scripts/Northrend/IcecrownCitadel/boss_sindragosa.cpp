@@ -235,6 +235,8 @@ class boss_sindragosa : public CreatureScript
                 BossAI::JustDied(killer);
                 Talk(SAY_DEATH);
                 _JustDied();
+                instance->SetBossState(DATA_SINDRAGOSA, DONE);
+                instance->SaveToDB();
             }
 
             void EnterCombat(Unit* victim)

@@ -339,9 +339,6 @@ class boss_valithria_dreamwalker : public CreatureScript
                 // encounter complete
                 if (me->HealthAbovePctHealed(100, heal) && !_done)
                 {
-                    _instance->SetBossState(DATA_VALITHRIA_DREAMWALKER, DONE);
-                    _instance->SaveToDB();
- 
                     _done = true;
                     Talk(SAY_VALITHRIA_SUCCESS);
                     _instance->SendEncounterUnit(ENCOUNTER_FRAME_DISENGAGE, me);
@@ -402,6 +399,9 @@ class boss_valithria_dreamwalker : public CreatureScript
 
                     if (Creature* trigger = ObjectAccessor::GetCreature(*me, _instance->GetData64(DATA_VALITHRIA_TRIGGER)))
                         me->Kill(trigger);
+
+                    _instance->SetBossState(DATA_VALITHRIA_DREAMWALKER, DONE);
+                    _instance->SaveToDB();
                 }
             }
 
