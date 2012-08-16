@@ -26,6 +26,7 @@ void AddSC_example_misc();
 void AddSC_example_commandscript();
 void AddSC_DuelReset();
 void AddSC_gmisland();
+void AddSC_pvp_script();
 void AddSC_anticheat_commandscript();
 void AddSC_transmogrify_script();
 
@@ -647,6 +648,7 @@ void AddExampleScripts()
     AddSC_example_commandscript();
     AddSC_DuelReset();
     AddSC_gmisland();
+    AddSC_pvp_script();
     AddSC_transmogrify_script();
 }
 
