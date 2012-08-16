@@ -162,32 +162,26 @@ public:
             killed->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
         }
     }
-
-    /* void OnPVPKill(Creature* killer, Player* killed)
-    {
-        if (killed->GetAreaId() == 2177) //&& killed->GetMapId() == 33
-        {
-            if (killed->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
-                killed->RemoveAurasByType(SPELL_AURA_MOD_SHAPESHIFT);
-
-            killed->KillPlayer();
-            killed->ResurrectPlayer(1.0f, false);
-
-            killed->CastSpell(killed, 13874, true);
-            if (Aura * aur = killed->GetAura(13874))
-                aur->SetDuration(5*IN_MILLISECONDS); // Божественный щит
-
-            uint32 rnd = urand(0,2);
-            killed->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
-        }
-    }*/
 };
-/*######
-##
-######*/
+
+class mod_afk : public PlayerScript
+{
+public:
+    mod_afk() : PlayerScript("mod_afk") { }
+
+    void OnPlayerAfk(Player* player)
+    {
+        if (player->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_AFK) && player->GetZoneId() == 4395/*Dalaran zone*/)
+        {
+            uint32 rnd = urand(0,2);
+            player->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
+        }
+    }
+};
 
 void AddSC_stranglethorn_vale()
 {
     new mob_yenniku();
     new mob_ressurect();
+    new mod_afk();
 }

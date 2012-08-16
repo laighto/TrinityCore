@@ -1197,6 +1197,12 @@ bool ScriptMgr::OnCriteriaCheck(AchievementCriteriaData const* data, Player* sou
 }
 
 // Player
+
+void ScriptMgr::OnPlayerAfk(Player* player)
+{
+    FOREACH_SCRIPT(PlayerScript)->OnPlayerAfk(player);
+}
+
 void ScriptMgr::OnPVPKill(Player* killer, Player* killed)
 {
     FOREACH_SCRIPT(PlayerScript)->OnPVPKill(killer, killed);
