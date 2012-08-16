@@ -53,7 +53,7 @@ public:
             if (urand(1,200) == urand(1,200))
             {
                 killer->AddItem(EMBLEM_OF_FROST, 1);
-                sWorld->SendWorldText(12015, killer->GetName);
+                sWorld->SendWorldText(12015, killer->GetName());
             }
         }
     }
