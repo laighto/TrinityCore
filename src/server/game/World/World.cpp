@@ -1224,6 +1224,8 @@ void World::LoadConfigSettings(bool reload)
 
     //Gurubashi Arena
     m_bool_configs[PvPEvent] = ConfigMgr::GetBoolDefault("PvPEvent", false);
+    m_bool_configs[DalaranAntiAfk] = ConfigMgr::GetBoolDefault("DalaranAntiAfk", false);
+    m_bool_configs[DalaranAntiAfkTP] = ConfigMgr::GetBoolDefault("DalaranAntiAfkTP", false);
     // Duel Reset Cooldown 
     m_bool_configs[CONFIG_DUEL_RESET_COOLDOWN] = ConfigMgr::GetBoolDefault("DuelResetCooldown", false);
     // Passive Anticheat

@@ -118,70 +118,7 @@ public:
     };
 };
 
-const Position allyPositions[3] =
-{
-    { -13248.2f, 282.385f, 21.8568f, 0.12517f },
-    { -13193.7f, 315.692f, 21.8568f, 4.36162f },
-    { -13162.7f, 262.096f, 21.8568f, 2.91257f },
-};
-
-class mob_ressurect : public PlayerScript
-{
-public:
-    mob_ressurect() : PlayerScript("mob_ressurect") { }
-
-    void OnPVPKill(Player* killer, Player* killed)
-    {
-        if (killed->GetAreaId() == 2177) /*&& killed->GetMapId() == 33*/
-        {
-            if (killed->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
-                killed->RemoveAurasByType(SPELL_AURA_MOD_SHAPESHIFT);
-
-            killed->KillPlayer();
-            killed->ResurrectPlayer(1.0f, false);
-
-            if (killer->GetAreaId() != 2177)
-            {
-                killer->CastSpell(killer, 15007, true);
-                if (Aura * aur = killer->GetAura(15007))
-                    aur->SetDuration(30*IN_MILLISECONDS); // Слабость негодникам
-            }
-
-            killed->CastSpell(killed, 48325, true);
-            if (Aura * aur = killed->GetAura(48325))
-                aur->SetDuration(7*IN_MILLISECONDS); //  Божественный щит
-
-            if (sWorld->getBoolConfig(PvPEvent))
-            {
-                killed->CastSpell(killed, 9454, true);
-                if (Aura * freeze = killed->GetAura(9454))
-                freeze->SetDuration(300*IN_MILLISECONDS); //  Заморозка
-            }
-
-            uint32 rnd = urand(0,2);
-            killed->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
-        }
-    }
-};
-
-class mod_afk : public PlayerScript
-{
-public:
-    mod_afk() : PlayerScript("mod_afk") { }
-
-    void OnPlayerAfk(Player* player)
-    {
-        if (player->HasFlag(PLAYER_FLAGS, PLAYER_FLAGS_AFK) && player->GetZoneId() == 4395/*Dalaran zone*/)
-        {
-            uint32 rnd = urand(0,2);
-            player->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
-        }
-    }
-};
-
 void AddSC_stranglethorn_vale()
 {
     new mob_yenniku();
-    new mob_ressurect();
-    new mod_afk();
 }

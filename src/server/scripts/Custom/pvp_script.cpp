@@ -1,0 +1,83 @@
+#include "ScriptMgr.h"
+#include "ScriptedCreature.h"
+#include "World.h"
+
+const Position allyPositions[3] =
+{
+    { -13248.2f, 282.385f, 21.8568f, 0.12517f },
+    { -13193.7f, 315.692f, 21.8568f, 4.36162f },
+    { -13162.7f, 262.096f, 21.8568f, 2.91257f },
+};
+
+enum itemdata
+{
+    EMBLEM_OF_FROST = 49426,
+};
+
+class mob_ressurect : public PlayerScript
+{
+public:
+    mob_ressurect() : PlayerScript("mob_ressurect") { }
+
+    void OnPVPKill(Player* killer, Player* killed)
+    {
+        if (killed->GetAreaId() == 2177) /*&& killed->GetMapId() == 33*/
+        {
+            if (killed->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
+                killed->RemoveAurasByType(SPELL_AURA_MOD_SHAPESHIFT);
+
+            killed->KillPlayer();
+            killed->ResurrectPlayer(1.0f, false);
+
+            if (killer->GetAreaId() != 2177)
+            {
+                killer->CastSpell(killer, 15007, true);
+                if (Aura * aur = killer->GetAura(15007))
+                    aur->SetDuration(30*IN_MILLISECONDS); // Слабость негодникам
+            }
+
+            killed->CastSpell(killed, 48325, true);
+            if (Aura * aur = killed->GetAura(48325))
+                aur->SetDuration(7*IN_MILLISECONDS); //  Божественный щит
+
+            if (sWorld->getBoolConfig(PvPEvent))
+            {
+                killed->CastSpell(killed, 9454, true);
+                if (Aura * freeze = killed->GetAura(9454))
+                    freeze->SetDuration(300*IN_MILLISECONDS); //  Заморозка
+            }
+
+            uint32 rnd = urand(0,2);
+            killed->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
+           
+            if (urand(1,100) == urand(1,100))
+                killer->AddItem(EMBLEM_OF_FROST, 1);
+        }
+    }
+};
+
+class mod_afk : public PlayerScript
+{
+public:
+    mod_afk() : PlayerScript("mod_afk") { }
+
+    void OnPlayerAfk(Player* player)
+    {
+        if (sWorld->getBoolConfig(DalaranAntiAfk))
+        {
+            if (player->GetZoneId() == 4395/*Dalaran zone*/)
+            {
+                player->SetDisplayId(31735);
+                if (sWorld->getBoolConfig(DalaranAntiAfkTP))
+                    player->TeleportTo(0, -13225.71f, 232.982f, 33.436f, 1.055f);
+                else player->TeleportTo(571, 5806.56f, 865.759f, 1063.911f, 4.639f);
+            }
+        }
+    }
+};
+
+void AddSC_pvp_script()
+{
+    new mob_ressurect();
+    new mod_afk();
+}
