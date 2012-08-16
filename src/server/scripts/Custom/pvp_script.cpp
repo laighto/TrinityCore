@@ -56,6 +56,13 @@ public:
     }
 };
 
+const Position afkPositions[3] =
+{
+    { 5806.56f, 865.759f, 1063.911f, 4.739f },
+    { 5644.94f, 861.313f, 569.724f, 2.4673f },
+    { 5652.90f, 454.909f, 789.917f, 0.8486f },
+};
+
 class mod_afk : public PlayerScript
 {
 public:
@@ -67,10 +74,17 @@ public:
         {
             if (player->GetZoneId() == 4395/*Dalaran zone*/)
             {
-                player->SetDisplayId(31735);
+                if (urand(0, 5) > urand (0, 5))
+                	player->SetDisplayId(21304);//pig
+                else player->SetDisplayId(25146);//elemental
+
                 if (sWorld->getBoolConfig(DalaranAntiAfkTP))
                     player->TeleportTo(0, -13225.71f, 232.982f, 33.436f, 1.055f);
-                else player->TeleportTo(571, 5806.56f, 865.759f, 1063.911f, 4.639f);
+                else
+                {
+                    uint32 rnd = urand(0, 2);
+                    player->TeleportTo(571, afkPositions[rnd].GetPositionX(), afkPositions[rnd].GetPositionY(), afkPositions[rnd].GetPositionZ(), afkPositions[rnd].GetOrientation());
+                }
             }
         }
     }
