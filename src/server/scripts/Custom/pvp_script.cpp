@@ -26,8 +26,8 @@ public:
             if (killed->HasAuraType(SPELL_AURA_SPIRIT_OF_REDEMPTION))
                 killed->RemoveAurasByType(SPELL_AURA_MOD_SHAPESHIFT);
 
-            killed->KillPlayer();
             killed->ResurrectPlayer(1.0f, false);
+            killed->DurabilityRepairAll(false, 0, false);
 
             if (killer->GetAreaId() != 2177)
             {
