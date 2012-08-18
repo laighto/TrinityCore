@@ -27,6 +27,7 @@ void AddSC_example_commandscript();
 void AddSC_DuelReset();
 void AddSC_gmisland();
 void AddSC_pvp_script();
+void ADSC_argent_tournamet_custom();
 void AddSC_anticheat_commandscript();
 void AddSC_transmogrify_script();
 
@@ -649,6 +650,7 @@ void AddExampleScripts()
     AddSC_DuelReset();
     AddSC_gmisland();
     AddSC_pvp_script();
+    ADSC_argent_tournamet_custom();
     AddSC_transmogrify_script();
 }
 

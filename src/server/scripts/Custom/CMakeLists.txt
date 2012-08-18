@@ -13,6 +13,7 @@ set(scripts_STAT_SRCS
   Custom/gmisland_protector.cpp
   Custom/npc_transmogrify.cpp
   Custom/pvp_script.cpp
+  Custom/argent_tournament.cpp
 )
 
 message("  -> Prepared: Custom")
