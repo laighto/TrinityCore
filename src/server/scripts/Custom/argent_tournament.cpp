@@ -1,3 +1,7 @@
+/*######
+## npc_valiant_melee 
+######*/
+
 enum Valiant
 {
     QUEST_GRAND_MELEE_1             = 13665,
@@ -233,7 +237,7 @@ class the_gand_melee : public CreatureScript
 };
 
 /*######
-## npc_valiant  
+## npc_valiant_champions 
 ######*/
 
 enum SpellGral
@@ -248,7 +252,6 @@ enum SpellGral
     SHIELD_LEVEL1                           = 62719,
     SHIELD_LEVEL2                           = 64100,
     SHIELD_LEVEL3                           = 63132,
-   // YELLOW_ROSE_FIREWORK                    = 11544
 };
 
 enum TimersGral
@@ -332,7 +335,8 @@ public:
             me->setFaction(35);
             me->SetHealth(1);
             pTarget->CastSpell(pTarget, MOUNTED_MELEE_VICTORY, true);
-            me->SetVisible(false);
+
+            me->DespawnOrUnsummon(4000);
         }
        
         void KilledUnit(Unit *victim)
@@ -501,7 +505,7 @@ public:
             pCreature->SetReactState(REACT_AGGRESSIVE);
             pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE  | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
             pCreature->MonsterSay(urand(0,1) ? SAY_START_1 : SAY_START_2, LANG_UNIVERSAL, 0);
-            pCreature->AI()->AttackStart(pPlayer);
+            pCreature->AI()->AttackStart(pPlayer->GetVehicleCreatureBase());
             pCreature->AddThreat(pPlayer, 0.0f);
             pCreature->SetInCombatWith(pPlayer);
             pPlayer->SetInCombatWith(pCreature);
