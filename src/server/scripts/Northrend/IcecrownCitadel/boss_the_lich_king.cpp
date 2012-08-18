@@ -2230,7 +2230,7 @@ class spell_the_lich_king_necrotic_plague_jump : public SpellScriptLoader
                 values.AddSpellMod(SPELLVALUE_AURA_STACK, GetStackAmount());
                 values.AddSpellMod(SPELLVALUE_BASE_POINT1, AURA_REMOVE_BY_ENEMY_SPELL); // add as marker (spell has no effect 1)
 
-                if (GetCaster()->GetTypeId() == TYPEID_PLAYER)
+               // if (GetCaster()->GetTypeId() == TYPEID_PLAYER)
                     GetTarget()->CastCustomSpell(SPELL_NECROTIC_PLAGUE_JUMP, values, NULL, true, NULL, NULL, GetCasterGUID());
 
                 if (Unit* caster = GetCaster())
