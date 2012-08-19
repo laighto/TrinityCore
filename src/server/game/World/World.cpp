@@ -1611,9 +1611,6 @@ void World::SetInitialWorldSettings()
     sLog->outInfo(LOG_FILTER_SERVER_LOADING, "Loading Gossip menu...");
     sObjectMgr->LoadGossipMenu();
 
-    sLog->outInfo(LOG_FILTER_SERVER_LOADING, "Loading Gossip scripts ...");
-    sObjectMgr->LoadGossipScripts();                             // must be before gossip menu options
-
     sLog->outInfo(LOG_FILTER_SERVER_LOADING, "Loading Gossip menu options...");
     sObjectMgr->LoadGossipMenuItems();
 
