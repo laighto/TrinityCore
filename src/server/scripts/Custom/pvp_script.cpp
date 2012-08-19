@@ -77,16 +77,20 @@ public:
         {
             if (player->GetZoneId() == 4395/*Dalaran zone*/)
             {
-                if (urand(0, 5) > urand (0, 5))
+                uint32 rand = urand(0, 2);
+
+                if (rand == 0)
                 	player->SetDisplayId(21304);//pig
-                else player->SetDisplayId(25146);//elemental
+                else if (rand == 1)
+                    player->SetDisplayId(25146); //elemental
+                else player->SetDisplayId(30414); //panda monk
 
                 if (sWorld->getBoolConfig(DalaranAntiAfkTP))
                     player->TeleportTo(0, -13225.71f, 232.982f, 33.436f, 1.055f);
                 else
                 {
-                    uint32 rnd = urand(0, 2);
-                    player->TeleportTo(571, afkPositions[rnd].GetPositionX(), afkPositions[rnd].GetPositionY(), afkPositions[rnd].GetPositionZ(), afkPositions[rnd].GetOrientation());
+                     uint32 rnd = urand(0, 2);
+                     player->TeleportTo(571, afkPositions[rnd].GetPositionX(), afkPositions[rnd].GetPositionY(), afkPositions[rnd].GetPositionZ(), afkPositions[rnd].GetOrientation());
                 }
             }
         }
