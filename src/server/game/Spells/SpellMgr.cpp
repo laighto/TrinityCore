@@ -3542,6 +3542,9 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->EffectRadiusIndex[1] = EFFECT_RADIUS_13_YARDS; // SPELL_EFFECT_SCHOOL_DAMAGE
                 spellInfo->EffectRadiusIndex[2] = EFFECT_RADIUS_20_YARDS; // SPELL_EFFECT_WMO_DAMAGE, Huck but it must be -> Fortress towers are much bigger than original WMO damage radius of spell
                 break;
+            case 62345: // UlduarSiegeEngine Ram set radius of WMO damage (15m)
+                spellInfo->EffectRadiusIndex[2] = EFFECT_RADIUS_25_YARDS; // SPELL_EFFECT_WMO_DAMAGE, Huck but it must be -> Fortress towers are much bigger than original WMO damage radius of spell
+                break;
             case 62661: // Searing Flames
             case 61915: // Lightning Whirl 10
             case 63483: // Lightning Whirl 25
