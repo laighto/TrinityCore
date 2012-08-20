@@ -344,6 +344,16 @@ void Spell::EffectSchoolDMG(SpellEffIndex effIndex)
 
                 switch (m_spellInfo->Id)                     // better way to check unknown
                 {
+                    // Thaddius - Positive charge
+                    case 28062:
+                        if (unitTarget->HasAura(28059))
+                            return;
+                        break;
+                    // Thaddius - Negative charge
+                    case 28085:
+                        if (unitTarget->HasAura(28084))
+                            return;
+                        break;
                     // Consumption
                     case 28865:
                         damage = (((InstanceMap*)m_caster->GetMap())->GetDifficulty() == REGULAR_DIFFICULTY ? 2750 : 4250);
