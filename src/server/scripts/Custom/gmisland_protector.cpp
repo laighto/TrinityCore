@@ -33,8 +33,8 @@ public:
                 sWorld->SendGlobalGMMessage(&data);
                 //who->TeleportTo(0, busted[0].GetPositionX(), busted[0].GetPositionY(), busted[0].GetPositionZ(), busted[0].GetOrientation());
                 who->CastSpell(who, 9454, true);
-                if (Aura * freeze = who->GetAura(9454))
-                    freeze->SetDuration(120*IN_MILLISECONDS); // Заморозка
+                /*if (Aura * freeze = who->GetAura(9454))
+                    freeze->SetDuration(600*IN_MILLISECONDS); // Заморозка */
             }
         }
     };
