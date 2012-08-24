@@ -64,6 +64,7 @@ class instance_ulduar : public InstanceMapScript
             uint64 YoggSaronGUID;
             uint64 AlgalonGUID;
             uint64 LeviathanGateGUID;
+            uint64 LightningDoorGUID;
             uint64 VezaxDoorGUID;
 
             // GameObjects
@@ -117,6 +118,7 @@ class instance_ulduar : public InstanceMapScript
                 HodirRareCacheGUID               = 0;
                 HodirChestGUID                   = 0;
                 LeviathanGateGUID                = 0;
+                LightningDoorGUID                = 0;                
                 VezaxDoorGUID                    = 0;
                 HodirDoorGUID                    = 0;
                 HodirIceDoorGUID                 = 0;
@@ -349,6 +351,9 @@ class instance_ulduar : public InstanceMapScript
                         break;
                     case GO_LEVIATHAN_DOOR:
                         AddDoor(gameObject, true);
+                        LightningDoorGUID = gameObject->GetGUID();
+                        if (GetBossState(BOSS_LEVIATHAN) == IN_PROGRESS)
+                            gameObject->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
                         break;
                     case GO_LEVIATHAN_GATE:
                         LeviathanGateGUID = gameObject->GetGUID();
@@ -619,6 +624,8 @@ class instance_ulduar : public InstanceMapScript
                             if (Creature* Leviathan = instance->GetCreature(LeviathanGUID))
                                 Leviathan->AI()->DoAction(ACTION_MOVE_TO_CENTER_POSITION);
                             if (GameObject* gameObject = instance->GetGameObject(LeviathanGateGUID))
+                                gameObject->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
+                            if (GameObject* gameObject = instance->GetGameObject(LightningDoorGUID))
                                 gameObject->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
                             SaveToDB();
                         }

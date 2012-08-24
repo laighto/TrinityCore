@@ -533,6 +533,7 @@ class boss_flame_leviathan : public CreatureScript
                             me->GetMotionMaster()->MoveCharge(Center->GetPositionX(), Center->GetPositionY(), Center->GetPositionZ()); //position center
                             me->SetReactState(REACT_AGGRESSIVE);
                             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
+                            instance->SetBossState(BOSS_LEVIATHAN, IN_PROGRESS);
                             return;
                         }
                         break;
@@ -1125,7 +1126,7 @@ class npc_freya_ward_summon : public CreatureScript
 
 //npc lore keeper
 #define GOSSIP_ITEM_1  "Activate secondary defensive systems"
-#define GOSSIP_ITEM_2  "Confirmed"
+#define GOSSIP_ITEM_2  "Confirmed (activate Leviathan HardMode)"
 
 class npc_lorekeeper : public CreatureScript
 {
