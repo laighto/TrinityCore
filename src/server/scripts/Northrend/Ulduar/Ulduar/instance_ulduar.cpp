@@ -352,8 +352,6 @@ class instance_ulduar : public InstanceMapScript
                     case GO_LEVIATHAN_DOOR:
                         AddDoor(gameObject, true);
                         LightningDoorGUID = gameObject->GetGUID();
-                        if (GetBossState(BOSS_LEVIATHAN) == IN_PROGRESS)
-                            gameObject->SetGoState(GO_STATE_ACTIVE_ALTERNATIVE);
                         break;
                     case GO_LEVIATHAN_GATE:
                         LeviathanGateGUID = gameObject->GetGUID();

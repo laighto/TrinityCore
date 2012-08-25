@@ -240,7 +240,7 @@ public:
 
             _summonDeaths = 0;
 
-            me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+            //me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
             _cannotMove = true;
 
