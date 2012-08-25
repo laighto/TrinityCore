@@ -245,6 +245,7 @@ public:
             _cannotMove = true;
 
             me->SetCanFly(true);
+            me->SetVisible(true);
 
             if (instance)
                 instance->DoStopTimedAchievement(ACHIEVEMENT_TIMED_TYPE_EVENT, ACHIEV_TIMED_START_EVENT);
