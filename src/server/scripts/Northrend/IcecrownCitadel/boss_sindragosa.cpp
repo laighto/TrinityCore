@@ -237,6 +237,21 @@ class boss_sindragosa : public CreatureScript
                 _JustDied();
                 instance->SetBossState(DATA_SINDRAGOSA, DONE);
                 instance->SaveToDB();
+
+                if (Is25ManRaid())
+                {
+                    if (urand(0,1) > 0)
+                    {
+                        Map* pMap = me->GetMap();
+                        InstanceMap::PlayerList const &PlayerList = pMap->GetPlayers();
+                        for (InstanceMap::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                        {
+                            if (i->getSource()->GetQuestStatus(24757) == QUEST_STATUS_INCOMPLETE)
+                                i->getSource()->CompleteQuest(24757);
+                        }
+	                    //instance->DoCastSpellOnPlayers(72290); instance->DoCastSpellOnPlayers(72289);
+                    }
+                }
             }
 
             void EnterCombat(Unit* victim)

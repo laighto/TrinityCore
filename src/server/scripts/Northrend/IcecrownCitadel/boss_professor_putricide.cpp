@@ -277,6 +277,21 @@ class boss_professor_putricide : public CreatureScript
                 _JustDied();
                 Talk(SAY_DEATH);
                 DoCast(SPELL_MUTATED_PLAGUE_CLEAR);
+
+                if (Is25ManRaid())
+                {
+                    if (urand(0,1) > 0)
+                    {
+                        Map* pMap = me->GetMap();
+                        InstanceMap::PlayerList const &PlayerList = pMap->GetPlayers();
+                        for (InstanceMap::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                        {
+                            if (i->getSource()->GetQuestStatus(24749) == QUEST_STATUS_INCOMPLETE)
+                                i->getSource()->CompleteQuest(24749);
+                        }
+                        //instance->DoCastSpellOnPlayers(71516); instance->DoCastSpellOnPlayers(71518);
+                    }
+                }
             }
 
             void JustSummoned(Creature* summon)

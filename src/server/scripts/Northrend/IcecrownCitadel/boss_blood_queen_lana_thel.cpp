@@ -198,6 +198,21 @@ class boss_blood_queen_lana_thel : public CreatureScript
                         minchar->GetMotionMaster()->MoveCharge(4629.3711f, 2782.6089f, 401.5301f, SPEED_CHARGE/3.0f);
                     }
                 }
+
+                if (Is25ManRaid())
+                {
+                    if (urand(0,1) > 0)
+                    {
+                        Map* pMap = me->GetMap();
+                        InstanceMap::PlayerList const &PlayerList = pMap->GetPlayers();
+                        for (InstanceMap::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                        {
+                            if (i->getSource()->GetQuestStatus(24756) == QUEST_STATUS_INCOMPLETE)
+                                i->getSource()->CompleteQuest(24756);
+                        }
+                        //instance->DoCastSpellOnPlayers(72154); instance->DoCastSpellOnPlayers(72934);
+                    }
+                }
             }
 
             void CleanAuras()
