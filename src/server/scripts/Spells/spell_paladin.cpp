@@ -47,6 +47,8 @@ enum PaladinSpells
     SPELL_FORBEARANCE                            = 25771,
     SPELL_AVENGING_WRATH_MARKER                  = 61987,
     SPELL_IMMUNE_SHIELD_MARKER                   = 61988,
+    SPELL_RIGHTEOUS_DEFENCE                      = 31789,
+    SPELL_RIGHTEOUS_DEFENCE_EFFECT_1             = 31790,
 };
 
 // 31850 - Ardent Defender
@@ -518,10 +520,18 @@ class spell_pal_righteous_defense : public SpellScriptLoader
 
                 return SPELL_CAST_OK;
             }
+ 	
+            void HandleSpellEffectTriggerSpell(SpellEffIndex /*effIndex*/)
+            {
+                if (Unit* caster = GetCaster())
+                    if (Unit* targetUnit = GetHitUnit())
+                        caster->CastSpell(targetUnit, SPELL_RIGHTEOUS_DEFENCE_EFFECT_1, true);
+            }
 
             void Register()
             {
                 OnCheckCast += SpellCheckCastFn(spell_pal_righteous_defense_SpellScript::CheckCast);
+                OnEffectHitTarget += SpellEffectFn(spell_pal_righteous_defense_SpellScript::HandleSpellEffectTriggerSpell, EFFECT_1, SPELL_EFFECT_TRIGGER_SPELL);
             }
         };
 
