@@ -356,6 +356,7 @@ class boss_razorscale : public CreatureScript
 
             void JustDied(Unit* /*killer*/)
             {
+                me->SetCanFly(false);
                 _JustDied();
                 if (Creature* controller = ObjectAccessor::GetCreature(*me, instance ? instance->GetData64(DATA_RAZORSCALE_CONTROL) : 0))
                     controller->AI()->Reset();
