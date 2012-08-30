@@ -79,7 +79,6 @@ void AddSC_server_commandscript();
 void AddSC_tele_commandscript();
 void AddSC_ticket_commandscript();
 void AddSC_titles_commandscript();
-void AddSC_wg_commandscript();
 void AddSC_wp_commandscript();
 
 #ifdef SCRIPTS
@@ -613,8 +612,6 @@ void AddSC_outdoorpvp_na();
 void AddSC_outdoorpvp_si();
 void AddSC_outdoorpvp_tf();
 void AddSC_outdoorpvp_zm();
-void AddSC_outdoorpvp_wg();
-void AddSC_wintergrasp();
 
 // player
 void AddSC_lexics_chat_log();
@@ -704,7 +701,6 @@ void AddCommandScripts()
     AddSC_tele_commandscript();
     AddSC_ticket_commandscript();
     AddSC_titles_commandscript();
-    AddSC_wg_commandscript();
     AddSC_wp_commandscript();
 }
 
@@ -1247,7 +1243,6 @@ void AddNorthrendScripts()
     AddSC_zuldrak();
     AddSC_crystalsong_forest();
     AddSC_isle_of_conquest();
-    AddSC_wintergrasp();
 #endif
 }
 
@@ -1260,7 +1255,6 @@ void AddOutdoorPvPScripts()
     AddSC_outdoorpvp_si();
     AddSC_outdoorpvp_tf();
     AddSC_outdoorpvp_zm();
-    AddSC_outdoorpvp_wg();
 #endif
 }
 
