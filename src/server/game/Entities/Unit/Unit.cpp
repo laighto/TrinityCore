@@ -57,6 +57,8 @@
 #include "MoveSpline.h"
 #include "ConditionMgr.h"
 #include "UpdateFieldFlags.h"
+#include "Battlefield.h"
+#include "BattlefieldMgr.h"
 
 #include <math.h>
 
@@ -157,7 +159,7 @@ m_movedPlayer(NULL), m_lastSanctuaryTime(0), IsAIEnabled(false), NeedChangeAI(fa
 m_ControlledByPlayer(false), movespline(new Movement::MoveSpline()), i_AI(NULL),
 i_disabledAI(NULL), m_procDeep(0), m_removedAurasCount(0), i_motionMaster(this),
 m_ThreatManager(this), m_vehicle(NULL), m_vehicleKit(NULL), m_unitTypeMask(UNIT_MASK_NONE),
-m_HostileRefManager(this)
+m_HostileRefManager(this), m_TempSpeed(0.0f), m_AutoRepeatFirstCast(false)
 {
 #ifdef _MSC_VER
 #pragma warning(default:4355)
@@ -14130,7 +14132,8 @@ void Unit::DeleteCharmInfo()
 
 CharmInfo::CharmInfo(Unit* unit)
 : m_unit(unit), m_CommandState(COMMAND_FOLLOW), m_petnumber(0), m_barInit(false),
-  m_isCommandAttack(false), m_isAtStay(false), m_isFollowing(false), m_isReturning(false)
+  m_isCommandAttack(false), m_isAtStay(false), m_isFollowing(false), m_isReturning(false),
+  m_stayX(0.0f), m_stayY(0.0f), m_stayZ(0.0f)
 {
     for (uint8 i = 0; i < MAX_SPELL_CHARM; ++i)
         m_charmspells[i].SetActionAndType(0, ACT_DISABLED);
@@ -15917,8 +15920,13 @@ void Unit::Kill(Unit* victim, bool durabilityLoss)
     // outdoor pvp things, do these after setting the death state, else the player activity notify won't work... doh...
     // handle player kill only if not suicide (spirit of redemption for example)
     if (player && this != victim)
+    {
         if (OutdoorPvP* pvp = player->GetOutdoorPvP())
             pvp->HandleKill(player, victim);
+
+        if (Battlefield* bf = sBattlefieldMgr->GetBattlefieldToZoneId(player->GetZoneId()))
+            bf->HandleKill(player, victim);
+    }
 
     //if (victim->GetTypeId() == TYPEID_PLAYER)
     //    if (OutdoorPvP* pvp = victim->ToPlayer()->GetOutdoorPvP())

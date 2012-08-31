@@ -322,10 +322,9 @@ void Spell::EffectSchoolDMG(SpellEffIndex effIndex)
     if (effectHandleMode != SPELL_EFFECT_HANDLE_LAUNCH_TARGET)
         return;
 
-    bool apply_direct_bonus = true;
-
     if (unitTarget && unitTarget->isAlive())
     {
+        bool apply_direct_bonus = true;
         switch (m_spellInfo->SpellFamilyName)
         {
             case SPELLFAMILY_GENERIC:
@@ -4393,17 +4392,6 @@ void Spell::EffectScriptEffect(SpellEffIndex effIndex)
                     unitTarget->CastSpell(unitTarget, spellTarget[urand(0, 4)], true);
                     break;
                 }
-                case 64142:                                 // Upper Deck - Create Foam Sword
-                    if (unitTarget->GetTypeId() != TYPEID_PLAYER)
-                        return;
-                    Player* player = unitTarget->ToPlayer();
-                    static uint32 const itemId[] = {45061, 45176, 45177, 45178, 45179, 0};
-                    // player can only have one of these items
-                    for (uint32 const* itr = &itemId[0]; *itr; ++itr)
-                        if (player->HasItemCount(*itr, 1, true))
-                            return;
-                    DoCreateItem(effIndex, itemId[urand(0, 4)]);
-                    return;
             }
             break;
         }
@@ -6317,6 +6305,7 @@ void Spell::EffectPlayerNotification(SpellEffIndex effIndex)
         case 58730: // Restricted Flight Area
         case 58600: // Restricted Flight Area
             unitTarget->ToPlayer()->GetSession()->SendNotification(LANG_ZONE_NOFLYZONE);
+            unitTarget->PlayDirectSound(9417); // Fel Reaver sound
             break;
     }
 
