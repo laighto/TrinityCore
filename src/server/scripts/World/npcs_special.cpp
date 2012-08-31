@@ -2136,6 +2136,11 @@ public:
             Reset();
         }
 
+        void SpellHit(Unit* /*caster*/, SpellInfo const* /*spell*/)
+        {
+            me->SetHealth(me->GetMaxHealth() * 0.20);
+        }
+
         void DamageTaken(Unit* /*doneBy*/, uint32& damage)
         {
             resetTimer = 5000;
