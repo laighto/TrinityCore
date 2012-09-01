@@ -277,6 +277,10 @@ void Spell::EffectInstaKill(SpellEffIndex /*effIndex*/)
     if (!unitTarget || !unitTarget->isAlive())
         return;
 
+    if (unitTarget->GetTypeId() == TYPEID_PLAYER)
+        if (unitTarget->ToPlayer()->GetCommandStatus(CHEAT_GOD))
+            return;
+
     // Death pact should only affet his ghoul
     if (m_spellInfo->Id == 48743)
     {
