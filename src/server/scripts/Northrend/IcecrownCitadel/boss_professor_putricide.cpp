@@ -54,10 +54,10 @@ enum Spells
     SPELL_GASEOUS_BLIGHT_LARGE          = 69157,
     SPELL_GASEOUS_BLIGHT_MEDIUM         = 69162,
     SPELL_GASEOUS_BLIGHT_SMALL          = 69164,
-    SPELL_MALLABLE_GOO_H                = 70852,
+    SPELL_MALLABLE_GOO_H                = 69240,
 
     // Rotface
-    SPELL_VILE_GAS_H                    = 69240,
+    SPELL_VILE_GAS_H                    = 70852,
 
     // Professor Putricide
     SPELL_SLIME_PUDDLE_TRIGGER          = 70341,
