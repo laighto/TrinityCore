@@ -14,6 +14,7 @@ set(scripts_STAT_SRCS
   Custom/npc_transmogrify.cpp
   Custom/pvp_script.cpp
   Custom/argent_tournament.cpp
+  Custom/pet_scale.cpp
 )
 
 message("  -> Prepared: Custom")
