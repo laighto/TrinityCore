@@ -135,6 +135,7 @@ class boss_bronjahm : public CreatureScript
                 summon->GetMotionMaster()->Clear();
                 summon->GetMotionMaster()->MoveFollow(me, me->GetObjectSize(), 0.0f);
                 summon->CastSpell(summon, SPELL_PURPLE_BANISH_VISUAL, true);
+                Unit* who=summon->GetOwner();
             }
 
             void UpdateAI(const uint32 diff)
