@@ -45,6 +45,9 @@
 #include "AccountMgr.h"
 #include "LFGMgr.h"
 
+#include "BattlefieldWG.h"
+#include "OutdoorPvPMgr.h"
+
 class LoginQueryHolder : public SQLQueryHolder
 {
     private:
@@ -915,6 +918,23 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder* holder)
 
     sObjectAccessor->AddObject(pCurrChar);
     //sLog->outDebug("Player %s added to Map.", pCurrChar->GetName());
+
+    //Send WG timer to player at login 
+    if (sWorld->getBoolConfig(CONFIG_WINTERGRASP_ENABLE))
+    {
+        if (BattlefieldWG *pvpWG = (BattlefieldWG*)sBattlefieldMgr->GetBattlefieldByBattleId(1))
+        {
+            if (pvpWG->IsWarTime()) // "Battle in progress"
+            {
+                pCurrChar->SendUpdateWorldState(ClockWorldState[0], uint32(time(NULL)));
+            } 
+            else // Time to next battle
+            {
+                pvpWG->SendInitWorldStatesTo(pCurrChar);
+                pCurrChar->SendUpdateWorldState(ClockWorldState[0], uint32(time(NULL) + pvpWG->GetTimer() / 1000));
+            }
+        }
+    }
 
     pCurrChar->SendInitialPacketsAfterAddToMap();
 
