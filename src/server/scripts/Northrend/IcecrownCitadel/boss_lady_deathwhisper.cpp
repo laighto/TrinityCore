@@ -298,9 +298,6 @@ class boss_lady_deathwhisper : public CreatureScript
             {
                 Talk(SAY_DEATH);
 
-                instance->SetBossState(DATA_GUNSHIP_EVENT, DONE);
-                instance->SaveToDB();
-
                 std::set<uint32> livingAddEntries;
                 // Full House achievement
                 for (SummonList::iterator itr = summons.begin(); itr != summons.end(); ++itr)
@@ -336,6 +333,9 @@ class boss_lady_deathwhisper : public CreatureScript
                 }
 
                 _JustDied();
+
+                instance->SetBossState(DATA_GUNSHIP_EVENT, DONE);
+                instance->SaveToDB();
             }
 
             void JustReachedHome()
