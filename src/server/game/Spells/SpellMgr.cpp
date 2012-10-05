@@ -3598,6 +3598,13 @@ void SpellMgr::LoadDbcDataCorrections()
                 spellInfo->manaCost = 0;
                 spellInfo->manaPerSecond = 0;
                 break;
+            // OCULUS SPELLS
+            // The spells below are here, because their effect 1 is giving warning, because the triggered spell is not found in dbc and is missing from encounter sniff.
+            case 49462: // Call Ruby Drake
+            case 49461: // Call Amber Drake
+            case 49345: // Call Emerald Drake
+                spellInfo->Effect[1] = 0;
+                break;
 
             // Custom
             case 51678: // WintergraspSiegeEngine Ram set radius of damage for units to 5 yards 
