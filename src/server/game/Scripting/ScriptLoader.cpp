@@ -510,7 +510,7 @@ void AddSC_ruby_sanctum();
 void AddSC_boss_baltharus_the_warborn();
 void AddSC_boss_saviana_ragefire();
 void AddSC_boss_general_zarithrian();
-void AddSC_boss_halion_custom();
+void AddSC_boss_halion();
 
 void AddSC_dalaran();
 void AddSC_borean_tundra();
@@ -1239,7 +1239,7 @@ void AddNorthrendScripts()
     AddSC_boss_baltharus_the_warborn();
     AddSC_boss_saviana_ragefire();
     AddSC_boss_general_zarithrian();
-    AddSC_boss_halion_custom();
+    AddSC_boss_halion();
 
     AddSC_dalaran();
     AddSC_borean_tundra();

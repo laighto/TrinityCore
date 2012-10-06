@@ -700,7 +700,7 @@ int32 AuraEffect::CalculateAmount(Unit* caster)
                     AddPct(amount, modHealing->GetAmount());
                 // Bonus from talent Spiritual Healing
                 if (AuraEffect* modHealing = caster->GetAuraEffect(SPELL_AURA_ADD_PCT_MODIFIER, SPELLFAMILY_PRIEST, 46, 1))
-                    AddPctN(amount, modHealing->GetAmount());
+                    AddPct(amount, modHealing->GetAmount());
             }
             break;
         case SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN:
