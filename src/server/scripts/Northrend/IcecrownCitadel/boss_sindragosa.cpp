@@ -210,7 +210,7 @@ class boss_sindragosa : public CreatureScript
                 BossAI::Reset();
                 me->SetReactState(REACT_DEFENSIVE);
                 DoCast(me, SPELL_TANK_MARKER, true);
-                events.ScheduleEvent(EVENT_BERSERK, 900000);
+                events.ScheduleEvent(EVENT_BERSERK, 600000);
                 events.ScheduleEvent(EVENT_CLEAVE, 10000, EVENT_GROUP_LAND_PHASE);
                 events.ScheduleEvent(EVENT_TAIL_SMASH, 20000, EVENT_GROUP_LAND_PHASE);
                 events.ScheduleEvent(EVENT_FROST_BREATH, urand(8000, 12000), EVENT_GROUP_LAND_PHASE);
@@ -230,8 +230,6 @@ class boss_sindragosa : public CreatureScript
 
             void JustDied(Unit* killer)
             {
-                instance->SetBossState(DATA_VALITHRIA_DREAMWALKER, DONE);
-                instance->SaveToDB();
                 BossAI::JustDied(killer);
                 Talk(SAY_DEATH);
                 _JustDied();

@@ -609,6 +609,7 @@ class npc_rotting_frost_giant : public CreatureScript
             void JustDied(Unit* /*killer*/)
             {
                 _events.Reset();
+
             }
 
             void UpdateAI(uint32 const diff)

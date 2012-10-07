@@ -91,7 +91,7 @@ class boss_festergut : public CreatureScript
             {
                 _Reset();
                 me->SetReactState(REACT_DEFENSIVE);
-                events.ScheduleEvent(EVENT_BERSERK, 600000);
+                events.ScheduleEvent(EVENT_BERSERK, 300000);
                 events.ScheduleEvent(EVENT_INHALE_BLIGHT, urand(25000, 30000));
                 events.ScheduleEvent(EVENT_GAS_SPORE, urand(20000, 25000));
                 events.ScheduleEvent(EVENT_GASTRIC_BLOAT, urand(12500, 15000));
