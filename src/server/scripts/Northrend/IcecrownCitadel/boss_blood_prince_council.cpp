@@ -260,6 +260,9 @@ class boss_blood_council_controller : public CreatureScript
 
                 if (Creature* valanar = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_PRINCE_VALANAR_GUID)))
                     valanar->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                
+                if (Creature* queen = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_BLOOD_QUEEN_GUID)))
+                    queen->AI()->Reset();
             }
 
             void JustDied(Unit* killer)

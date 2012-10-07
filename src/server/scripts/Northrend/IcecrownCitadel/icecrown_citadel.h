@@ -111,6 +111,7 @@ enum DataTypes
     DATA_HIGHLORD_TIRION_FORDRING   = 37,
     DATA_ARTHAS_PLATFORM            = 38,
     DATA_TERENAS_MENETHIL           = 39,
+    DATA_BLOOD_QUEEN_GUID           = 40,
 };
 
 enum CreaturesIds
@@ -208,6 +209,7 @@ enum CreaturesIds
     NPC_KINETIC_BOMB_TARGET                     = 38458,
     NPC_KINETIC_BOMB                            = 38454,
     NPC_SHOCK_VORTEX                            = 38422,
+    NPC_BLOOD_QUEEN                             = 38004,
 
     // Blood-Queen Lana'thel
     NPC_BLOOD_QUEEN_LANA_THEL                   = 37955,

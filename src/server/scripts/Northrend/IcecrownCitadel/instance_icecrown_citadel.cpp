@@ -146,6 +146,7 @@ class instance_icecrown_citadel : public InstanceMapScript
                 ColdflameJetsState = NOT_STARTED;
                 BloodQuickeningState = NOT_STARTED;
                 BloodQuickeningMinutes = 0;
+                BloodQueenGUID = 0;
             }
 
             void FillInitialWorldStates(WorldPacket& data)
@@ -247,6 +248,9 @@ class instance_icecrown_citadel : public InstanceMapScript
                     case NPC_BLOOD_ORB_CONTROLLER:
                         BloodCouncilControllerGUID = creature->GetGUID();
                         break;
+                    case NPC_BLOOD_QUEEN:
+                        BloodQueenGUID = creature->GetGUID();
+                        break; 
                     case NPC_BLOOD_QUEEN_LANA_THEL:
                         BloodQueenLanaThelGUID = creature->GetGUID();
                         break;
@@ -636,6 +640,8 @@ class instance_icecrown_citadel : public InstanceMapScript
                         return PutricideTableGUID;
                     case DATA_PRINCE_KELESETH_GUID:
                         return BloodCouncilGUIDs[0];
+                    case DATA_BLOOD_QUEEN_GUID:
+                        return BloodQueenGUID;
                     case DATA_PRINCE_TALDARAM_GUID:
                         return BloodCouncilGUIDs[1];
                     case DATA_PRINCE_VALANAR_GUID:
@@ -1310,6 +1316,7 @@ class instance_icecrown_citadel : public InstanceMapScript
             bool IsOozeDanceEligible;
             bool IsNauseaEligible;
             bool IsOrbWhispererEligible;
+            uint64 BloodQueenGUID;
         };
 
         InstanceScript* GetInstanceScript(InstanceMap* map) const
