@@ -173,6 +173,11 @@ enum ProfessionSpells
     S_UNLEARN_TRANSMUTE     = 41565,
     S_UNLEARN_ELIXIR        = 41564,
     S_UNLEARN_POTION        = 41563,
+
+    SPELL_UNLEARN_GOBLIN_ENGINEER     = 68334,
+    SPELL_UNLEARN_GNOMISH_ENGINEER    = 68333,
+    SPELL_REVERT_TO_ONE_TALENT_SPEC   = 63651,
+    SPELL_LEARN_DUAL_TALENT_SPEC      = 63624,
 };
 
 /*###
@@ -341,6 +346,24 @@ void ProfessionUnlearnSpells(Player* player, uint32 type)
             player->removeSpell(26756);                     // Frozen Shadoweave Shoulders
             player->removeSpell(26757);                     // Frozen Shadoweave Boots
             player->removeSpell(26758);                     // Frozen Shadoweave Robe
+            break;
+        case SPELL_UNLEARN_GOBLIN_ENGINEER:
+            player->removeSpell(30575);                     // Gnomish Battle Goggles
+            player->removeSpell(30574);                     // Gnomish Power Goggles
+            player->removeSpell(56473);                     // Gnomish X-Ray Specs
+            player->removeSpell(30569);                     // Gnomish Poultryizer
+            player->removeSpell(30563);                     // Ultrasafe Transporter - Toshley's Station
+            player->removeSpell(23489);                     // Ultrasafe Transporter - Gadgetzan
+            player->removeSpell(23129);                     // World Enlarger
+            break;
+        case SPELL_UNLEARN_GNOMISH_ENGINEER:
+            player->removeSpell(30575);                     // Gnomish Battle Goggles
+            player->removeSpell(30574);                     // Gnomish Power Goggles
+            player->removeSpell(56473);                     // Gnomish X-Ray Specs
+            player->removeSpell(30569);                     // Gnomish Poultryizer
+            player->removeSpell(30563);                     // Ultrasafe Transporter - Toshley's Station
+            player->removeSpell(23489);                     // Ultrasafe Transporter - Gadgetzan
+            player->removeSpell(23129);                     // World Enlarger
             break;
     }
 }
@@ -1158,6 +1181,45 @@ public:
     }
 };
 
+class dummy_book : public GameObjectScript
+{
+    public:
+        dummy_book() : GameObjectScript("dummy_book") { }
+
+        bool OnGossipHello(Player* player, GameObject* object)
+        {
+           player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999950/*GOSSIP_HELLO_DEMO1*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+           player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999951/*GOSSIP_HELLO_DEMO2*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+           player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999952/*GOSSIP_HELLO_DEMO3*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+           player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999953/*GOSSIP_HELLO_DEMO4*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+
+           player->SEND_GOSSIP_MENU(player->GetGossipTextId(object), object->GetGUID());
+           return true;
+        }
+
+        bool OnGossipSelect(Player* player, GameObject* object, uint32 /*sender*/, uint32 action)
+        {
+            player->CLOSE_GOSSIP_MENU();
+
+            switch (action - GOSSIP_ACTION_INFO_DEF)
+            {
+                case 0:
+                    ProcessUnlearnAction(player, 0, SPELL_UNLEARN_GOBLIN_ENGINEER, 0, DoHighUnlearnCost(player));
+                    break;
+                case 1:
+                    ProcessUnlearnAction(player, 0, SPELL_UNLEARN_GNOMISH_ENGINEER, 0, DoHighUnlearnCost(player));
+                    break;
+                case 2:
+                    player->CastSpell(player, SPELL_REVERT_TO_ONE_TALENT_SPEC, true);
+                    break;
+                case 3:
+                    ProcessUnlearnAction(player, 0, SPELL_LEARN_DUAL_TALENT_SPEC, 0, 10000000);
+                    break;
+            }
+            return true;
+        }
+};
+
 void AddSC_npc_professions()
 {
     new npc_prof_alchemy();
@@ -1165,4 +1227,5 @@ void AddSC_npc_professions()
     new npc_engineering_tele_trinket();
     new npc_prof_leather();
     new npc_prof_tailor();
+    new dummy_book();
 }

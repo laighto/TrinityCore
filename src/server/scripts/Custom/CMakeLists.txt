@@ -15,7 +15,6 @@ set(scripts_STAT_SRCS
   Custom/pvp_script.cpp
   Custom/argent_tournament.cpp
   Custom/pet_scale.cpp
-  Custom/dummy_book.cpp
 )
 
 message("  -> Prepared: Custom")

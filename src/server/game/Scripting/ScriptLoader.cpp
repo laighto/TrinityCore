@@ -30,7 +30,6 @@ void AddSC_pvp_script();
 void ADSC_argent_tournamet_custom();
 void AddSC_anticheat_commandscript();
 void AddSC_transmogrify_script();
-void AddSC_dummy_book();
 
 // spells
 void AddSC_deathknight_spell_scripts();
@@ -655,7 +654,6 @@ void AddExampleScripts()
     AddSC_pvp_script();
     ADSC_argent_tournamet_custom();
     AddSC_transmogrify_script();
-    AddSC_dummy_book();
 }
 
 void AddSpellScripts()
