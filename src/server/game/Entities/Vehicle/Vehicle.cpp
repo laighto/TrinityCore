@@ -360,9 +360,9 @@ bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
             ASSERT(false);
     }
 
-    // hide passenger from selection
+   /* // hide passenger from selection
     if (seat->second.SeatInfo->m_flags & VEHICLE_SEAT_FLAG_PASSENGER_NOT_SELECTABLE)
-        unit->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        unit->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);*/
 
     if (_me->IsInWorld())
     {
@@ -421,9 +421,9 @@ void Vehicle::RemovePassenger(Unit* unit)
     if (_me->GetTypeId() == TYPEID_UNIT && unit->GetTypeId() == TYPEID_PLAYER && seat->first == 0 && seat->second.SeatInfo->m_flags & VEHICLE_SEAT_FLAG_CAN_CONTROL)
         _me->RemoveCharmedBy(unit);
 
-    // restore passenger selection
+  /*  // restore passenger selection
     if (seat->second.SeatInfo->m_flags & VEHICLE_SEAT_FLAG_PASSENGER_NOT_SELECTABLE)
-        unit->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+        unit->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);*/
 
     if (_me->IsInWorld())
     {
