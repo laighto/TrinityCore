@@ -425,7 +425,7 @@ enum VehicleSeatFlags
     VEHICLE_SEAT_FLAG_CAN_CAST_MOUNT_SPELL       = 0x00001000,           // Can cast spells with SPELL_AURA_MOUNTED from seat (possibly 4.x only, 0 seats on 3.3.5a)
     VEHICLE_SEAT_FLAG_UNCONTROLLED               = 0x00002000,           // can override !& VEHICLE_SEAT_FLAG_CAN_ENTER_OR_EXIT
     VEHICLE_SEAT_FLAG_CAN_ATTACK                 = 0x00004000,           // Can attack, cast spells and use items from vehicle
-    VEHICLE_SEAT_FLAG_PASSENGER_NOT_SELECTABLE   = 0x00100000,           // Can't select passenger?
+//    VEHICLE_SEAT_FLAG_PASSENGER_NOT_SELECTABLE   = 0x00100000,           // Can't select passenger?
     VEHICLE_SEAT_FLAG_SHOULD_USE_VEH_SEAT_EXIT_ANIMN_ON_FORCED_EXIT = 0x00008000,
     VEHICLE_SEAT_FLAG_HAS_VEH_EXIT_ANIM_VOLUNTARY_EXIT = 0x00040000,
     VEHICLE_SEAT_FLAG_HAS_VEH_EXIT_ANIM_FORCED_EXIT = 0x00080000,
