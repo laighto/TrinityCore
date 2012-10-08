@@ -208,7 +208,10 @@ class boss_baltharus_the_warborn : public CreatureScript
                     }
                 }
 
-                DoMeleeAttackIfReady();
+            if (!me->IsWithinMeleeRange(me->getVictim()) && urand(0,3)==1)
+                DoCast(me->getVictim(), 28299);
+
+            DoMeleeAttackIfReady();
             }
 
         private:
