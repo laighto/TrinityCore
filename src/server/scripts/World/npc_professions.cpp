@@ -1199,8 +1199,6 @@ class dummy_book : public GameObjectScript
 
         bool OnGossipSelect(Player* player, GameObject* object, uint32 /*sender*/, uint32 action)
         {
-            player->CLOSE_GOSSIP_MENU();
-
             switch (action - GOSSIP_ACTION_INFO_DEF)
             {
                 case 0:
