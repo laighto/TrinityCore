@@ -3490,12 +3490,12 @@ void Spell::EffectWeaponDmg(SpellEffIndex effIndex)
                 AddPct(totalDamagePercentMod, bonusPct);
                 break;
             }
-            // Rune Strike
+          /*  // Rune Strike
             if (m_spellInfo->SpellFamilyFlags[1] & 0x20000000)
             {
                 m_damage += int32(m_caster->GetTotalAttackPowerValue(BASE_ATTACK) * 0.15f);
                 break;
-            }
+            }*/
             break;
         }
     }
