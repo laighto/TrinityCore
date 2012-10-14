@@ -311,7 +311,7 @@ class boss_deathbringer_saurfang : public CreatureScript
 
             void JustDied(Unit* /*killer*/)
             {
-                _JustDied();
+                //_JustDied();
             }
 
             void AttackStart(Unit* victim)
