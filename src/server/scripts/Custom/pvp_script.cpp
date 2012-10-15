@@ -47,10 +47,10 @@ public:
                     freeze->SetDuration(300*IN_MILLISECONDS); //  Заморозка
             }
 
-            uint32 rnd = urand(0,2);
+            uint32 rnd = urand(0, 2);
             killed->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
            
-            if (urand(1,200) == urand(1,200))
+            if (urand(1, 300) == urand(1, 300))
             {
                 killer->AddItem(EMBLEM_OF_FROST, 1);
                 sWorld->SendWorldText(12015, killer->GetName());
