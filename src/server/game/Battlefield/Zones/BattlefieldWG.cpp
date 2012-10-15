@@ -377,6 +377,12 @@ void BattlefieldWG::OnBattleEnd(bool endByTimer)
             // Award achievement for succeeding in Wintergrasp in 10 minutes or less
             if (!endByTimer && GetTimer() <= 10000)
                 DoCompleteOrIncrementAchievement(ACHIEVEMENTS_WIN_WG_TIMER_10, player);
+            // Complete Quest "Victory in Wintergrasp"
+            if (player->HasAura(SPELL_LIEUTENANT) || player->HasAura(SPELL_CORPORAL))
+            {
+                player->AreaExploredOrEventHappens(13181);
+                player->AreaExploredOrEventHappens(13183);
+            }
         }
     }
 
@@ -639,7 +645,29 @@ void BattlefieldWG::HandleKill(Player* killer, Unit* victim)
             if (Player* player = sObjectAccessor->FindPlayer(*itr))
                 if (player->GetDistance2d(killer) < 40)
                     PromotePlayer(player);
+        // Reward killcredit for quest "Slay them all" (13178,13180)
+        killer->RewardPlayerAndGroupAtEvent(31086, victim);
         return;
+    } else {
+        switch (victim->GetEntry())
+        {
+            case NPC_WG_SEIGE_ENGINE_ALLIANCE:
+            case NPC_WG_SEIGE_ENGINE_HORDE:
+            case NPC_WG_DEMOLISHER:
+            case NPC_WG_CATAPULT:
+                // Reward killcredit for quest "Stop the Siege" (13185,13186)
+                killer->RewardPlayerAndGroupAtEvent(31093, victim);
+                break;
+            case BATTLEFIELD_WG_NPC_GUARD_H:
+            case BATTLEFIELD_WG_NPC_GUARD_A:
+            case 32307:
+            case 32308:
+                // Reward killcredit for quest "Slay them all" (13178,13180)
+                killer->RewardPlayerAndGroupAtEvent(31086, victim);
+                break;
+            default:
+                break;
+        }
     }
 
     for (GuidSet::const_iterator itr = KeepCreature[GetOtherTeam(killerTeam)].begin();
