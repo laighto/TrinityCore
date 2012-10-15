@@ -232,9 +232,6 @@ class boss_sindragosa : public CreatureScript
             {
                 BossAI::JustDied(killer);
                 Talk(SAY_DEATH);
-                _JustDied();
-                instance->SetBossState(DATA_SINDRAGOSA, DONE);
-                instance->SaveToDB();
 
                 if (Is25ManRaid())
                 {
@@ -254,12 +251,12 @@ class boss_sindragosa : public CreatureScript
 
             void EnterCombat(Unit* victim)
             {
-                /*if (!instance->CheckRequiredBosses(DATA_SINDRAGOSA, victim->ToPlayer()))
+                if (!instance->CheckRequiredBosses(DATA_SINDRAGOSA, victim->ToPlayer()))
                 {
                     EnterEvadeMode();
                     instance->DoCastSpellOnPlayers(LIGHT_S_HAMMER_TELEPORT);
                     return;
-                }*/
+                }
 
                 BossAI::EnterCombat(victim);
                 DoCast(me, SPELL_FROST_AURA);
@@ -341,7 +338,7 @@ class boss_sindragosa : public CreatureScript
                         me->CastCustomSpell(SPELL_ICE_TOMB_TARGET, SPELLVALUE_MAX_TARGETS, RAID_MODE<int32>(2, 5, 2, 6), NULL);
                         me->SetFacingTo(float(M_PI));
                         events.ScheduleEvent(EVENT_AIR_MOVEMENT_FAR, 1);
-                        events.ScheduleEvent(EVENT_FROST_BOMB, 10000);
+                        events.ScheduleEvent(EVENT_FROST_BOMB, 9000);
                         break;
                     case POINT_AIR_PHASE_FAR:
                         me->SetFacingTo(float(M_PI));
@@ -472,12 +469,12 @@ class boss_sindragosa : public CreatureScript
                             break;
                         case EVENT_FROST_BREATH:
                             DoCastVictim(_isThirdPhase ? SPELL_FROST_BREATH_P2 : SPELL_FROST_BREATH_P1);
-                            events.ScheduleEvent(EVENT_FROST_BREATH, urand(25000, 35000), EVENT_GROUP_LAND_PHASE);
+                            events.ScheduleEvent(EVENT_FROST_BREATH, urand(20000, 25000), EVENT_GROUP_LAND_PHASE);
                             break;
                         case EVENT_UNCHAINED_MAGIC:
                             Talk(SAY_UNCHAINED_MAGIC);
                             DoCast(me, SPELL_UNCHAINED_MAGIC);
-                            events.ScheduleEvent(EVENT_UNCHAINED_MAGIC, urand(35000, 45000), EVENT_GROUP_LAND_PHASE);
+                            events.ScheduleEvent(EVENT_UNCHAINED_MAGIC, urand(30000, 35000), EVENT_GROUP_LAND_PHASE);
                             break;
                         case EVENT_ICY_GRIP:
                             DoCast(me, SPELL_ICY_GRIP);
