@@ -69,6 +69,7 @@ void AddSC_guild_commandscript();
 void AddSC_honor_commandscript();
 void AddSC_instance_commandscript();
 void AddSC_learn_commandscript();
+void AddSC_lfg_commandscript();
 void AddSC_list_commandscript();
 void AddSC_lookup_commandscript();
 void AddSC_message_commandscript();
@@ -97,6 +98,7 @@ void AddSC_npc_innkeeper();
 void AddSC_npcs_special();
 void AddSC_npc_taxi();
 void AddSC_achievement_scripts();
+void AddSC_event_scripts();
 
 //eastern kingdoms
 void AddSC_alterac_valley();                 //Alterac Valley
@@ -697,6 +699,7 @@ void AddCommandScripts()
     AddSC_instance_commandscript();
     AddSC_learn_commandscript();
     AddSC_lookup_commandscript();
+    AddSC_lfg_commandscript();
     AddSC_list_commandscript();
     AddSC_message_commandscript();
     AddSC_misc_commandscript();
@@ -727,6 +730,7 @@ void AddWorldScripts()
     AddSC_npc_taxi();
     AddSC_achievement_scripts();
     AddSC_lexics_chat_log();
+    AddSC_event_scripts();
 #endif
 }
 
