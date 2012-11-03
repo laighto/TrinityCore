@@ -9,11 +9,6 @@ const Position allyPositions[3] =
     { -13162.7f, 262.096f, 21.8568f, 2.91257f },
 };
 
-enum itemdata
-{
-    EMBLEM_OF_FROST = 49426,
-};
-
 class mob_ressurect : public PlayerScript
 {
 public:
@@ -49,12 +44,6 @@ public:
 
             uint32 rnd = urand(0, 2);
             killed->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
-           
-            if (urand(1, 300) == urand(1, 300))
-            {
-                killer->AddItem(EMBLEM_OF_FROST, 1);
-                sWorld->SendWorldText(12015, killer->GetName());
-            }
         }
     }
 };
