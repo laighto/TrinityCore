@@ -21,14 +21,18 @@
 #include "Common.h"
 #include "ChatLexicsCutter.h"
 #include "ChatLink.h"
+#include "Chat.h"
 
 LexicsCutter::LexicsCutter(const std::string& analogsFileName, const std::string& innormativeWordsFileName, bool ignoreMiddleSpaces, bool ignoreLetterRepeat)
     : _invalidChars("~`!@#$%^&*()-_+=[{]}|\\;:'\",<.>/?"), _ignoreMiddleSpaces(ignoreMiddleSpaces), _ignoreLetterRepeat(ignoreLetterRepeat)
 {
+    std::string analogsFile = analogsFileName;
+    std::string innormativeWordsFile = innormativeWordsFileName;
+
     if (!_ReadLetterAnalogs(analogsFileName))
-        sLog->outError(LOG_FILTER_CHATSYS, "CHAT LOG: Unable to open file with letter analogs '%s'", analogsFileName);
+        sLog->outError(LOG_FILTER_CHATSYS, "CHAT LOG: Unable to open file with letter analogs '%s'", analogsFile.c_str());
     if (!_ReadInnormativeWords(innormativeWordsFileName))
-        sLog->outError(LOG_FILTER_CHATSYS, "CHAT LOG: Unable to open file with innormative words '%s'", innormativeWordsFileName);
+        sLog->outError(LOG_FILTER_CHATSYS, "CHAT LOG: Unable to open file with innormative words '%s'", innormativeWordsFile.c_str());
     _MapInnormativeWords();
 }
 

@@ -84,7 +84,7 @@ public:
         return true;
     }
 
-    static bool HandleAnticheatJailCommand(ChatHandler* handler, const char* args)
+    static bool HandleAnticheatJailCommand(ChatHandler* handler, char const* args)
     {
         if (!sWorld->getBoolConfig(CONFIG_ANTICHEAT_ENABLE))
             return false;
@@ -205,7 +205,8 @@ public:
         uint32 teleportplane_reports = sAnticheatMgr->GetTypeReports(guid,4);
         uint32 climb_reports = sAnticheatMgr->GetTypeReports(guid,5);
 
-        handler->PSendSysMessage("Information about player %s",player->GetName());
+        std::string PlayerName = player->GetName();
+        handler->PSendSysMessage("Information about player %s", PlayerName.c_str());
         handler->PSendSysMessage("Average: %f || Total Reports: %u ",average,total_reports);
         handler->PSendSysMessage("Speed Reports: %u || Fly Reports: %u || Jump Reports: %u ",speed_reports,fly_reports,jump_reports);
         handler->PSendSysMessage("Walk On Water Reports: %u  || Teleport To Plane Reports: %u",waterwalk_reports,teleportplane_reports);

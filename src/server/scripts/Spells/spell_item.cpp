@@ -2031,17 +2031,18 @@ class spell_toss_your_luck : public SpellScriptLoader
             void HandleScript(SpellEffIndex effIndex)
             {
                 Player* caster = GetCaster()->ToPlayer();
+                std::string PlayerName = caster->GetName();
                 ChatHandler handler = ChatHandler(caster);
-                handler.PSendSysMessage(604761, caster->GetName());
+                handler.PSendSysMessage(604761, PlayerName.c_str());
                 side = rand() % 2;
 
                 switch(side)
                 {
                     case 0:
-                        handler.PSendSysMessage(604762, caster->GetName());
+                        handler.PSendSysMessage(604762, PlayerName.c_str());
                         break;
                     case 1:
-                        handler.PSendSysMessage(604763, caster->GetName());
+                        handler.PSendSysMessage(604763, PlayerName.c_str());
                         break;
                 }
             }
