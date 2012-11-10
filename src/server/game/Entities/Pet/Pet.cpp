@@ -1082,8 +1082,6 @@ bool Guardian::InitStatsForLevel(uint8 petlevel)
         }
     }
 
-    SetCreateHealth(uint32(GetMaxHealth() * 1.50));
-
     UpdateAllStats();
 
     SetFullHealth();

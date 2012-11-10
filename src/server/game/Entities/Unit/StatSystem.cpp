@@ -1247,7 +1247,10 @@ void Guardian::UpdateMaxHealth()
     value += GetModifierValue(unitMod, TOTAL_VALUE) + (baseStam + moreStam * multiplicator);
     value *= GetModifierValue(unitMod, TOTAL_PCT);
 
-    SetMaxHealth((uint32)value);
+    if (isPet())
+        SetMaxHealth((uint32)value * 1.50f);
+    else
+        SetMaxHealth((uint32)value);
 }
 
 void Guardian::UpdateMaxPower(Powers power)
