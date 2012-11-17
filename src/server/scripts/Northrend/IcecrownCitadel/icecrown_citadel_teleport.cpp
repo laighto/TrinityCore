@@ -20,6 +20,7 @@
 #include "InstanceScript.h"
 #include "icecrown_citadel.h"
 #include "Spell.h"
+#include "Player.h"
 #include "World.h"
 
 #define GOSSIP_SENDER_ICC_PORT 631
