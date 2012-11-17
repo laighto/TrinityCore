@@ -60,7 +60,7 @@ class npc_transmogrify : public CreatureScript
 
         void TransmogrifyItem(Player* player, Creature* creature)
         {
-            ChatHandler handler(player);
+            ChatHandler handler(player->GetSession());
             int32 PriceInGold = sWorld->getIntConfig(CONFIG_TRANSMOGRIFY_PRICE) * 100 * 100;
             Item *trItem = player->GetItemByPos(INVENTORY_SLOT_BAG_0, INVENTORY_SLOT_ITEM_START);
             Item *displayItem = player->GetItemByPos(INVENTORY_SLOT_BAG_0, INVENTORY_SLOT_ITEM_START + 1);
@@ -130,7 +130,7 @@ class npc_transmogrify : public CreatureScript
 
         void ClearItem(Player *player, Creature* creature)
         {
-            ChatHandler handler(player);
+            ChatHandler handler(player->GetSession());
             Item *trItem = player->GetItemByPos(INVENTORY_SLOT_BAG_0, INVENTORY_SLOT_ITEM_START);
             if (!trItem)
             {

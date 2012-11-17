@@ -2034,7 +2034,7 @@ class spell_toss_your_luck : public SpellScriptLoader
             {
                 Player* caster = GetCaster()->ToPlayer();
                 std::string PlayerName = caster->GetName();
-                ChatHandler handler = ChatHandler(caster);
+                ChatHandler handler = ChatHandler(caster->GetSession());
                 handler.PSendSysMessage(604761, PlayerName.c_str());
                 side = rand() % 2;
 

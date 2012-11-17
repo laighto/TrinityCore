@@ -419,7 +419,7 @@ public:
 
     bool OnUse(Player* player, Item* /*item*/, SpellCastTargets const & /*targets*/)
     {
-        ChatHandler handler = ChatHandler(player);
+        ChatHandler handler = ChatHandler(player->GetSession());
         //player->CastSpell(player, 72429, NULL);
         handler.PSendSysMessage("Rise my minions!");
         return false;

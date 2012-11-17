@@ -46,6 +46,7 @@
 #include "LFGMgr.h"
 
 #include "BattlefieldWG.h"
+#include "BattlefieldMgr.h"
 
 class LoginQueryHolder : public SQLQueryHolder
 {
