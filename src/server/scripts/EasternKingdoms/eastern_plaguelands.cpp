@@ -509,7 +509,7 @@ public:
             if (waveTimer <= diff)
             {
                 // 6*12 => 72 Peasants sent, 14 may die => 58 are underway
-                if (waveCount >= 6)
+                if (waveCount > 6)
                     return;
 
                 pPriest->getHostileRefManager().deleteReferences();
@@ -521,7 +521,7 @@ public:
                     pos.m_positionY = bolas_coords[0][1] + (bolas_coords[1][1] - bolas_coords[0][1]) * urand(0, 100) / 100.0f;
                     pos.m_positionZ = bolas_coords[0][2];
                     pos.m_orientation = bolas_coords[0][3];
-                    if (Creature* p = me->SummonCreature(NPC_INJURED_PEASANT, pos, TEMPSUMMON_MANUAL_DESPAWN, 0))
+                    if (Creature* p = me->SummonCreature(NPC_INJURED_PEASANT, pos, TEMPSUMMON_TIMED_DESPAWN, 360000))
                     {
                         p->setFaction(pPriest->getFaction());
 

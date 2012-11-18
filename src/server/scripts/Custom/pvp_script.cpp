@@ -98,13 +98,13 @@ public:
             if (player->getGender() == GENDER_MALE)
             {
                 char msg[250];
-                snprintf(msg, 250, "|CFF7BBEF7[Boss Announcer]|r:|cffff0000 %s |r and his group killed world boss |CFF18BE00[%s]|r !!!", player->GetName(),boss->GetName());
+                snprintf(msg, 250, "|CFF7BBEF7[Boss Announcer]|r:|cffff0000 %s |r and his group killed world boss |CFF18BE00[%s]|r !!!", player->GetName().c_str(),boss->GetName().c_str());
                 sWorld->SendServerMessage(SERVER_MSG_STRING, msg);
             }
             else
             {
                 char msg[250];
-                snprintf(msg, 250, "|CFF7BBEF7[Boss Announcer]|r:|cffff0000 %s |r and her group killed world boss |CFF18BE00[%s]|r !!!", player->GetName(),boss->GetName());
+                snprintf(msg, 250, "|CFF7BBEF7[Boss Announcer]|r:|cffff0000 %s |r and her group killed world boss |CFF18BE00[%s]|r !!!", player->GetName().c_str(),boss->GetName().c_str());
                 sWorld->SendServerMessage(SERVER_MSG_STRING, msg);
             }
         }
