@@ -472,18 +472,18 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
 
             for (ObjectList::const_iterator itr = targets->begin(); itr != targets->end(); ++itr)
             {
+                // Special handling for vehicles
+                if (IsUnit(*itr))
+                    if (Vehicle* vehicle = (*itr)->ToUnit()->GetVehicleKit())
+                        for (SeatMap::iterator it = vehicle->Seats.begin(); it != vehicle->Seats.end(); ++it)
+                            if (Player* player = ObjectAccessor::FindPlayer(it->second.Passenger))
+                                player->AreaExploredOrEventHappens(e.action.quest.quest);
+                        
                 if (IsPlayer(*itr))
                 {
                     (*itr)->ToPlayer()->AreaExploredOrEventHappens(e.action.quest.quest);
                     sLog->outDebug(LOG_FILTER_DATABASE_AI, "SmartScript::ProcessAction:: SMART_ACTION_CALL_AREAEXPLOREDOREVENTHAPPENS: Player guidLow %u credited quest %u",
                         (*itr)->GetGUIDLow(), e.action.quest.quest);
-                }
-                
-                if ((*itr)->ToUnit()->IsVehicle() && (*itr)->ToCreature()->GetVehicleKit()->IsVehicleInUse() && IsPlayer((*itr)->ToCreature()->GetCharmerOrOwner()))
-                {
-                    (*itr)->ToCreature()->GetCharmerOrOwnerPlayerOrPlayerItself()->AreaExploredOrEventHappens(e.action.quest.quest);
-                    sLog->outDebug(LOG_FILTER_DATABASE_AI, "SmartScript::ProcessAction:: SMART_ACTION_CALL_AREAEXPLOREDOREVENTHAPPENS: Player guidLow %u credited quest %u",
-                        (*itr)->ToCreature()->GetCharmerOrOwnerPlayerOrPlayerItself()->GetGUIDLow(), e.action.quest.quest);
                 }
             }
 
@@ -759,12 +759,11 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                 sLog->outDebug(LOG_FILTER_DATABASE_AI, "SmartScript::ProcessAction: SMART_ACTION_CALL_GROUPEVENTHAPPENS: Player %u, group credit for quest %u",
                     unit->GetGUIDLow(), e.action.quest.quest);
             }
-            else if (unit->IsVehicle() && unit->ToCreature()->GetVehicleKit()->IsVehicleInUse() && IsPlayer(unit->ToCreature()->GetCharmerOrOwner()) && GetBaseObject())
-            {
-                unit->ToCreature()->GetCharmerOrOwnerPlayerOrPlayerItself()->GroupEventHappens(e.action.quest.quest, GetBaseObject());
-                sLog->outDebug(LOG_FILTER_DATABASE_AI, "SmartScript::ProcessAction: SMART_ACTION_CALL_GROUPEVENTHAPPENS: Player %u, group credit for quest %u",
-                    unit->ToCreature()->GetCharmerOrOwnerPlayerOrPlayerItself()->GetGUIDLow(), e.action.quest.quest);
-            }
+            // Special handling for vehicles
+            if (Vehicle* vehicle = unit->GetVehicleKit())
+                for (SeatMap::iterator it = vehicle->Seats.begin(); it != vehicle->Seats.end(); ++it)
+                    if (Player* player = ObjectAccessor::FindPlayer(it->second.Passenger))
+                        player->GroupEventHappens(e.action.quest.quest, GetBaseObject());
             break;
         }
         case SMART_ACTION_CALL_CASTEDCREATUREORGO:
@@ -891,6 +890,13 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
 
                 for (ObjectList::const_iterator itr = targets->begin(); itr != targets->end(); ++itr)
                 {
+                    // Special handling for vehicles
+                    if (IsUnit(*itr))
+                        if (Vehicle* vehicle = (*itr)->ToUnit()->GetVehicleKit())
+                            for (SeatMap::iterator it = vehicle->Seats.begin(); it != vehicle->Seats.end(); ++it)
+                                if (Player* player = ObjectAccessor::FindPlayer(it->second.Passenger))
+                                    player->RewardPlayerAndGroupAtEvent(e.action.killedMonster.creature, player);
+                    
                     if (!IsPlayer(*itr))
                         continue;
 
@@ -898,17 +904,6 @@ void SmartScript::ProcessAction(SmartScriptHolder& e, Unit* unit, uint32 var0, u
                     sLog->outDebug(LOG_FILTER_DATABASE_AI, "SmartScript::ProcessAction: SMART_ACTION_CALL_KILLEDMONSTER: Player %u, Killcredit: %u",
                         (*itr)->GetGUIDLow(), e.action.killedMonster.creature);
                 }
-
-                for (ObjectList::const_iterator itr = targets->begin(); itr != targets->end(); ++itr)
-                {
-                    if (!((*itr)->ToUnit()->IsVehicle() && (*itr)->ToCreature()->GetVehicleKit()->IsVehicleInUse() && IsPlayer((*itr)->ToCreature()->GetCharmerOrOwner())))
-                       continue;
-
-                    (*itr)->ToCreature()->GetCharmerOrOwnerPlayerOrPlayerItself()->RewardPlayerAndGroupAtEvent(e.action.killedMonster.creature, (*itr)->ToCreature()->GetCharmerOrOwnerPlayerOrPlayerItself());
-                    sLog->outDebug(LOG_FILTER_DATABASE_AI, "SmartScript::ProcessAction: SMART_ACTION_CALL_KILLEDMONSTER: Player %u, Killcredit: %u",
-                        (*itr)->ToCreature()->GetCharmerOrOwnerPlayerOrPlayerItself()->GetGUIDLow(), e.action.killedMonster.creature);
-                }
-
                 delete targets;
             }
             else if (trigger && IsPlayer(unit))
