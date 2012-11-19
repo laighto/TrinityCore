@@ -359,7 +359,7 @@ public:
                 default:             break;
             }
 
-            if (killCount >= 15)
+            if (killCount > 14)
             {
                 // FailQuest
                 //me->MonsterYell(SAY_FAIL, LANG_UNIVERSAL, 0);
@@ -367,7 +367,7 @@ public:
                 eventActive = false;
                 pPriest = NULL;
             }
-            else if (saveCount >= 50)
+            else if (saveCount > 39)
             {
                 // award Quest
                 me->MonsterYell(SAY_COMPLETE, LANG_UNIVERSAL, 0);
@@ -434,7 +434,7 @@ public:
             // register survivor
             DoAction(0);
 
-            if (saveCount == 50)
+            if (saveCount == 40)
                 CAST_AI(npc_fleeing_peasant::npc_fleeing_peasantAI, p->AI())->StartOutro();
         }
 
@@ -521,7 +521,7 @@ public:
                     pos.m_positionY = bolas_coords[0][1] + (bolas_coords[1][1] - bolas_coords[0][1]) * urand(0, 100) / 100.0f;
                     pos.m_positionZ = bolas_coords[0][2];
                     pos.m_orientation = bolas_coords[0][3];
-                    if (Creature* p = me->SummonCreature(NPC_INJURED_PEASANT, pos, TEMPSUMMON_TIMED_DESPAWN, 360000))
+                    if (Creature* p = me->SummonCreature(NPC_INJURED_PEASANT, pos, TEMPSUMMON_TIMED_DESPAWN, 600000))
                     {
                         p->setFaction(pPriest->getFaction());
 

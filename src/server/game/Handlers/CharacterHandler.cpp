@@ -44,6 +44,7 @@
 #include "Battleground.h"
 #include "AccountMgr.h"
 #include "LFGMgr.h"
+#include "CalendarMgr.h"
 
 #include "BattlefieldWG.h"
 #include "BattlefieldMgr.h"
@@ -729,6 +730,7 @@ void WorldSession::HandleCharDeleteOpcode(WorldPacket & recvData)
             sLog->outCharDump(dump.c_str(), GetAccountId(), GUID_LOPART(guid), name.c_str());
     }
 
+    sCalendarMgr->RemoveAllPlayerEventsAndInvites(guid);
     Player::DeleteFromDB(guid, GetAccountId());
 
     WorldPacket data(SMSG_CHAR_DELETE, 1);
