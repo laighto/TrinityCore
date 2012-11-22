@@ -686,6 +686,7 @@ void WorldSession::HandleCharDeleteOpcode(WorldPacket & recvData)
         return;
 
     uint32 accountId = 0;
+    uint32 charlevel = 0;
     std::string name;
 
     // is guild leader
@@ -714,6 +715,7 @@ void WorldSession::HandleCharDeleteOpcode(WorldPacket & recvData)
         Field* fields = result->Fetch();
         accountId     = fields[0].GetUInt32();
         name          = fields[1].GetString();
+        charlevel     = fields[2].GetUInt8();
     }
 
     // prevent deleting other players' characters using cheating tools
@@ -721,9 +723,7 @@ void WorldSession::HandleCharDeleteOpcode(WorldPacket & recvData)
         return;
 
     std::string IP_str = GetRemoteAddress();
-    if (Player* pCurrChar = new Player(this))
-        sLog->outInfo(LOG_FILTER_CHARACTER, "Account: %d (IP: %s) Delete Character:[%s] (GUID: %u) Level: %d", GetAccountId(), IP_str.c_str(), name.c_str(), GUID_LOPART(guid), pCurrChar->getLevel());
-    else sLog->outInfo(LOG_FILTER_CHARACTER, "Account: %d (IP: %s) Delete Character:[%s] (GUID: %u)", GetAccountId(), IP_str.c_str(), name.c_str(), GUID_LOPART(guid));
+    sLog->outInfo(LOG_FILTER_CHARACTER, "Account: %d (IP: %s) Delete Character:[%s] (GUID: %u) Level: %d", GetAccountId(), IP_str.c_str(), name.c_str(), GUID_LOPART(guid), charlevel);
     sScriptMgr->OnPlayerDelete(guid);
     sWorld->DeleteCharaceterNameData(GUID_LOPART(guid));
 
