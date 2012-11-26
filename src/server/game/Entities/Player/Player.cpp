@@ -12553,10 +12553,10 @@ void Player::MoveItemToInventory(ItemPosCountVec const& dest, Item* pItem, bool 
         // if this original item then it need create record in inventory
         // in case trade we already have item in other player inventory
         pLastItem->SetState(in_characterInventoryDB ? ITEM_CHANGED : ITEM_NEW, this);
-    }
 
-    if (pLastItem->HasFlag(ITEM_FIELD_FLAGS, ITEM_FLAG_BOP_TRADEABLE))
-        AddTradeableItem(pLastItem);
+        if (pLastItem->HasFlag(ITEM_FIELD_FLAGS, ITEM_FLAG_BOP_TRADEABLE))
+            AddTradeableItem(pLastItem);
+    }
 }
 
 void Player::DestroyItem(uint8 bag, uint8 slot, bool update)
@@ -16901,7 +16901,9 @@ bool Player::LoadFromDB(uint32 guid, SQLQueryHolder *holder)
             const WorldLocation& _loc = GetBattlegroundEntryPoint();
             mapId = _loc.GetMapId(); instanceId = 0;
 
-            if (mapId == MAPID_INVALID) // Battleground Entry Point not found (???)
+            // Db field type is type int16, so it can never be MAPID_INVALID
+            //if (mapId == MAPID_INVALID) -- code kept for reference
+            if (int16(mapId) == int16(-1)) // Battleground Entry Point not found (???)
             {
                 sLog->outError(LOG_FILTER_PLAYER, "Player (guidlow %d) was in BG in database, but BG was not found, and entry point was invalid! Teleport to default race/class locations.", guid);
                 RelocateToHomebind();
@@ -17717,8 +17719,14 @@ Item* Player::_LoadItem(SQLTransaction& trans, uint32 zoneId, uint32 timeDiff, F
                     AllowedLooterSet looters;
                     for (Tokenizer::const_iterator itr = GUIDlist.begin(); itr != GUIDlist.end(); ++itr)
                         looters.insert(atol(*itr));
-                    item->SetSoulboundTradeable(looters);
-                    AddTradeableItem(item);
+
+                    if (looters.size() > 1 && item->GetTemplate()->GetMaxStackSize() == 1 && item->IsSoulBound())
+                    {
+                        item->SetSoulboundTradeable(looters);
+                        AddTradeableItem(item);
+                    }
+                    else
+                        item->ClearSoulboundTradeable(this);
                 }
                 else
                 {
