@@ -334,9 +334,6 @@ class boss_lady_deathwhisper : public CreatureScript
                 }
 
                 _JustDied();
-
-                instance->SetBossState(DATA_GUNSHIP_EVENT, DONE);
-                instance->SaveToDB();
             }
 
             void JustReachedHome()
