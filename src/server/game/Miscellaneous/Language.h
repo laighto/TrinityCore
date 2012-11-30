@@ -1098,6 +1098,23 @@ enum TrinityStrings
     LANG_AUTO_BROADCAST                 = 11000,
     LANG_INVALID_REALMID                = 11001,
 
+    // UT Awards
+    LANG_UTA_DOUBLE_KILL                = 20100,
+    LANG_UTA_TRIPLE_KILL                = 20101,
+    LANG_UTA_MULTI_KILL                 = 20102,
+    LANG_UTA_MEGA_KILL                  = 20103,
+    LANG_UTA_ULTRA_KILL                 = 20104,
+    LANG_UTA_MONSTER_KILL               = 20105,
+    LANG_UTA_HOLY_SHIT                  = 20106,
+    LANG_UTA_FIRST_BLOOD                = 20110,
+    LANG_UTA_KILLING_SPREE              = 20111,
+    LANG_UTA_DOMINATION                 = 20112,
+    LANG_UTA_RAMPAGE                    = 20113,
+    LANG_UTA_UNSTOPPABLE                = 20114,
+    LANG_UTA_GODLIKE                    = 20115,
+    LANG_UTA_BEYOND_GODLIKE             = 20116,
+    LANG_UTA_INTERRUPTED_SERIES         = 20119,
+
     // NOT RESERVED IDS                   12000-1999999999
     // `db_script_string` table index     2000000000-2000009999 (MIN_DB_SCRIPT_STRING_ID-MAX_DB_SCRIPT_STRING_ID)
     // For other tables maybe             2000010000-2147483647 (max index)
