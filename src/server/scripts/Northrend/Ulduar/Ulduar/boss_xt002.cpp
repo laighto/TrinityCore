@@ -402,7 +402,10 @@ class boss_xt002 : public CreatureScript
                 Talk(EMOTE_HEART_CLOSED);
 
                 DoCast(me, SPELL_STAND);
+                me->RemoveAura(SPELL_SUBMERGE);
                 me->SetReactState(REACT_AGGRESSIVE);
+                me->RemoveByteFlag(UNIT_FIELD_BYTES_1, 0, UNIT_STAND_STATE_SUBMERGED);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_IMMUNE_TO_PC);
 
                 _phase = 1;
 
