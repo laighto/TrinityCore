@@ -79,6 +79,8 @@ public:
         void JustDied(Unit* /*killer*/)
         {
             DoScriptText(SAY_DEATH, me);
+            if (GameObject* object = me->FindNearestGameObject(176965, 150.0f)) //open GO Portcullis
+                object->UseDoorOrButton();
         }
 
         void UpdateAI(const uint32 diff)

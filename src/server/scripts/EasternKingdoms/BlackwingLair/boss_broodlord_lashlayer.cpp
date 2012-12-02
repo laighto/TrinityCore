@@ -73,6 +73,12 @@ public:
             DoZoneInCombat();
         }
 
+        void JustDied(Unit* /*killer*/)
+        {
+            if (GameObject* object = me->FindNearestGameObject(179365, 50.0)) //open GO Portcullis
+                object->UseDoorOrButton();
+        }
+
         void UpdateAI(const uint32 diff)
         {
             if (!UpdateVictim())

@@ -156,6 +156,12 @@ public:
             me->ResetPlayerDamageReq();
         }
 
+        void JustDied(Unit* /*killer*/)
+        {
+            if (GameObject* object = me->FindNearestGameObject(179364, 100.0f)) //open GO Portcullis
+                object->UseDoorOrButton();
+        }
+
         void UpdateAI(const uint32 diff)
         {
             //Speech
