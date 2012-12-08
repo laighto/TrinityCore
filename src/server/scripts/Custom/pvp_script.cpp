@@ -79,7 +79,7 @@ public:
                     {
                         killer->AddAura(47044, killer);
                         char msg[250];
-                        snprintf(msg, 250, "|CFF7BBEF7[World Event Announcer]|r:|cffff0000 %s |r has become TOP creature killer over %s, HIGH priority to kill HIM !!!", killer->GetName().c_str(), killed->GetName().c_str());
+                        snprintf(msg, 250, "|CFF7BBEF7[World Event Announcer]|r:|cffff0000 %s |r has become Renegade over %s, HIGH priority to kill HIM!", killer->GetName().c_str(), killed->GetName().c_str());
                         sWorld->SendServerMessage(SERVER_MSG_STRING, msg);
                     }
                 }
@@ -211,8 +211,21 @@ public:
                     {
                         player->AddAura(47044, player);
                         char msg[250];
-                        snprintf(msg, 250, "|CFF7BBEF7[World Event Announcer]|r:|cffff0000 %s |r is a TOP creature killer, HIGH priority to kill HIM !!!", player->GetName().c_str());
+                        snprintf(msg, 250, "|CFF7BBEF7[World Event Announcer]|r:|cffff0000 %s |r is a Renegade, HIGH priority to kill HIM!", player->GetName().c_str());
                         sWorld->SendServerMessage(SERVER_MSG_STRING, msg);
+                    }
+                    else if (urand (0, 4) == 3)
+                    {
+                        QueryResult result = CharacterDatabase.PQuery("SELECT name FROM characters WHERE guid = %u;", leader);
+
+                        if (result)
+                        {
+                            Field *fieldsDB = result->Fetch();
+                            const char *name = fieldsDB[0].GetCString();
+                            char msg[250];
+                            snprintf(msg, 250, "|CFF7BBEF7[World Event Announcer]|r:|cffff0000 %s |r is a Renegade, HIGH priority to kill HIM!", name);
+                            sWorld->SendServerMessage(SERVER_MSG_STRING, msg);
+                        }
                     }
                 }
             }
