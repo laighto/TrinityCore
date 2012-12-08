@@ -9,6 +9,10 @@ const Position allyPositions[3] =
     { -13162.7f, 262.096f, 21.8568f, 2.91257f },
 };
 
+uint32 counter = 0;
+uint32 leader = 0;
+bool checker = false;
+
 class mob_ressurect : public PlayerScript
 {
 public:
@@ -44,6 +48,42 @@ public:
 
             uint32 rnd = urand(0, 2);
             killed->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
+        }
+
+        //WORLD MASS EVENT
+        if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker)
+        {
+            if (killed->GetGUIDLow() == leader)
+            {
+                QueryResult result = CharacterDatabase.PQuery("SELECT guid FROM world_event_player WHERE guid = %u ;", killer->GetGUIDLow());
+
+                if (result)
+                {         
+                    CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 10 WHERE guid = %u ;", killer->GetGUIDLow());
+                    CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed - 10 WHERE guid = %u ;", killed->GetGUIDLow());
+                }
+                else
+                {         
+                    CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 10, 0);", killer->GetGUIDLow());
+                    CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed - 10 WHERE guid = %u ;", killed->GetGUIDLow());
+                }
+
+                QueryResult leadercheck = CharacterDatabase.PQuery("SELECT guid FROM world_event_player ORDER BY creature_killed DESC LIMIT 1;");
+
+                if (leadercheck)
+                {
+                    Field *fieldsDB = leadercheck->Fetch();
+                    leader = fieldsDB[0].GetUInt32();
+
+                    if (killer->GetGUIDLow() == leader)
+                    {
+                        killer->AddAura(47044, killer);
+                        char msg[250];
+                        snprintf(msg, 250, "|CFF7BBEF7[World Event Announcer]|r:|cffff0000 %s |r has become TOP creature killer over %s, HIGH priority to kill HIM !!!", killer->GetName().c_str(), killed->GetName().c_str());
+                        sWorld->SendServerMessage(SERVER_MSG_STRING, msg);
+                    }
+                }
+            }
         }
     }
 };
@@ -93,6 +133,38 @@ public:
  
     void OnCreatureKill(Player* player, Creature* boss)
     {
+        //WORLD MASS EVENT
+        if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker)
+        {
+            counter++;
+
+            QueryResult result = CharacterDatabase.PQuery("SELECT guid FROM world_event_player WHERE guid = %u ;", player->GetGUIDLow());
+
+            if (!result)
+            {
+                if (boss->isWorldBoss())            
+                    CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 1, 1);", player->GetGUIDLow());
+                else
+                    CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 1, 0);", player->GetGUIDLow());
+            }
+            else
+            {
+                if (boss->isWorldBoss())
+                    CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 1, boss_killed = boss_killed + 1 WHERE guid = %u ;", player->GetGUIDLow());
+                else
+                    CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 1 WHERE guid = %u ;", player->GetGUIDLow());
+            }
+
+            if (counter == 10)
+            {
+                PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(WORLDEVENT);
+                stmt->setUInt32(0, counter);
+                CharacterDatabase.Execute(stmt);
+                counter = 0;
+            }
+        }
+        // END WORLD MASS EVENT
+
         if (boss->isWorldBoss())
         {
             if (player->getGender() == GENDER_MALE)
@@ -106,6 +178,43 @@ public:
                 char msg[250];
                 snprintf(msg, 250, "|CFF7BBEF7[Boss Announcer]|r:|cffff0000 %s |r and her group killed world boss |CFF18BE00[%s]|r !!!", player->GetName().c_str(),boss->GetName().c_str());
                 sWorld->SendServerMessage(SERVER_MSG_STRING, msg);
+            }
+        }
+    }
+
+    //WORLD MASS EVENT
+    void OnLogin(Player* player)
+    {
+        if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker)
+        {
+           
+            QueryResult resultb = CharacterDatabase.PQuery("SELECT creatures_killed FROM world_event;");
+
+            if (resultb)
+            {
+                Field *row = resultb->Fetch();
+                uint32 creatures = row[0].GetUInt32();
+                if (creatures > 500000)
+                    checker=true;
+            } 
+
+            if (!checker)
+            {
+                QueryResult result = CharacterDatabase.PQuery("SELECT guid FROM world_event_player ORDER BY creature_killed DESC LIMIT 1;");
+
+                if (result)
+                {
+                    Field *fieldsDB = result->Fetch();
+                    leader = fieldsDB[0].GetUInt32();
+
+                    if (player->GetGUIDLow() == leader)
+                    {
+                        player->AddAura(47044, player);
+                        char msg[250];
+                        snprintf(msg, 250, "|CFF7BBEF7[World Event Announcer]|r:|cffff0000 %s |r is a TOP creature killer, HIGH priority to kill HIM !!!", player->GetName().c_str());
+                        sWorld->SendServerMessage(SERVER_MSG_STRING, msg);
+                    }
+                }
             }
         }
     }

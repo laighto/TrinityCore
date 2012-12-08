@@ -3099,6 +3099,13 @@ DalaranAntiAfkTP = 0
 #		     1 - Enable
 
 DuelResetCooldown = 1
+
+#   World Event
+#	Default: 0 - Disable
+#		     1 - Enable
+
+WorldEvent = 0
+
 #
 ##############################################################################
 
