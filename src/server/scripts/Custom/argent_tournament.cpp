@@ -48,7 +48,7 @@ enum Valiant
 #define GRAND_MELEE_SAY_END "I have been defeated. Good Fight!"
 #define GRAND_MELEE_SAY_VICTORY "I am victorious!"
 
-class the_gand_melee : public CreatureScript
+class the_grand_melee : public CreatureScript
 {
     private:
         enum Events
@@ -58,11 +58,11 @@ class the_gand_melee : public CreatureScript
         };
 
     public:
-        the_gand_melee() : CreatureScript("npc_valiant_melee") { }
+        the_grand_melee() : CreatureScript("npc_valiant_melee") { }
 
-        struct the_gand_meleeAI : public ScriptedAI
+        struct the_grand_meleeAI : public ScriptedAI
         {
-            the_gand_meleeAI(Creature* _Creature) : ScriptedAI(_Creature) 
+            the_grand_meleeAI(Creature* _Creature) : ScriptedAI(_Creature) 
             { 
                 Challenger = NULL;
             }
@@ -232,7 +232,7 @@ class the_gand_melee : public CreatureScript
         
         CreatureAI* GetAI(Creature* _Creature) const
         {
-            return new the_gand_meleeAI(_Creature);
+            return new the_grand_meleeAI(_Creature);
         }
 };
 
@@ -521,6 +521,6 @@ public:
 
 void ADSC_argent_tournamet_custom()
 {
-	new the_gand_melee();
+	new the_grand_melee();
     new among_the_champions();
 };
