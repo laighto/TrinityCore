@@ -162,7 +162,7 @@ class the_grand_melee : public CreatureScript
                 Unit* Challenger;
         };
 
-        bool OnGossipHello(Player* _Player, Creature* _Creature)
+        /*bool OnGossipHello(Player* _Player, Creature* _Creature)
         {
             if (_Creature->isQuestGiver())
                 _Player->PrepareQuestMenu(_Creature->GetGUID());
@@ -179,8 +179,7 @@ class the_grand_melee : public CreatureScript
                 (_Player->GetQuestStatus(QUEST_GRAND_MELEE_10) == QUEST_STATUS_INCOMPLETE)) &&
                 (_Player->HasAura(SPELL_RIDE_VEHICLE)) &&
                 (_Player->HasAura(SPELL_PLAYER_ON_AT_MOUNT)) &&
-                (_Player->HasAura(SPELL_LANCE_EQUIPPED)) &&
-                (!_Player->isInCombat()))
+                (_Player->HasAura(SPELL_LANCE_EQUIPPED)))
             {
                 if ((_Creature->GetEntry() == NPC_STORMWIND_VALIANT) || (_Creature->GetEntry() == NPC_DARNASSUS_VALIANT) ||
                     (_Creature->GetEntry() == NPC_EXODAR_VALIANT) || (_Creature->GetEntry() == NPC_GNOMEREGAN_VALIANT) ||
@@ -208,7 +207,7 @@ class the_grand_melee : public CreatureScript
                 return true;
             }
             return false;
-        }
+        }*/
         
         bool OnGossipSelect(Player* _Player, Creature* _Creature, uint32 /*uiSender*/, uint32 Action)
         {
@@ -216,17 +215,16 @@ class the_grand_melee : public CreatureScript
                 return false;
 
             _Player->PlayerTalkClass->ClearMenus();
-
-            if (Action == GOSSIP_ACTION_INFO_DEF+1)
+            if (Action == 1)
             {
                 _Creature->setFaction(FACTION_HOSTILE);
                 _Creature->SetReactState(REACT_AGGRESSIVE);
                 _Creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
                 _Creature->MonsterSay(urand(0,1) ? GRAND_MELEE_SAY_START_1 : GRAND_MELEE_SAY_START_2, LANG_UNIVERSAL, 0);
                 _Creature->AI()->AttackStart(_Player->GetVehicleCreatureBase());
-
-                _Player->CLOSE_GOSSIP_MENU();
             }
+
+            _Player->CLOSE_GOSSIP_MENU();
             return true;
         }
         
@@ -473,7 +471,7 @@ public:
         }
     };
 
-    bool OnGossipHello(Player* pPlayer, Creature* pCreature)
+    /*bool OnGossipHello(Player* pPlayer, Creature* pCreature)
     {
         if (pCreature->isQuestGiver())
             pPlayer->PrepareQuestMenu(pCreature->GetGUID());
@@ -484,8 +482,7 @@ public:
             (pPlayer->GetQuestStatus(QUEST_AMONG_THECHAMPIONS_A2) == QUEST_STATUS_INCOMPLETE)) &&
             (pPlayer->HasAura(RIDE_VEHICLE)) &&
             (pPlayer->HasAura(PLAYER_ON_TOURNAMENT_MOUNT)) &&
-            (pPlayer->HasAura(LANCE_EQUIPPED)) &&
-            (!pPlayer->isInCombat()))
+            (pPlayer->HasAura(LANCE_EQUIPPED)))
 
         {
             pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_VALIANT_1, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
@@ -493,12 +490,13 @@ public:
             return true;
         }
         return false;
-    }
+    }*/
 
     bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
         pPlayer->PlayerTalkClass->ClearMenus();
-        if (uiAction == GOSSIP_ACTION_INFO_DEF+1)
+
+        if (uiAction == 1)
         {
             pPlayer->CLOSE_GOSSIP_MENU();
             pCreature->setFaction(14);
