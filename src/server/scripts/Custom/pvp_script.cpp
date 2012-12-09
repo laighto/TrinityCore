@@ -60,12 +60,12 @@ public:
                 if (result)
                 {         
                     CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 10 WHERE guid = %u ;", killer->GetGUIDLow());
-                    CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed - 10 WHERE guid = %u ;", killed->GetGUIDLow());
+                    CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed - 100 WHERE guid = %u ;", killed->GetGUIDLow());
                 }
                 else
                 {         
                     CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 10, 0);", killer->GetGUIDLow());
-                    CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed - 10 WHERE guid = %u ;", killed->GetGUIDLow());
+                    CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed - 100 WHERE guid = %u ;", killed->GetGUIDLow());
                 }
 
                 QueryResult leadercheck = CharacterDatabase.PQuery("SELECT guid FROM world_event_player ORDER BY creature_killed DESC LIMIT 1;");
