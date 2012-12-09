@@ -9,7 +9,7 @@ const Position allyPositions[3] =
     { -13162.7f, 262.096f, 21.8568f, 2.91257f },
 };
 
-uint32 counter = 0;
+uint32 counter = 1;
 uint32 leader = 0;
 bool checker = false;
 
@@ -134,7 +134,7 @@ public:
     void OnCreatureKill(Player* player, Creature* boss)
     {
         //WORLD MASS EVENT
-        if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker)
+        if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker && ((player->getLevel() - boss->getLevel()) <= 5))
         {
             counter++;
 
@@ -155,12 +155,10 @@ public:
                     CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 1 WHERE guid = %u ;", player->GetGUIDLow());
             }
 
-            if (counter == 10)
+            if (counter > 10)
             {
-                PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(WORLDEVENT);
-                stmt->setUInt32(0, counter);
-                CharacterDatabase.Execute(stmt);
-                counter = 0;
+                CharacterDatabase.PExecute("UPDATE world_event SET creatures_killed = creatures_killed + 10");
+                counter = 1;
             }
         }
         // END WORLD MASS EVENT
@@ -185,6 +183,11 @@ public:
     //WORLD MASS EVENT
     void OnLogin(Player* player)
     {
+        /*if(checker)
+        {
+            player->SendNewItem(item, 1, false, true);
+        }*/
+
         if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker)
         {
            
