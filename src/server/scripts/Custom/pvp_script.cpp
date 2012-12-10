@@ -149,7 +149,7 @@ public:
                 }
                 else if (boss->isElite())
                 {
-                    CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 10, 1);", player->GetGUIDLow());
+                    CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 10, 0);", player->GetGUIDLow());
                     //counter = counter + 9;
                 }
                 else
@@ -164,7 +164,7 @@ public:
                 }
                 else if (boss->isElite())
                 {
-                    CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 10, 1);", player->GetGUIDLow());
+                    CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 10 WHERE guid = %u ;", player->GetGUIDLow());
                     //counter = counter + 9;
                 }
                 else
