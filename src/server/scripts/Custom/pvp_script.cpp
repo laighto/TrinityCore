@@ -145,12 +145,12 @@ public:
                 if (boss->isWorldBoss())
                 {
                     CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 50, 1);", player->GetGUIDLow());
-                    counter = counter + 50;
+                    //counter = counter + 49;
                 }
                 else if (boss->isElite())
                 {
                     CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 10, 1);", player->GetGUIDLow());
-                    counter = counter + 10;
+                    //counter = counter + 9;
                 }
                 else
                     CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 1, 0);", player->GetGUIDLow());
@@ -160,20 +160,20 @@ public:
                 if (boss->isWorldBoss())
                 {
                     CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 50, boss_killed = boss_killed + 1 WHERE guid = %u ;", player->GetGUIDLow());
-                    counter = counter + 50;                
+                    //counter = counter + 49;                
                 }
                 else if (boss->isElite())
                 {
                     CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 10, 1);", player->GetGUIDLow());
-                    counter = counter + 10;
+                    //counter = counter + 9;
                 }
                 else
                     CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 1 WHERE guid = %u ;", player->GetGUIDLow());
             }
 
-            if (counter > 100)
+            if (counter > 50)
             {
-                CharacterDatabase.PExecute("UPDATE world_event SET creatures_killed = creatures_killed + %u", counter);
+                CharacterDatabase.PExecute("UPDATE world_event SET creatures_killed = creatures_killed + 50;" /* %u", counter*/);
                 counter = 1;
             }
         }
