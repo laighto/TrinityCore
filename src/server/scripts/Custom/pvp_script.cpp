@@ -142,22 +142,38 @@ public:
 
             if (!result)
             {
-                if (boss->isWorldBoss())            
-                    CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 1, 1);", player->GetGUIDLow());
+                if (boss->isWorldBoss())
+                {
+                    CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 50, 1);", player->GetGUIDLow());
+                    counter = counter + 50;
+                }
+                else if (boss->isElite())
+                {
+                    CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 10, 1);", player->GetGUIDLow());
+                    counter = counter + 10;
+                }
                 else
                     CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 1, 0);", player->GetGUIDLow());
             }
             else
             {
                 if (boss->isWorldBoss())
-                    CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 1, boss_killed = boss_killed + 1 WHERE guid = %u ;", player->GetGUIDLow());
+                {
+                    CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 50, boss_killed = boss_killed + 1 WHERE guid = %u ;", player->GetGUIDLow());
+                    counter = counter + 50;                
+                }
+                else if (boss->isElite())
+                {
+                    CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 10, 1);", player->GetGUIDLow());
+                    counter = counter + 10;
+                }
                 else
                     CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 1 WHERE guid = %u ;", player->GetGUIDLow());
             }
 
-            if (counter > 10)
+            if (counter > 100)
             {
-                CharacterDatabase.PExecute("UPDATE world_event SET creatures_killed = creatures_killed + 10");
+                CharacterDatabase.PExecute("UPDATE world_event SET creatures_killed = creatures_killed + %u", counter);
                 counter = 1;
             }
         }
@@ -212,12 +228,12 @@ public:
 
                     if (player->GetGUIDLow() == leader)
                     {
-                        player->AddAura(47044, player);
+                        //player->AddAura(47044, player);
                         char msg[250];
                         snprintf(msg, 250, "|CFF7BBEF7[World Event Announcer]|r:|cffff0000 %s |r is a Renegade, HIGH priority to kill HIM!", player->GetName().c_str());
                         sWorld->SendServerMessage(SERVER_MSG_STRING, msg);
                     }
-                    else if (urand (0, 4) == 3)
+                    else if (urand (0, 5) == 3)
                     {
                         QueryResult result = CharacterDatabase.PQuery("SELECT name FROM characters WHERE guid = %u;", leader);
 
