@@ -142,7 +142,7 @@ public:
 
             if (!result)
             {
-                if (boss->isWorldBoss())
+                if (boss->isWorldBoss()) && (boss->GetRespawnTime() > DAY * 0.5))
                 {
                     CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 50, 1);", player->GetGUIDLow());
                     //counter = counter + 49;
@@ -157,7 +157,7 @@ public:
             }
             else
             {
-                if (boss->isWorldBoss())
+                if (boss->isWorldBoss() && (boss->GetRespawnTime() > DAY * 0.5))
                 {
                     CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 50, boss_killed = boss_killed + 1 WHERE guid = %u ;", player->GetGUIDLow());
                     //counter = counter + 49;                
