@@ -142,7 +142,7 @@ public:
 
             if (!result)
             {
-                if (boss->isWorldBoss()) && (boss->GetRespawnTime() > DAY * 0.5))
+                if (boss->isWorldBoss() && (boss->GetRespawnTime() > DAY * 0.5))
                 {
                     CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 50, 1);", player->GetGUIDLow());
                     //counter = counter + 49;
