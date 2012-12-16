@@ -136,7 +136,7 @@ public:
         //WORLD MASS EVENT
         if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker && ((player->getLevel() - boss->getLevel()) <= 5))
         {
-            counter++;
+            //counter++;
 
             QueryResult result = CharacterDatabase.PQuery("SELECT guid FROM world_event_player WHERE guid = %u ;", player->GetGUIDLow());
 
@@ -144,36 +144,54 @@ public:
             {
                 if (boss->isWorldBoss() && (boss->GetRespawnTime() > DAY * 0.5))
                 {
-                    CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 50, 1);", player->GetGUIDLow());
-                    //counter = counter + 49;
+                    if (player->GetGUIDLow() == leader)
+                        CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 1, 1);", player->GetGUIDLow());
+                    else CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 50, 1);", player->GetGUIDLow());
+                    
+                    counter = counter + 50;
                 }
                 else if (boss->isElite())
                 {
-                    CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 10, 0);", player->GetGUIDLow());
-                    //counter = counter + 9;
+                    if (player->GetGUIDLow() == leader)
+                        CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 1, 0);", player->GetGUIDLow());
+                    else CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 10, 0);", player->GetGUIDLow());
+                    
+                    counter = counter + 10;
                 }
                 else
+                {
                     CharacterDatabase.PExecute("INSERT INTO world_event_player VALUES (%u, 1, 0);", player->GetGUIDLow());
+                    counter++;
+                }
             }
             else
             {
                 if (boss->isWorldBoss() && (boss->GetRespawnTime() > DAY * 0.5))
                 {
-                    CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 50, boss_killed = boss_killed + 1 WHERE guid = %u ;", player->GetGUIDLow());
-                    //counter = counter + 49;                
+                    if (player->GetGUIDLow() == leader)
+                        CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 1, boss_killed = boss_killed + 1 WHERE guid = %u ;", player->GetGUIDLow());
+                    else CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 50, boss_killed = boss_killed + 1 WHERE guid = %u ;", player->GetGUIDLow());
+                    
+                    counter = counter + 10;                
                 }
                 else if (boss->isElite())
                 {
-                    CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 10 WHERE guid = %u ;", player->GetGUIDLow());
-                    //counter = counter + 9;
+                    if (player->GetGUIDLow() == leader)
+                        CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 1 WHERE guid = %u ;", player->GetGUIDLow());
+                    else CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 10 WHERE guid = %u ;", player->GetGUIDLow());
+                    
+                    counter = counter + 5;
                 }
                 else
+                {
                     CharacterDatabase.PExecute("UPDATE world_event_player SET creature_killed = creature_killed + 1 WHERE guid = %u ;", player->GetGUIDLow());
+                    counter++;
+                }
             }
 
             if (counter > 50)
             {
-                CharacterDatabase.PExecute("UPDATE world_event SET creatures_killed = creatures_killed + 50;" /* %u", counter*/);
+                CharacterDatabase.PExecute("UPDATE world_event SET creatures_killed = creatures_killed +  %u", counter);
                 counter = 1;
             }
         }
