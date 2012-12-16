@@ -583,6 +583,9 @@ public:
             if (!instance) //Massive usage of instance, global check
                 return;
 
+            if (uiMainEventPhase == FAIL)
+                break;
+
             if (instance->GetData(DATA_REMOVE_NPC) == 1)
             {
                 me->DespawnOrUnsummon();
