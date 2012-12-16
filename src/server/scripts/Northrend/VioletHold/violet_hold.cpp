@@ -583,9 +583,6 @@ public:
             if (!instance) //Massive usage of instance, global check
                 return;
 
-            if (uiMainEventPhase == FAIL)
-                break;
-
             if (instance->GetData(DATA_REMOVE_NPC) == 1)
             {
                 me->DespawnOrUnsummon();
@@ -641,7 +638,7 @@ public:
                         {
                             bPortalGuardianOrKeeperOrEliteSpawn = true;
                             uint32 entry = RAND(CREATURE_PORTAL_GUARDIAN, CREATURE_PORTAL_KEEPER);
-                            if (Creature* pPortalKeeper = DoSummon(entry, me, 2.0f, 0, TEMPSUMMON_DEAD_DESPAWN))
+                            if (Creature* pPortalKeeper = DoSummon(entry, me, 2.0f, 60000, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT))
                                 me->CastSpell(pPortalKeeper, SPELL_PORTAL_CHANNEL, false);
                         }
                         uiSpawnTimer = SPAWN_TIME;

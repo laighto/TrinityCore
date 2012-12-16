@@ -785,7 +785,6 @@ public:
                 {
                     SetData(DATA_MAIN_DOOR, GO_STATE_ACTIVE);
                     uiMainEventPhase = FAIL;
-                    bCrystalActivated = false;
                 }
             }
         }
