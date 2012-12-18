@@ -51,7 +51,7 @@ public:
         }
         else //Marry Xmas
         {
-            killed->SummonGameObject(600003,killed->GetPositionX(),killed->GetPositionY(),killed->GetPositionZ(),0,0,0,0,0,0);
+            killer->SummonGameObject(600003,killed->GetPositionX(),killed->GetPositionY(),killed->GetPositionZ(),0,0,0,0,0,0);
         }
 
         //WORLD MASS EVENT
