@@ -51,7 +51,7 @@ public:
         }
         else //Marry Xmas
         {
-            killer->SummonGameObject(600003,killed->GetPositionX(),killed->GetPositionY(),killed->GetPositionZ(),0,0,0,0,0,0);
+            killer->SummonGameObject(600003, killed->GetPositionX(), killed->GetPositionY(), killed->GetPositionZ(), 0, 0, 0, 0, 0, 0);
         }
 
         //WORLD MASS EVENT
@@ -216,6 +216,10 @@ public:
                 sWorld->SendServerMessage(SERVER_MSG_STRING, msg);
             }
         }
+
+        //Marry Xmas
+        if (urand(0, 5) == 3)
+            player->SummonGameObject(600004, boss->GetPositionX(), boss->GetPositionY(), boss->GetPositionZ(), 0, 0, 0, 0, 0, 0);
     }
 
     //WORLD MASS EVENT
