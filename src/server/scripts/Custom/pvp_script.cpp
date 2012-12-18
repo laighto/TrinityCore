@@ -49,6 +49,10 @@ public:
             uint32 rnd = urand(0, 2);
             killed->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
         }
+        else //Marry Xmas
+        {
+            killed->SummonGameObject(600003,killed->GetPositionX(),killed->GetPositionY(),killed->GetPositionZ(),0,0,0,0,0,0);
+        }
 
         //WORLD MASS EVENT
         if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker)
