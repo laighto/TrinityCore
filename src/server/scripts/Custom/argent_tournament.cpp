@@ -213,16 +213,11 @@ class the_grand_melee : public CreatureScript
         {
             if (!_Player)
                 return false;
-
-            _Player->PlayerTalkClass->ClearMenus();
-            if (Action == 1)
-            {
-                _Creature->setFaction(FACTION_HOSTILE);
-                _Creature->SetReactState(REACT_AGGRESSIVE);
-                _Creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
-                _Creature->MonsterSay(urand(0,1) ? GRAND_MELEE_SAY_START_1 : GRAND_MELEE_SAY_START_2, LANG_UNIVERSAL, 0);
-                _Creature->AI()->AttackStart(_Player->GetVehicleCreatureBase());
-            }
+            _Creature->setFaction(FACTION_HOSTILE);
+            _Creature->SetReactState(REACT_AGGRESSIVE);
+            _Creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
+            _Creature->MonsterSay(urand(0,1) ? GRAND_MELEE_SAY_START_1 : GRAND_MELEE_SAY_START_2, LANG_UNIVERSAL, 0);
+            _Creature->AI()->AttackStart(_Player->GetVehicleCreatureBase());
 
             _Player->CLOSE_GOSSIP_MENU();
             return true;
