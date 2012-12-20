@@ -219,7 +219,7 @@ public:
 
         //Marry Xmas
         if (urand(0, 5) == 3)
-            player->SummonGameObject(600004, boss->GetPositionX(), boss->GetPositionY(), boss->GetPositionZ(), 0, 0, 0, 0, 0, 0);
+            player->SummonGameObject(600004, boss->GetPositionX()+1.0f, boss->GetPositionY()+1.0f, boss->GetPositionZ()+1.0f, 0, 0, 0, 0, 0, 0);
     }
 
     //WORLD MASS EVENT
