@@ -126,6 +126,8 @@ public:
                      player->TeleportTo(571, afkPositions[rnd].GetPositionX(), afkPositions[rnd].GetPositionY(), afkPositions[rnd].GetPositionZ(), afkPositions[rnd].GetOrientation());
                 }
             }
+            else if (player->GetZoneId() == 4415/*Violet Hold*/)
+                player->TeleportTo(571, 5695.1f, 505.2f, 652.7f, 4.0f);
         }
     }
 };
