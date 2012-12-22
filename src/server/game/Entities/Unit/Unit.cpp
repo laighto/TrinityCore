@@ -5663,14 +5663,9 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                         ok = true;
                     }
 
-                    // The spell usually only hits one target, but it should hit every player 
+                    // The spell usually only hits one target, but it should hit every player
                     // which applied Shadows Fate at least once to the victim.
-
-                    Player* playerr = target->ToPlayer();
-                    if (!playerr || !target)
-                        return false;
-
-                    if (target->GetTypeId() == TYPEID_PLAYER && playerr->GetQuestStatus(24547) == QUEST_STATUS_INCOMPLETE)
+                    if (GetTypeId() == TYPEID_PLAYER && ToPlayer()->GetQuestStatus(24547) == QUEST_STATUS_INCOMPLETE)
                     {
                         triggered_spell_id = 71203;
                         ok = true;
