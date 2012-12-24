@@ -375,12 +375,13 @@ class boss_xt002 : public CreatureScript
                 Unit* heart = me->GetVehicleKit() ? me->GetVehicleKit()->GetPassenger(HEART_VEHICLE_SEAT_NORMAL) : NULL;
                 if (heart)
                 {
+                    heartb = heart;
                     heart->CastSpell(heart, SPELL_HEART_OVERLOAD, false);
                     heart->CastSpell(me, SPELL_HEART_LIGHTNING_TETHER, false);
                     heart->CastSpell(heart, SPELL_HEART_HEAL_TO_FULL, true);
                     heart->CastSpell(heart, SPELL_EXPOSED_HEART, false);    // Channeled
                     heart->ChangeSeat(HEART_VEHICLE_SEAT_EXPOSED, true);
-                    heart->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
+                    heart->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NON_ATTACKABLE);
                     //heart->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_UNK_29);
                }
 
@@ -415,7 +416,11 @@ class boss_xt002 : public CreatureScript
 
                 Unit* heart = me->GetVehicleKit() ? me->GetVehicleKit()->GetPassenger(HEART_VEHICLE_SEAT_EXPOSED) : NULL;
                 if (!heart)
-                    return;
+                {
+                    if (!heartb)
+                        return;
+                    else heart = heartb;
+                }
 
                 heart->ChangeSeat(HEART_VEHICLE_SEAT_NORMAL, false);
                 heart->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
@@ -440,6 +445,8 @@ class boss_xt002 : public CreatureScript
                 uint8 _phase;
                 uint8 _heartExposed;
                 uint32 _transferHealth;
+
+                Unit* heartb;
         };
 };
 
