@@ -209,17 +209,18 @@ class the_grand_melee : public CreatureScript
             return false;
         }*/
         
-        bool OnGossipSelect(Player* _Player, Creature* _Creature, uint32 /*uiSender*/, uint32 Action)
+        bool OnGossipSelect(Player* pPlayer, Creature* _Creature, uint32 /*uiSender*/, uint32 Action)
         {
-            if (!_Player)
+            if (!pPlayer)
                 return false;
+
             _Creature->setFaction(FACTION_HOSTILE);
             _Creature->SetReactState(REACT_AGGRESSIVE);
             _Creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
             _Creature->MonsterSay(urand(0,1) ? GRAND_MELEE_SAY_START_1 : GRAND_MELEE_SAY_START_2, LANG_UNIVERSAL, 0);
-            _Creature->AI()->AttackStart(_Player->GetVehicleCreatureBase());
+            _Creature->AI()->AttackStart(pPlayer->GetVehicleCreatureBase());
 
-            _Player->CLOSE_GOSSIP_MENU();
+            //pPlayer->CLOSE_GOSSIP_MENU();
             return true;
         }
         
@@ -489,20 +490,20 @@ public:
 
     bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
     {
-        pPlayer->PlayerTalkClass->ClearMenus();
+        if (!pPlayer)
+            return false;
 
-        if (uiAction == 1)
-        {
-            pPlayer->CLOSE_GOSSIP_MENU();
-            pCreature->setFaction(14);
-            pCreature->SetReactState(REACT_AGGRESSIVE);
-            pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE  | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
-            pCreature->MonsterSay(urand(0,1) ? SAY_START_1 : SAY_START_2, LANG_UNIVERSAL, 0);
-            pCreature->AI()->AttackStart(pPlayer->GetVehicleCreatureBase());
-            pCreature->AddThreat(pPlayer, 0.0f);
-            pCreature->SetInCombatWith(pPlayer);
-            pPlayer->SetInCombatWith(pCreature);
-        }
+        //pPlayer->PlayerTalkClass->ClearMenus();
+
+        //pPlayer->CLOSE_GOSSIP_MENU();
+        pCreature->setFaction(14);
+        pCreature->SetReactState(REACT_AGGRESSIVE);
+        pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE  | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
+        pCreature->MonsterSay(urand(0,1) ? SAY_START_1 : SAY_START_2, LANG_UNIVERSAL, 0);
+        pCreature->AI()->AttackStart(pPlayer->GetVehicleCreatureBase());
+        pCreature->AddThreat(pPlayer, 0.0f);
+        pCreature->SetInCombatWith(pPlayer);
+
         return true;
     }        
             
