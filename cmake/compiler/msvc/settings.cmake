@@ -53,4 +53,4 @@ endif()
 
 # Specify Precompiled Header Memory Allocation Limit
 # (Fix a compiler-problem when using PCH - the /Ym flag is adjusted by the compiler in MSVC2012, hence we need to set an upper limit to avoid disrupancies)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zm500")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zm500")

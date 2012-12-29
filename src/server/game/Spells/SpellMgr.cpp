@@ -3711,10 +3711,6 @@ void SpellMgr::LoadDbcDataCorrections()
             case 42650: // Army of the Dead - now we can interrupt this
                 spellInfo->InterruptFlags = SPELL_INTERRUPT_FLAG_INTERRUPT;
                 break;
-            case 45524: // Chains of Ice
-                // this will fix self-damage caused by Glyph of Chains of Ice
-                spellInfo->EffectImplicitTargetA[2] = TARGET_UNIT_TARGET_ENEMY;
-                break;
             case 16493:     // Impale Rank 1
                 spellInfo->EffectBasePoints[0] = 10;
                 break;
