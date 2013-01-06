@@ -339,7 +339,7 @@ public:
             EnterEvadeMode();
         }
        
-        void SpellHit(Unit *caster, const SpellEntry *spell)
+        void SpellHit(Unit *caster, SpellInfo const* spell)
         {
             if ((spell->Id == SHIELD_BREAKER)||(spell->Id == CHARGE))
             {
@@ -366,7 +366,7 @@ public:
             }
         }
 
-        void SpellHitTarget(Unit *pTarget, const SpellEntry *spell)
+        void SpellHitTarget(Unit *pTarget, SpellInfo const* spell)
         {
             if ((spell->Id == SHIELD_BREAKER)||(spell->Id == CHARGE))
             {
