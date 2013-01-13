@@ -360,7 +360,7 @@ public:
                 default:             break;
             }
 
-            if (killCount > 14)
+            if (killCount > 20)
             {
                 // FailQuest
                 //me->MonsterYell(SAY_FAIL, LANG_UNIVERSAL, 0);
@@ -368,7 +368,7 @@ public:
                 eventActive = false;
                 pPriest = NULL;
             }
-            else if (saveCount > 39)
+            else if (saveCount > 25)
             {
                 // award Quest
                 me->MonsterYell(SAY_COMPLETE, LANG_UNIVERSAL, 0);
