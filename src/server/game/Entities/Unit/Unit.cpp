@@ -12942,6 +12942,10 @@ void Unit::UpdateSpeed(UnitMoveType mtype, bool forced)
             // Set creature speed rate
             if (GetTypeId() == TYPEID_UNIT)
             {
+                if (!this->IsInWorld())
+                    speed *= ToCreature()->GetCreatureTemplate()->speed_run;
+                else {
+
                 Unit* pOwner = GetCharmerOrOwner();
                 if ((isPet() || isGuardian()) && !isInCombat() && pOwner) // Must check for owner or crash on "Tame Beast"
                 {
@@ -12959,6 +12963,7 @@ void Unit::UpdateSpeed(UnitMoveType mtype, bool forced)
                 }
                 else
                     speed *= ToCreature()->GetCreatureTemplate()->speed_run;    // at this point, MOVE_WALK is never reached
+            }
             }
 
             // Normalize speed by 191 aura SPELL_AURA_USE_NORMAL_MOVEMENT_SPEED if need
