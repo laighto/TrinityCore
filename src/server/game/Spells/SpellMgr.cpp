@@ -3632,6 +3632,9 @@ void SpellMgr::LoadDbcDataCorrections()
             case 49345: // Call Emerald Drake
                 spellInfo->Effect[1] = 0;
                 break;
+            case 24314: // Threatening Gaze
+                spellInfo->AuraInterruptFlags |= AURA_INTERRUPT_FLAG_CAST | AURA_INTERRUPT_FLAG_MOVE | AURA_INTERRUPT_FLAG_JUMP;
+                break;
 
             // Custom
             case 51678: // WintergraspSiegeEngine Ram set radius of damage for units to 5 yards 
