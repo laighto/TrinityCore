@@ -165,6 +165,7 @@ enum WorldBoolConfigs
     CONFIG_WARDEN_ENABLED,
     CONFIG_ENABLE_MMAPS,
     CONFIG_WINTERGRASP_ENABLE,
+    CONFIG_UI_QUESTLEVELS_IN_DIALOGS,     // Should we add quest levels to the title in the NPC dialogs?
     PvPEvent,
     DalaranAntiAfk,
     DalaranAntiAfkTP,
@@ -176,6 +177,7 @@ enum WorldBoolConfigs
     CONFIG_ARENA_5v5_TEAM_ENABLE,
     CONFIG_ALLOW_LICH_KING_ENTRANCE,
     CONFIG_WORLD_EVENT,
+
     BOOL_CONFIG_VALUE_COUNT
 };
 
