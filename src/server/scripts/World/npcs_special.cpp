@@ -2058,9 +2058,9 @@ class npc_dummy_low : public CreatureScript
 public:
     npc_dummy_low() : CreatureScript("npc_dummy_low") { }
 
-    struct npc_dummy_lowAI : Scripted_NoMovementAI
+    struct npc_dummy_lowAI : ScriptedAI
     {
-        npc_dummy_lowAI(Creature* creature) : Scripted_NoMovementAI(creature)
+        npc_dummy_lowAI(Creature* creature) : ScriptedAI(creature)
         {
             entry = creature->GetEntry();
         }
