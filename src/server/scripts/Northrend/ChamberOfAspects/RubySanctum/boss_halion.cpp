@@ -979,7 +979,7 @@ class npc_meteor_strike_initial : public CreatureScript
         {
             npc_meteor_strike_initialAI(Creature* creature) : ScriptedAI(creature),
                 _instance(creature->GetInstanceScript())
-            { 
+            {
                 SetCombatMovement(false);
             }
 
