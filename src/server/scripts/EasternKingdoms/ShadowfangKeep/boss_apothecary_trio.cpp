@@ -395,7 +395,7 @@ class npc_apothecary_baxter : public CreatureScript
                     case START_FIGHT:
                     {
                         if (Creature* hummel = ObjectAccessor::GetCreature(*me, _instance ? _instance->GetData64(DATA_HUMMEL) : 0))
-                            Talk(SAY_CALL_BAXTER, hummel->GetGUID());
+                            hummel->AI()->Talk(SAY_CALL_BAXTER);
 
                         _phase = PHASE_NORMAL;
                         me->setFaction(FACTION_HOSTILE);
@@ -524,7 +524,7 @@ class npc_apothecary_frye : public CreatureScript
                     case START_FIGHT:
                     {
                         if (Creature* hummel = ObjectAccessor::GetCreature(*me, _instance ? _instance->GetData64(DATA_HUMMEL) : 0))
-                            Talk(SAY_CALL_FRYE, hummel->GetGUID());
+                            hummel->AI()->Talk(SAY_CALL_FRYE);
 
                         _phase = PHASE_NORMAL;
                         me->setFaction(FACTION_HOSTILE);
