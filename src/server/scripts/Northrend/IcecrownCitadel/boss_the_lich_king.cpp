@@ -2093,15 +2093,26 @@ class spell_the_lich_king_necrotic_plague : public SpellScriptLoader
                 switch (GetTargetApplication()->GetRemoveMode())
                 {
                     case AURA_REMOVE_BY_ENEMY_SPELL:
+                        used_dispell = true;
+                        break;
                     case AURA_REMOVE_BY_EXPIRE:
                     case AURA_REMOVE_BY_DEATH:
+                        used_dispell = false;
                         break;
                     default:
                         return;
                 }
 
+
                 CustomSpellValues values;
-                //values.AddSpellMod(SPELLVALUE_AURA_STACK, 2);
+                if(used_dispell)
+                {
+                    used_dispell = false;
+
+                    if ((GetStackAmount() - 1) < 1)
+                        return;
+                    else values.AddSpellMod(SPELLVALUE_AURA_STACK, GetStackAmount() - 1);
+                }
                 values.AddSpellMod(SPELLVALUE_MAX_TARGETS, 1);
                 GetTarget()->CastCustomSpell(SPELL_NECROTIC_PLAGUE_JUMP, values, NULL, TRIGGERED_FULL_MASK, NULL, NULL, GetCasterGUID());
                 if (Unit* caster = GetCaster())
@@ -2112,6 +2123,8 @@ class spell_the_lich_king_necrotic_plague : public SpellScriptLoader
             {
                 AfterEffectRemove += AuraEffectRemoveFn(spell_the_lich_king_necrotic_plague_AuraScript::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE, AURA_EFFECT_HANDLE_REAL);
             }
+
+            bool used_dispell;
         };
 
         AuraScript* GetAuraScript() const
