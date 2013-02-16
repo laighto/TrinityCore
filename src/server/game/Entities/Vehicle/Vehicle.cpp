@@ -377,10 +377,6 @@ bool Vehicle::AddPassenger(Unit* unit, int8 seatId)
         seat->second.SeatInfo->m_flags & VEHICLE_SEAT_FLAG_CAN_CONTROL)
         ASSERT(_me->SetCharmedBy(unit, CHARM_TYPE_VEHICLE))
 
-   /* // hide passenger from selection
-    if (seat->second.SeatInfo->m_flags & VEHICLE_SEAT_FLAG_PASSENGER_NOT_SELECTABLE)
-        unit->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);*/
-
     if (_me->IsInWorld())
     {
         unit->SendClearTarget();                            // SMSG_BREAK_TARGET
