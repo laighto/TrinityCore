@@ -226,7 +226,7 @@ Unit::Unit(bool isWorldObject): WorldObject(isWorldObject)
         m_auraModifiersGroup[i][TOTAL_VALUE] = 0.0f;
         m_auraModifiersGroup[i][TOTAL_PCT] = 1.0f;
     }
-                                                            // implement 50% base damage from offhand
+    // implement 50% base damage from offhand
     m_auraModifiersGroup[UNIT_MOD_DAMAGE_OFFHAND][TOTAL_PCT] = 0.5f;
 
     for (uint8 i = 0; i < MAX_ATTACK; ++i)
@@ -5468,7 +5468,8 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                 triggered_spell_id = 29442;
                 break;
             }
-            // Arcane Potency            if (dummySpell->SpellIconID == 2120)
+            // Arcane Potency 
+            if (dummySpell->SpellIconID == 2120)
             {
                 if (!procSpell)
                     return false;
@@ -7467,7 +7468,8 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
     return true;
 }
 
-// Used in case when access to whole aura is needed// All procs should be handled like this...
+// Used in case when access to whole aura is needed
+// All procs should be handled like this...
 bool Unit::HandleAuraProc(Unit* victim, uint32 damage, Aura* triggeredByAura, SpellInfo const* procSpell, uint32 /*procFlag*/, uint32 procEx, uint32 cooldown, bool * handled)
 {
     SpellInfo const* dummySpell = triggeredByAura->GetSpellInfo();
