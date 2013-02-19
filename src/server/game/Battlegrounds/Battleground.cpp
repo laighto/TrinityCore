@@ -702,7 +702,13 @@ void Battleground::RewardHonorToTeam(uint32 Honor, uint32 TeamID)
 {
     for (BattlegroundPlayerMap::const_iterator itr = m_Players.begin(); itr != m_Players.end(); ++itr)
         if (Player* player = _GetPlayerForTeam(TeamID, itr, "RewardHonorToTeam"))
+        {
             UpdatePlayerScore(player, SCORE_BONUS_HONOR, Honor);
+
+            //Reward Emblem of Frost
+            uint32 countitem = urand(1, 2);
+            player->AddItem(49426, countitem);
+        }
 }
 
 void Battleground::RewardReputationToTeam(uint32 faction_id, uint32 Reputation, uint32 TeamID)
