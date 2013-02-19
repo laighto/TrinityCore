@@ -526,12 +526,12 @@ class boss_the_lich_king : public CreatureScript
 
             void EnterCombat(Unit* target)
             {
-               /* if (!instance->CheckRequiredBosses(DATA_THE_LICH_KING, target->ToPlayer()))
+                if (!instance->CheckRequiredBosses(DATA_THE_LICH_KING, target->ToPlayer()))
                 {
                     EnterEvadeMode();
                     instance->DoCastSpellOnPlayers(LIGHT_S_HAMMER_TELEPORT);
                     return;
-                }*/
+                }
 
                 me->setActive(true);
                 DoZoneInCombat();
@@ -575,6 +575,14 @@ class boss_the_lich_king : public CreatureScript
                 DoCastAOE(SPELL_KILL_FROSTMOURNE_PLAYERS);
                 EntryCheckPredicate pred(NPC_STRANGULATE_VEHICLE);
                 summons.DoAction(ACTION_TELEPORT_BACK, pred);
+
+                Map* pMap = me->GetMap();
+                InstanceMap::PlayerList const &PlayerList = pMap->GetPlayers();
+                for (InstanceMap::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
+                {
+                        i->getSource()->ResurrectPlayer(100);
+                        i->getSource()->CastSpell(i->getSource(), FROZEN_THRONE_TELEPORT);
+                }
             }
 
             void KilledUnit(Unit* victim)
@@ -2093,28 +2101,15 @@ class spell_the_lich_king_necrotic_plague : public SpellScriptLoader
                 switch (GetTargetApplication()->GetRemoveMode())
                 {
                     case AURA_REMOVE_BY_ENEMY_SPELL:
-                        used_dispell = true;
-                        break;
                     case AURA_REMOVE_BY_EXPIRE:
                     case AURA_REMOVE_BY_DEATH:
-                        used_dispell = false;
                         break;
                     default:
                         return;
                 }
 
-
                 CustomSpellValues values;
-                if (used_dispell == true)
-                {
-                    used_dispell = false;
-
-                    if ((GetStackAmount() - 1) > 1)
-                        values.AddSpellMod(SPELLVALUE_AURA_STACK, GetStackAmount() - 1);
-
-                    values.AddSpellMod(SPELLVALUE_RADIUS_MOD, 10);
-
-                }
+                //values.AddSpellMod(SPELLVALUE_AURA_STACK, 2);
                 values.AddSpellMod(SPELLVALUE_MAX_TARGETS, 1);
                 GetTarget()->CastCustomSpell(SPELL_NECROTIC_PLAGUE_JUMP, values, NULL, TRIGGERED_FULL_MASK, NULL, NULL, GetCasterGUID());
                 if (Unit* caster = GetCaster())
@@ -2125,8 +2120,6 @@ class spell_the_lich_king_necrotic_plague : public SpellScriptLoader
             {
                 AfterEffectRemove += AuraEffectRemoveFn(spell_the_lich_king_necrotic_plague_AuraScript::OnRemove, EFFECT_0, SPELL_AURA_PERIODIC_DAMAGE, AURA_EFFECT_HANDLE_REAL);
             }
-
-            bool used_dispell;
         };
 
         AuraScript* GetAuraScript() const
@@ -2211,7 +2204,6 @@ class spell_the_lich_king_necrotic_plague_jump : public SpellScriptLoader
 
                 CustomSpellValues values;
                 values.AddSpellMod(SPELLVALUE_AURA_STACK, GetStackAmount());
-                values.AddSpellMod(SPELLVALUE_MAX_TARGETS, 1);
                 GetTarget()->CastCustomSpell(SPELL_NECROTIC_PLAGUE_JUMP, values, NULL, TRIGGERED_FULL_MASK, NULL, NULL, GetCasterGUID());
                 if (Unit* caster = GetCaster())
                     caster->CastSpell(caster, SPELL_PLAGUE_SIPHON, true);
@@ -2229,13 +2221,7 @@ class spell_the_lich_king_necrotic_plague_jump : public SpellScriptLoader
                     return;
 
                 CustomSpellValues values;
-                values.AddSpellMod(SPELLVALUE_MAX_TARGETS, 1);
-
-                if ((GetStackAmount() - 1) > 1)
-                    values.AddSpellMod(SPELLVALUE_AURA_STACK, GetStackAmount() - 1);
-                else
-                    values.AddSpellMod(SPELLVALUE_AURA_STACK, GetStackAmount());
-
+                values.AddSpellMod(SPELLVALUE_AURA_STACK, GetStackAmount());
                 values.AddSpellMod(SPELLVALUE_BASE_POINT1, AURA_REMOVE_BY_ENEMY_SPELL); // add as marker (spell has no effect 1)
                 GetTarget()->CastCustomSpell(SPELL_NECROTIC_PLAGUE_JUMP, values, NULL, TRIGGERED_FULL_MASK, NULL, NULL, GetCasterGUID());
                 if (Unit* caster = GetCaster())
@@ -3310,7 +3296,4 @@ void AddSC_boss_the_lich_king()
     new spell_the_lich_king_play_movie();
     new achievement_been_waiting_long_time();
     new achievement_neck_deep_in_vile();
-
-    if (VehicleSeatEntry* vehSeat = const_cast<VehicleSeatEntry*>(sVehicleSeatStore.LookupEntry(6166)))
-        vehSeat->m_flags |= 0x400;
 }
