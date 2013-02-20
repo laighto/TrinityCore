@@ -137,7 +137,7 @@ class boss_bronjahm : public CreatureScript
                 Unit* who=summon->GetOwner();
             }
 
-            void UpdateAI(const uint32 diff)
+            void UpdateAI(uint32 diff)
             {
                 if (!UpdateVictim())
                     return;
