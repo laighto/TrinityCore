@@ -251,6 +251,7 @@ enum eGurgthock
     QUEST_AMPHITHEATER_ANGUISH_YGGDRAS_1          = 12932,
     QUEST_AMPHITHEATER_ANGUISH_MAGNATAUR          = 12933,
     QUEST_AMPHITHEATER_ANGUISH_FROM_BEYOND        = 12934,
+    QUEST_CHAMPION_OF_ANGUISH                     = 12948,
 
     NPC_ORINOKO_TUSKBREAKER                       = 30020,
     NPC_KORRAK_BLOODRAGER                         = 30023,
@@ -264,6 +265,7 @@ enum eGurgthock
     NPC_FIEND_AIR                                 = 30045,
     NPC_FIEND_FIRE                                = 30042,
     NPC_FIEND_EARTH                               = 30043,
+    NPC_VLAD_OF_THE_BUTCHER                       = 30022,
 
     SAY_QUEST_ACCEPT_TUSKARRMAGEDON               = 0,
     SAY_QUEST_ACCEPT_KORRAK_1                     = 1,
@@ -390,6 +392,10 @@ public:
                             Talk(SAY_QUEST_ACCEPT_KORRAK_1);
                             uiPhase = 3;
                             uiTimer = 3000;
+                            break;
+                        case QUEST_CHAMPION_OF_ANGUISH:
+                            uiTimer = 3000;
+                            uiPhase = 15;
                             break;
                         case QUEST_AMPHITHEATER_ANGUISH_YGGDRAS_2:
                         case QUEST_AMPHITHEATER_ANGUISH_YGGDRAS_1:
@@ -526,6 +532,12 @@ public:
                                 creature->AI()->SetData(1, uiBossRandom);
                             uiPhase = 0;
                             break;
+                        case 15:
+                            if (Creature* summon = me->SummonCreature(NPC_VLAD_OF_THE_BUTCHER, SpawnPosition[1], TEMPSUMMON_CORPSE_DESPAWN, 1000))
+                                SummonGUID = summon->GetGUID();
+                            uiTimer = 3000;
+                            uiPhase = 0;
+                            break;
                     }
                 }else uiTimer -= uiDiff;
             }
@@ -550,6 +562,9 @@ public:
                 creature->AI()->SetData(1, quest->GetQuestId());
                 break;
             case QUEST_AMPHITHEATER_ANGUISH_FROM_BEYOND:
+                creature->AI()->SetData(1, quest->GetQuestId());
+                break;
+            case QUEST_CHAMPION_OF_ANGUISH:
                 creature->AI()->SetData(1, quest->GetQuestId());
                 break;
         }
