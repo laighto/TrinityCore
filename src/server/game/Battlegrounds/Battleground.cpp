@@ -707,7 +707,7 @@ void Battleground::RewardHonorToTeam(uint32 Honor, uint32 TeamID)
 
             //Reward Emblem of Frost
             uint32 countitem = urand(0, 2);
-            if (countitem > 0)
+            if (countitem == 1)
                 player->AddItem(49426, countitem);
         }
 }
