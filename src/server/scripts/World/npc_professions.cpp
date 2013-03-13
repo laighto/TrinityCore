@@ -1197,16 +1197,16 @@ class dummy_book : public GameObjectScript
     public:
         dummy_book() : GameObjectScript("dummy_book") { }
 
-        bool OnGossipHello(Player* player, GameObject* object)
-        {
+      //  bool OnGossipHello(Player* player, GameObject* object)
+       // {
          //  player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999951/*GOSSIP_HELLO_DEMO2*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
           // player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999950/*GOSSIP_HELLO_DEMO1*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
        //    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999952/*GOSSIP_HELLO_DEMO3*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
         //   player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999953/*GOSSIP_HELLO_DEMO4*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
 
-           player->SEND_GOSSIP_MENU(player->GetGossipTextId(object), object->GetGUID());
-           return true;
-        }
+         //  player->SEND_GOSSIP_MENU(player->GetGossipTextId(object), object->GetGUID());
+         //  return true;
+       // }
 
         bool OnGossipSelect(Player* player, GameObject* object, uint32 /*sender*/, uint32 action)
         {
