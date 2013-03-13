@@ -358,8 +358,6 @@ class boss_halion : public CreatureScript
                 if (Creature* controller = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_HALION_CONTROLLER)))
                     if (controller->isAlive())
                         controller->Kill(controller);
-                if (Creature* tvhalion = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_TWILIGHT_HALION)))
-                    tvhalion->SetHealth(100);
             }
 
             Position const* GetMeteorStrikePosition() const { return &_meteorStrikePos; }
