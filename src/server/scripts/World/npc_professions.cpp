@@ -177,6 +177,8 @@ enum ProfessionSpells
     S_UNLEARN_ELIXIR        = 41564,
     S_UNLEARN_POTION        = 41563,
 
+    SPELL_LEARN_GOBLIN_ENGINEER     = 20221,
+    SPELL_LEARN_GNOMISH_ENGINEER    = 20220,
     SPELL_UNLEARN_GOBLIN_ENGINEER     = 68334,
     SPELL_UNLEARN_GNOMISH_ENGINEER    = 68333,
     SPELL_REVERT_TO_ONE_TALENT_SPEC   = 63651,
@@ -359,6 +361,7 @@ void ProfessionUnlearnSpells(Player* player, uint32 type)
             player->removeSpell(23486);                     // Dimensional Ripper - Everloo
             player->removeSpell(72952);                     // Plans: Shatter Rounds
             player->removeSpell(20222);                     // Goblin Engineer
+            player->RemoveRewardedQuest(3639);              //Prevent Reapply Spell 20222 on Logout
             break;
         case SPELL_UNLEARN_GNOMISH_ENGINEER:
             player->removeSpell(30575);                     // Gnomish Battle Goggles
@@ -370,6 +373,8 @@ void ProfessionUnlearnSpells(Player* player, uint32 type)
             player->removeSpell(23129);                     // World Enlarger
             player->removeSpell(72953);                     // Plans: Iceblade Arrow
             player->removeSpell(20219);                     // Gnomish Engineer
+            player->RemoveRewardedQuest(3643);              //Horde Prevent Reapply Spell 20219 on Logout
+            player->RemoveRewardedQuest(3641);              //Allience Prevent Reapply Spell 20219 on Logout
             break;
     }
 }
@@ -1194,10 +1199,10 @@ class dummy_book : public GameObjectScript
 
         bool OnGossipHello(Player* player, GameObject* object)
         {
-           player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999950/*GOSSIP_HELLO_DEMO1*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-           player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999951/*GOSSIP_HELLO_DEMO2*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
-           player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999952/*GOSSIP_HELLO_DEMO3*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
-           player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999953/*GOSSIP_HELLO_DEMO4*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
+         //  player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999951/*GOSSIP_HELLO_DEMO2*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
+          // player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999950/*GOSSIP_HELLO_DEMO1*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 1);
+       //    player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999952/*GOSSIP_HELLO_DEMO3*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 2);
+        //   player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, sObjectMgr->GetTrinityStringForDBCLocale(999953/*GOSSIP_HELLO_DEMO4*/), GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF + 3);
 
            player->SEND_GOSSIP_MENU(player->GetGossipTextId(object), object->GetGUID());
            return true;
@@ -1208,15 +1213,21 @@ class dummy_book : public GameObjectScript
             switch (action - GOSSIP_ACTION_INFO_DEF)
             {
                 case 0:
-                    ProcessUnlearnAction(player, 0, SPELL_UNLEARN_GOBLIN_ENGINEER, 0, DoHighUnlearnCost(player));
+                    ProcessCastaction(player, 0, SPELL_LEARN_GNOMISH_ENGINEER, 0, DoLearnCost(player));
                     break;
                 case 1:
+                    ProcessCastaction(player, 0, SPELL_LEARN_GOBLIN_ENGINEER, 0, DoLearnCost(player));
+                    break;      
+                case 2:
                     ProcessUnlearnAction(player, 0, SPELL_UNLEARN_GNOMISH_ENGINEER, 0, DoHighUnlearnCost(player));
                     break;
-                case 2:
-                    player->CastSpell(player, SPELL_REVERT_TO_ONE_TALENT_SPEC, true);
-                    break;
                 case 3:
+                    ProcessUnlearnAction(player, 0, SPELL_UNLEARN_GOBLIN_ENGINEER, 0, DoHighUnlearnCost(player));
+                    break;
+                case 4:
+                    ProcessCastaction(player, 0, SPELL_REVERT_TO_ONE_TALENT_SPEC, 0, 0);
+                    break;
+                case 5:
                     ProcessUnlearnAction(player, 0, SPELL_LEARN_DUAL_TALENT_SPEC, 0, 10000000);
                     break;
             }
