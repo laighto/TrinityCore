@@ -200,6 +200,12 @@ public:
 
         void EnterCombat(Unit* /*who*/) {}
 
+        void JustDied(Unit* /*killer*/)
+        {
+            if (GameObject* object = me->FindNearestGameObject(179117, 100.0f)) //open GO Portcullis
+                object->UseDoorOrButton();
+        }
+
         void UpdateAI(uint32 diff)
         {
             if (!UpdateVictim())
