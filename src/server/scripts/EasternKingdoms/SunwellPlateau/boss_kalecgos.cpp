@@ -596,6 +596,7 @@ public:
 
         bool isEnraged;
         bool isBanished;
+        bool agrotry;
 
         void Reset()
         {
@@ -620,6 +621,7 @@ public:
             ResetThreat = 1000;
             isEnraged = false;
             isBanished = false;
+            agrotry = false;
 
             me->CastSpell(me, AURA_DEMONIC_VISUAL, true);
             TeleportAllPlayersBack();
@@ -630,9 +632,10 @@ public:
             if (Creature* Kalec = me->SummonCreature(MOB_KALEC, me->GetPositionX() + 10, me->GetPositionY() + 5, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 900000))
             {
                 KalecGUID = Kalec->GetGUID();
-                me->CombatStart(Kalec);
                 me->AddThreat(Kalec, 100.0f);
                 Kalec->setActive(true);
+                me->CombatStart(Kalec);
+                agrotry = true;
             }
             Talk(SAY_SATH_AGGRO);
         }
@@ -722,6 +725,14 @@ public:
                         Kalecgos->AI()->EnterEvadeMode();
                         return;
                 }
+
+                if (agrotry && Kalec && Kalec->isAlive())
+                {
+                    me->AddThreat(Kalec, 100.0f);
+                    me->CombatStart(Kalec);
+                    agrotry = false;
+                }
+
                 if (HealthBelowPct(10) && !isEnraged)
                 {
                     if (Creature* Kalecgos = Unit::GetCreature(*me, KalecgosGUID))
