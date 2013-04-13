@@ -140,6 +140,9 @@ public:
                 me->GetPosition(x, y, z);
                 me->SummonCreature(FELMYST, x, y, z+30, me->GetOrientation(), TEMPSUMMON_MANUAL_DESPAWN, 0);
             }
+
+            if (GameObject* object = me->FindNearestGameObject(188075, 150.0f)) //open GO Doodad_Sunwell_Fire_Barrier_ext01
+                object->UseDoorOrButton();
         }
 
         void EnterEvadeMode()
