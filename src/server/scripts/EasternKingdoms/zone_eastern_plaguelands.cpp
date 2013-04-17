@@ -266,7 +266,7 @@ public:
             sayStep = 1;
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 diff)
         {
             if (!sayStep)
                 return;
@@ -344,7 +344,7 @@ public:
             killCount = 0;
         }
 
-        void DoAction(const int32 action)
+        void DoAction(int32 action)
         {
             if (!eventActive || !pPriest || !pPriest->IsInWorld())
             {
@@ -439,7 +439,7 @@ public:
                 CAST_AI(npc_fleeing_peasant::npc_fleeing_peasantAI, p->AI())->StartOutro();
         }
 
-        void UpdateAI(const uint32 diff)
+        void UpdateAI(uint32 diff)
         {
             if (!eventActive || !pPriest || !pPriest->IsInWorld())
             {
