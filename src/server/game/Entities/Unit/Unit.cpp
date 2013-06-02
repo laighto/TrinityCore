@@ -414,7 +414,7 @@ void Unit::UpdateSplineMovement(uint32 t_diff)
             pos.m_orientation = loc.orientation;
 
             if (TransportBase* transport = GetDirectTransport())
-                transport->CalculatePassengerPosition(loc.x, loc.y, loc.z, loc.orientation);
+                transport->CalculatePassengerPosition(loc.x, loc.y, loc.z, &loc.orientation);
         }
 
         if (HasUnitState(UNIT_STATE_CANNOT_TURN))
@@ -17025,12 +17025,9 @@ bool Unit::HandleSpellClick(Unit* clicker, int8 seatId)
         result = true;
     }
 
-    if (result)
-    {
-        Creature* creature = ToCreature();
-        if (creature && creature->IsAIEnabled)
-            creature->AI()->OnSpellClick(clicker);
-    }
+    Creature* creature = ToCreature();
+    if (creature && creature->IsAIEnabled)
+        creature->AI()->OnSpellClick(clicker, result);
 
     return result;
 }
