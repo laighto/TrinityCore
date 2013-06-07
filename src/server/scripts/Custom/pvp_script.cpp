@@ -219,6 +219,15 @@ public:
             }
         }
 
+        if (urand(0, 100) == urand(0, 100))
+        {
+            if ((player->getLevel() - boss->getLevel()) <= 10)
+            {
+                player->CastSpell(player, 26662, true);
+                if (Aura * bers = player->GetAura(26662))
+                    bers->SetDuration(15*IN_MILLISECONDS);
+            }
+        }
         //Marry Xmas
         //if (urand(0, 5) == 3)
         //    player->SummonGameObject(600004, boss->GetPositionX()+1.0f, boss->GetPositionY()+1.0f, boss->GetPositionZ()+1.0f, 0, 0, 0, 0, 0, 0);
