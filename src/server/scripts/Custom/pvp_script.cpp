@@ -225,7 +225,7 @@ public:
             {
                 player->CastSpell(player, 26662, true);
                 if (Aura * bers = player->GetAura(26662))
-                    bers->SetDuration(15*IN_MILLISECONDS);
+                    bers->SetDuration(8*IN_MILLISECONDS);
             }
         }
         //Marry Xmas
