@@ -48,6 +48,14 @@ public:
 
             uint32 rnd = urand(0, 2);
             killed->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
+
+            //Frost
+            if (urand(0, 200) == urand(0, 200))
+            {
+                killer->AddItem(49426, 1);
+                sWorld->SendWorldText(12015, killer->GetName);
+            }
+
         }
        /* else //Marry Xmas
         {
@@ -232,9 +240,10 @@ public:
                     bers->SetDuration(8*IN_MILLISECONDS);
             }
         }
+
         //Marry Xmas
-        //if (urand(0, 5) == 3)
-        //    player->SummonGameObject(600004, boss->GetPositionX()+1.0f, boss->GetPositionY()+1.0f, boss->GetPositionZ()+1.0f, 0, 0, 0, 0, 0, 0);
+        if (urand(0, 6) == 3)
+            player->SummonGameObject(600004, boss->GetPositionX()+0.1f, boss->GetPositionY()+0.1f, boss->GetPositionZ()+0.1f, 0, 0, 0, 0, 0, 0);
     }
 
     //WORLD MASS EVENT
