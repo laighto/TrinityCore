@@ -53,7 +53,7 @@ public:
             if (urand(0, 200) == urand(0, 200))
             {
                 killer->AddItem(49426, 1);
-                sWorld->SendWorldText(12015, killer->GetName);
+                sWorld->SendWorldText(12015, killer->GetName());
             }
 
         }
