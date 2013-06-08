@@ -54,6 +54,10 @@ public:
             killer->SummonGameObject(600003, killed->GetPositionX(), killed->GetPositionY(), killed->GetPositionZ(), 0, 0, 0, 0, 0, 0);
         }*/
 
+        //Add ancient shard
+        if ((urand(0, 105) == urand(0, 105)) && killer->InBattleground())
+            killer->AddItem(23359, 1);
+
         //WORLD MASS EVENT
         if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker)
         {
