@@ -50,10 +50,10 @@ public:
             killed->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
 
             //Frost
-            if (urand(0, 200) == urand(0, 200))
+            if (urand(0, 300) == urand(0, 300))
             {
                 killer->AddItem(49426, 1);
-                sWorld->SendWorldText(12015, killer->GetName());
+                sWorld->SendWorldText(12015, killer->GetName().c_str());
             }
 
         }
