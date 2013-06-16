@@ -246,8 +246,8 @@ class boss_sindragosa : public CreatureScript
                         InstanceMap::PlayerList const &PlayerList = pMap->GetPlayers();
                         for (InstanceMap::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
                         {
-                            if (i->getSource()->GetQuestStatus(24757) == QUEST_STATUS_INCOMPLETE)
-                                i->getSource()->CompleteQuest(24757);
+                            if (i->GetSource()->GetQuestStatus(24757) == QUEST_STATUS_INCOMPLETE)
+                                i->GetSource()->CompleteQuest(24757);
                         }
 	                    //instance->DoCastSpellOnPlayers(72290); instance->DoCastSpellOnPlayers(72289);
                     }
@@ -1057,7 +1057,7 @@ class spell_sindragosa_s_fury : public SpellScriptLoader
             {
                 PreventHitDefaultEffect(effIndex);
 
-                if (!GetHitUnit()->isAlive() || !_targetCount)
+                if (!GetHitUnit()->IsAlive() || !_targetCount)
                     return;
 
                 float resistance = float(GetHitUnit()->GetResistance(SpellSchoolMask(GetSpellInfo()->SchoolMask)));

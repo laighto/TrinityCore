@@ -87,8 +87,8 @@ void MapManager::UnLoadTransportFromMap(Transport* t)
     transData.BuildPacket(&out_packet);
 
     for (Map::PlayerList::const_iterator itr = map->GetPlayers().begin(); itr != map->GetPlayers().end(); ++itr)
-        if (t != itr->getSource()->GetTransport())
-            itr->getSource()->SendDirectMessage(&out_packet);
+        if (t != itr->GetSource()->GetTransport())
+            itr->GetSource()->SendDirectMessage(&out_packet);
 
     t->m_NPCPassengerSet.clear();         
     m_TransportsByInstanceIdMap[t->GetInstanceId()].erase(t);
@@ -694,13 +694,13 @@ void Transport::UpdateForMap(Map const* targetMap)
     {
         for (Map::PlayerList::const_iterator itr = player.begin(); itr != player.end(); ++itr)
         {
-            if (this != itr->getSource()->GetTransport())
+            if (this != itr->GetSource()->GetTransport())
             {
                 UpdateData transData;
-                BuildCreateUpdateBlockForPlayer(&transData, itr->getSource());
+                BuildCreateUpdateBlockForPlayer(&transData, itr->GetSource());
                 WorldPacket packet;
                 transData.BuildPacket(&packet);
-                itr->getSource()->SendDirectMessage(&packet);
+                itr->GetSource()->SendDirectMessage(&packet);
             }
         }
     }
@@ -712,8 +712,8 @@ void Transport::UpdateForMap(Map const* targetMap)
         transData.BuildPacket(&out_packet);
 
         for (Map::PlayerList::const_iterator itr = player.begin(); itr != player.end(); ++itr)
-            if (this != itr->getSource()->GetTransport())
-                itr->getSource()->SendDirectMessage(&out_packet);
+            if (this != itr->GetSource()->GetTransport())
+                itr->GetSource()->SendDirectMessage(&out_packet);
     }
 }
 

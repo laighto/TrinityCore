@@ -93,7 +93,7 @@ void SetInCombat(Creature* self)
 {
     self->AI()->DoZoneInCombat(self, 150.0f);
 
-    if (!self->isInCombat())
+    if (!self->IsInCombat())
         self->AI()->EnterEvadeMode();
 }
 
@@ -164,7 +164,7 @@ class npc_apothecary_hummel : public CreatureScript
 
                 if (Creature* baxter = ObjectAccessor::GetCreature(*me, _instance->GetData64(DATA_BAXTER)))
                 {
-                    if (baxter->isAlive())
+                    if (baxter->IsAlive())
                         baxter->AI()->EnterEvadeMode();
                     else
                         baxter->Respawn();
@@ -172,7 +172,7 @@ class npc_apothecary_hummel : public CreatureScript
 
                 if (Creature* frye = ObjectAccessor::GetCreature(*me, _instance->GetData64(DATA_FRYE)))
                 {
-                    if (frye->isAlive())
+                    if (frye->IsAlive())
                         frye->AI()->EnterEvadeMode();
                     else
                         frye->Respawn();
@@ -375,7 +375,7 @@ class npc_apothecary_baxter : public CreatureScript
 
                 if (Creature* hummel = ObjectAccessor::GetCreature(*me, _instance ? _instance->GetData64(DATA_HUMMEL) : 0))
                 {
-                    if (hummel->isAlive())
+                    if (hummel->IsAlive())
                         hummel->AI()->EnterEvadeMode();
                     else
                         hummel->Respawn();
@@ -504,7 +504,7 @@ class npc_apothecary_frye : public CreatureScript
 
                 if (Creature* hummel = ObjectAccessor::GetCreature(*me, _instance ? _instance->GetData64(DATA_HUMMEL) : 0))
                 {
-                    if (hummel->isAlive())
+                    if (hummel->IsAlive())
                         hummel->AI()->EnterEvadeMode();
                     else
                         hummel->Respawn();
@@ -590,7 +590,7 @@ class npc_apothecary_frye : public CreatureScript
                     {
                         if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, 100, true))
                         {
-                            me->getThreatManager().modifyThreatPercent(me->getVictim(), -100);
+                            me->getThreatManager().modifyThreatPercent(me->GetVictim(), -100);
                             me->AddThreat(target, 9999999.9f);
                         }
                         _targetSwitchTimer = urand(5000, 10000);

@@ -118,7 +118,7 @@ class the_grand_melee : public CreatureScript
                     else
                         DoCast(SPELL_VALIANT_SHIELD_BREAKER);
 
-                    me->GetMotionMaster()->MoveChase(me->getVictim());
+                    me->GetMotionMaster()->MoveChase(me->GetVictim());
                 }
                 
             }

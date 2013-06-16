@@ -66,7 +66,7 @@ public:
         if ((urand(0, 105) == urand(0, 105)) && killer->InBattleground())
             killer->AddItem(23359, 1);
 
-        //WORLD MASS EVENT
+      /*  //WORLD MASS EVENT
         if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker)
         {
             if (killed->GetGUIDLow() == leader)
@@ -100,7 +100,7 @@ public:
                     }
                 }
             }
-        }
+        }*/
     }
 };
 
@@ -151,7 +151,7 @@ public:
  
     void OnCreatureKill(Player* player, Creature* boss)
     {
-        //WORLD MASS EVENT
+/*        //WORLD MASS EVENT
         if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker && ((player->getLevel() - boss->getLevel()) <= 5))
         {
             //counter++;
@@ -214,7 +214,7 @@ public:
             }
         }
         // END WORLD MASS EVENT
-
+        */
         if (boss->isWorldBoss())
         {
             if (player->getGender() == GENDER_MALE)
@@ -233,7 +233,7 @@ public:
 
         if (urand(0, 100) == urand(0, 100))
         {
-            if ((player->getLevel() - boss->getLevel()) <= 10)
+            if ( (player->getLevel() - boss->getLevel()) <= 10 )
             {
                 player->CastSpell(player, 26662, true);
                 if (Aura * bers = player->GetAura(26662))
@@ -241,12 +241,12 @@ public:
             }
         }
 
-        //Marry Xmas
+        //Gift
         if (urand(0, 6) == 3)
             player->SummonGameObject(600004, boss->GetPositionX()+0.1f, boss->GetPositionY()+0.1f, boss->GetPositionZ()+0.1f, 0, 0, 0, 0, 0, 0);
     }
 
-    //WORLD MASS EVENT
+   /* //WORLD MASS EVENT
     void OnLogin(Player* player)
     {
         /*if(checker)
@@ -254,7 +254,7 @@ public:
             player->SendNewItem(item, 1, false, true);
         }*/
 
-        if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker)
+      /*  if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker)
         {
            
             QueryResult resultb = CharacterDatabase.PQuery("SELECT creatures_killed FROM world_event;");
@@ -299,7 +299,7 @@ public:
                 }
             }
         }
-    }
+    }*/
 };
 
 void AddSC_pvp_script()

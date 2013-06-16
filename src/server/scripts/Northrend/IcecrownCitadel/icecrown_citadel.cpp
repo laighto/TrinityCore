@@ -315,7 +315,7 @@ class FrostwingVrykulSearcher
 
         bool operator()(Unit* unit)
         {
-            if (!unit->isAlive())
+            if (!unit->IsAlive())
                 return false;
 
             switch (unit->GetEntry())
@@ -780,7 +780,7 @@ class boss_sister_svalna : public CreatureScript
                 {
                     if (Creature* crusader = ObjectAccessor::GetCreature(*me, instance->GetData64(DATA_CAPTAIN_ARNATH + i)))
                     {
-                        if (crusader->isAlive() && crusader->GetEntry() == crusader->GetCreatureData()->id)
+                        if (crusader->IsAlive() && crusader->GetEntry() == crusader->GetCreatureData()->id)
                         {
                             crusader->m_Events.AddEvent(new CaptainSurviveTalk(*crusader), crusader->m_Events.CalculateTime(delay));
                             delay += 6000;
@@ -984,7 +984,7 @@ class npc_crok_scourgebane : public CreatureScript
             {
                 if (action == ACTION_START_GAUNTLET)
                 {
-                    if (_isEventDone || !me->isAlive())
+                    if (_isEventDone || !me->IsAlive())
                         return;
 
                     _isEventActive = true;
@@ -1838,7 +1838,7 @@ class spell_icc_sprit_alarm : public SpellScriptLoader
                 wards.sort(Trinity::ObjectDistanceOrderPred(GetCaster()));
                 for (std::list<Creature*>::iterator itr = wards.begin(); itr != wards.end(); ++itr)
                 {
-                    if ((*itr)->isAlive() && (*itr)->HasAura(SPELL_STONEFORM))
+                    if ((*itr)->IsAlive() && (*itr)->HasAura(SPELL_STONEFORM))
                     {
                         (*itr)->AI()->Talk(SAY_TRAP_ACTIVATE);
                         (*itr)->RemoveAurasDueToSpell(SPELL_STONEFORM);
@@ -1985,7 +1985,7 @@ class AliveCheck
         bool operator()(WorldObject* object) const
         {
             if (Unit* unit = object->ToUnit())
-                return unit->isAlive();
+                return unit->IsAlive();
             return true;
         }
 };
@@ -2251,12 +2251,12 @@ class npc_sindragosas_ward : public CreatureScript
 
                 for (Map::PlayerList::const_iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
                 {
-                    if (Player* player = itr->getSource())
+                    if (Player* player = itr->GetSource())
                     {
-                        if (player->isGameMaster())
+                        if (player->IsGameMaster())
                             continue;
 
-                        if (player->isAlive() && me->GetDistance(player) > 125.0f)
+                        if (player->IsAlive() && me->GetDistance(player) > 125.0f)
                             return true;
                     }
                 }
@@ -2279,7 +2279,7 @@ class npc_sindragosas_ward : public CreatureScript
             void SummonedCreatureDespawn(Creature* summon)
             {
                 // This one should never happen, if summoned creature despawns alive, reset!
-                if (summon->isAlive())
+                if (summon->IsAlive())
                 {
                     EnterEvadeMode();
                     return;
