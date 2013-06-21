@@ -456,7 +456,7 @@ public:
                             break;
                         case 15:
                             if (Creature* summon = me->SummonCreature(NPC_VLAD_OF_THE_BUTCHER, SpawnPosition[1], TEMPSUMMON_CORPSE_DESPAWN, 1000))
-                                SummonGUID = summon->GetGUID();
+                                _summonGUID = summon->GetGUID();
                             uiTimer = 3000;
                             uiPhase = 0;
                             break;

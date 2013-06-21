@@ -808,7 +808,7 @@ Creature* Transport::AddNPCPassengerInInstance(uint32 entry, float x, float y, f
     creature->SetTransport(this);
     creature->AddUnitMovementFlag(MOVEMENTFLAG_ONTRANSPORT);
     creature->m_movementInfo.guid = GetGUID();
-    creature->m_movementInfo.t_pos.Relocate(x, y, z, o);
+    creature->m_movementInfo.transport.pos.Relocate(x, y, z, o);
 
     creature->Relocate(
         GetPositionX() + (x * cos(GetOrientation()) + y * sin(GetOrientation() + float(M_PI))),
@@ -868,10 +868,10 @@ void Transport::UpdatePlayerPositions()
         Player* plr = *itr;
 
         float x, y, z, o;
-        o = GetOrientation() + plr->m_movementInfo.t_pos.m_orientation;
-        x = GetPositionX() + (plr->m_movementInfo.t_pos.m_positionX * cos(GetOrientation()) + plr->m_movementInfo.t_pos.m_positionY * sin(GetOrientation() + M_PI));
-        y = GetPositionY() + (plr->m_movementInfo.t_pos.m_positionY * cos(GetOrientation()) + plr->m_movementInfo.t_pos.m_positionX * sin(GetOrientation()));
-        z = GetPositionZ() + plr->m_movementInfo.t_pos.m_positionZ;
+        o = GetOrientation() + plr->m_movementInfo.transport.pos.m_orientation;
+        x = GetPositionX() + (plr->m_movementInfo.transport.pos.m_positionX * cos(GetOrientation()) + plr->m_movementInfo.transport.pos.m_positionY * sin(GetOrientation() + M_PI));
+        y = GetPositionY() + (plr->m_movementInfo.transport.pos.m_positionY * cos(GetOrientation()) + plr->m_movementInfo.transport.pos.m_positionX * sin(GetOrientation()));
+        z = GetPositionZ() + plr->m_movementInfo.transport.pos.m_positionZ;
         plr->Relocate(x, y, z, o);
         UpdateData transData;
         WorldPacket packet;
