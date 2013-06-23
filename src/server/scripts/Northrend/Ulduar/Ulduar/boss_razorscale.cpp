@@ -495,7 +495,7 @@ class boss_razorscale : public CreatureScript
                                 events.CancelEvent(EVENT_BUFFET);
                                 return;
                             case EVENT_FUSE:
-                                DoCast(me->GetVictim(), SPELL_FUSEARMOR);
+                                DoCastVictim(SPELL_FUSEARMOR);
                                 events.ScheduleEvent(EVENT_FUSE, 10000, 0, PHASE_PERMAGROUND);
                                 return;
                         }
@@ -865,7 +865,7 @@ class npc_darkrune_watcher : public CreatureScript
 
                 if (ChainTimer <= Diff)
                 {
-                    DoCast(me->GetVictim(), SPELL_CHAIN_LIGHTNING);
+                    DoCastVictim(SPELL_CHAIN_LIGHTNING);
                     ChainTimer = urand(10000, 15000);
                 }
                 else
@@ -925,7 +925,7 @@ class npc_darkrune_guardian : public CreatureScript
 
                 if (StormTimer <= Diff)
                 {
-                    DoCast(me->GetVictim(), SPELL_STORMSTRIKE);
+                    DoCastVictim(SPELL_STORMSTRIKE);
                     StormTimer = urand(4000, 8000);
                 }
                 else
@@ -971,7 +971,7 @@ class npc_darkrune_sentinel : public CreatureScript
 
                 if (HeroicTimer <= Diff)
                 {
-                    DoCast(me->GetVictim(), SPELL_HEROIC_STRIKE);
+                    DoCastVictim(SPELL_HEROIC_STRIKE);
                     HeroicTimer = urand(4000, 6000);
                 }
                 else
@@ -979,7 +979,7 @@ class npc_darkrune_sentinel : public CreatureScript
 
                 if (WhirlTimer <= Diff)
                 {
-                    DoCast(me->GetVictim(), SPELL_WHIRLWIND);
+                    DoCastVictim(SPELL_WHIRLWIND);
                     WhirlTimer = urand(20000, 25000);
                 }
                 else
