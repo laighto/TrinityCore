@@ -18,6 +18,7 @@ set(scripts_STAT_SRCS
   Commands/cs_cast.cpp
   Commands/cs_character.cpp
   Commands/cs_cheat.cpp
+  Commands/cs_custom.cpp
   Commands/cs_debug.cpp
   Commands/cs_deserter.cpp
   Commands/cs_disable.cpp
