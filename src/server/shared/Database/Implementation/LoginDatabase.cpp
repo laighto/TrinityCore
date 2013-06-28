@@ -108,5 +108,4 @@ void LoginDatabaseConnection::DoPrepareStatements()
     PrepareStatement(LOGIN_DEL_RBAC_ACCOUNT_PERMISSION, "DELETE FROM rbac_account_permissions WHERE accountId = ? AND permissionId = ? AND (realmId = ? OR realmId = -1)", CONNECTION_ASYNC);
 
     PrepareStatement(LOGIN_SET_FRIEND, "UPDATE account SET recruiter = ? WHERE id = ?", CONNECTION_ASYNC);
-    PrepareStatement(LOGIN_SET_FRIEND_CHECK, "SELECT recruiter FROM account WHERE id = ?", CONNECTION_SYNCH);
 }

@@ -62,27 +62,20 @@ public:
             
             if (InitiatorAccount != FriendAccount)
             {
-                PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SET_FRIEND_CHECK);
-                    stmt->setUInt64(0, InitiatorAccount);
-                if (PreparedQueryResult result = LoginDatabase.Query(stmt))
+                if (handler->GetSession()->GetRecruiterId() == 0)
                 {
-                    Field* fields = result->Fetch();
-                    recruiter = fields[0].GetUInt64();
+                    PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SET_FRIEND);
+                    stmt->setUInt64(0, FriendAccount);
+                    stmt->setUInt64(1, InitiatorAccount);
+                    LoginDatabase.Execute(stmt);
 
-                    if (recruiter > 0)
-                    {
-                        handler->PSendSysMessage(LANG_PLAYER_CAN_NOT_SET_FRIEND);
-                        //handler->PSendSysMessage("%u", recruiter);
-                        return true;
-                    }
+                    handler->PSendSysMessage(LANG_PLAYER_SET_FRIEND_SUCCESS, targetName.c_str());
                 }
-
-                stmt = LoginDatabase.GetPreparedStatement(LOGIN_SET_FRIEND);
-                stmt->setUInt64(0, FriendAccount);
-                stmt->setUInt64(1, InitiatorAccount);
-                LoginDatabase.Execute(stmt);
-
-                handler->PSendSysMessage(LANG_PLAYER_SET_FRIEND_SUCCESS, targetName.c_str());
+                else
+                {
+                    handler->PSendSysMessage(LANG_PLAYER_CAN_NOT_SET_FRIEND);
+                    //handler->PSendSysMessage("%u", recruiter);
+                }
             }
             else 
             {
