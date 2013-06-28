@@ -47,7 +47,7 @@ enum Spells
     SPELL_STRIKE                    = 15580, // Combat
     SPELL_ENCAGE                    = 16045, // Combat
     // Cast on player by altar
-    SPELL_EMBERSEER_START           = 16533
+    SPELL_EMBERSEER_OBJECT_VISUAL   = 16532
 };
 
 enum Events
@@ -61,12 +61,11 @@ enum Events
     EVENT_FIRENOVA                  = 4,
     EVENT_FLAMEBUFFET               = 5,
     EVENT_PYROBLAST                 = 6,
-    // Reset
-    EVENT_RESET_ALTAR               = 7,
     // Hack due to trigger spell not in dbc
-    EVENT_FIRE_SHIELD               = 8,
+    EVENT_FIRE_SHIELD               = 7,
     // Make sure all players have aura from altar
-    EVENT_PLAYER_CHECK              = 9
+    EVENT_PLAYER_CHECK              = 8,
+    EVENT_ENTER_COMBAT              = 9
 };
 
 class boss_pyroguard_emberseer : public CreatureScript
@@ -82,48 +81,46 @@ public:
         {
             if (instance)
             {
-                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC|UNIT_FLAG_IMMUNE_TO_NPC|UNIT_FLAG_NOT_SELECTABLE);
-
+                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
+                events.Reset();
                 // Apply auras on spawn and reset
                 // DoCast(me, SPELL_FIRE_SHIELD_TRIGGER); // Need to find this in old DBC if possible
+
+                instance->SetBossState(DATA_PYROGAURD_EMBERSEER, NOT_STARTED);
+                me->RemoveAura(SPELL_EMBERSEER_FULL_STRENGTH);
+                me->RemoveAura(SPELL_EMBERSEER_GROWING);
+                me->RemoveAura(SPELL_EMBERSEER_GROWING_TRIGGER);
+                events.ScheduleEvent(EVENT_RESPAWN, 1000);
+                // Hack for missing trigger spell
+                events.ScheduleEvent(EVENT_FIRE_SHIELD, 3000);
 
                 // Open doors on reset
                 if (instance->GetBossState(DATA_PYROGAURD_EMBERSEER) == IN_PROGRESS)
                     OpenDoors(false); // Opens 2 entrance doors
-
-                instance->SetBossState(DATA_PYROGAURD_EMBERSEER, NOT_STARTED);
-
-                // Hack for missing trigger spell
-                events.ScheduleEvent(EVENT_FIRE_SHIELD, 3000);
             }
         }
 
-        void JustReachedHome()
+        void SetData(uint32 /*type*/, uint32 data)
         {
-            if (instance)
+            switch (data)
             {
-                // respawn any dead Blackhand Incarcerators & reset Altar
-                events.ScheduleEvent(EVENT_RESPAWN, 1000);
-                events.ScheduleEvent(EVENT_RESET_ALTAR, 6000);
-            }
-        }
-
-        void SetData(uint32 type, uint32 data)
-        {
-            if (instance && type == 1 && data == 1)
-            {
-                events.ScheduleEvent(EVENT_PLAYER_CHECK, 5000);
-            }
-
-            if (instance && type == 1 && data == 2)
-            {
-               // Close these two doors on Blackhand Incarcerators aggro
-               if (GameObject* door1 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_IN)))
-                   if (door1->GetGoState() == GO_STATE_ACTIVE)
-                       door1->SetGoState(GO_STATE_READY);
-               if (GameObject* door2 = me->GetMap()->GetGameObject(instance->GetData64(GO_DOORS)))
-                   if (door2->GetGoState() == GO_STATE_ACTIVE)
-                       door2->SetGoState(GO_STATE_READY);
+                case 1:
+                    events.ScheduleEvent(EVENT_PLAYER_CHECK, 5000);
+                    break;
+                case 2:
+                   // Close these two doors on Blackhand Incarcerators aggro
+                   if (GameObject* door1 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_IN)))
+                       if (door1->GetGoState() == GO_STATE_ACTIVE)
+                           door1->SetGoState(GO_STATE_READY);
+                   if (GameObject* door2 = me->GetMap()->GetGameObject(instance->GetData64(GO_DOORS)))
+                       if (door2->GetGoState() == GO_STATE_ACTIVE)
+                           door2->SetGoState(GO_STATE_READY);
+                    break;
+                case 3:
+                    Reset();
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -140,24 +137,10 @@ public:
             if (instance)
             {
                 // Activate all the runes
-                if (GameObject* rune1 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_RUNE_1)))
-                    rune1->SetGoState(GO_STATE_READY);
-                if (GameObject* rune2 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_RUNE_2)))
-                    rune2->SetGoState(GO_STATE_READY);
-                if (GameObject* rune3 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_RUNE_3)))
-                    rune3->SetGoState(GO_STATE_READY);
-                if (GameObject* rune4 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_RUNE_4)))
-                    rune4->SetGoState(GO_STATE_READY);
-                if (GameObject* rune5 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_RUNE_5)))
-                    rune5->SetGoState(GO_STATE_READY);
-                if (GameObject* rune6 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_RUNE_6)))
-                    rune6->SetGoState(GO_STATE_READY);
-                if (GameObject* rune7 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_RUNE_7)))
-                    rune7->SetGoState(GO_STATE_READY);
-
+                UpdateRunes(GO_STATE_READY);
                 // Opens all 3 doors
                 OpenDoors(true);
-
+                // Complete encounter
                 instance->SetBossState(DATA_PYROGAURD_EMBERSEER, DONE);
             }
         }
@@ -182,8 +165,8 @@ public:
                     me->CastSpell(me, SPELL_EMBERSEER_FULL_STRENGTH);
                     Talk(EMOTE_FREE_OF_BONDS);
                     Talk(YELL_FREE_OF_BONDS);
-                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC|UNIT_FLAG_IMMUNE_TO_NPC|UNIT_FLAG_NOT_SELECTABLE);
-                    AttackStart(me->SelectNearestPlayer(30.0f));
+                    me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
+                    events.ScheduleEvent(EVENT_ENTER_COMBAT, 2000);
                 }
             }
         }
@@ -202,6 +185,28 @@ public:
                     door3->SetGoState(GO_STATE_ACTIVE);
        }
 
+        void UpdateRunes(GOState state)
+        {
+            if (instance)
+            {
+                // update all runes
+                if (GameObject* rune1 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_RUNE_1)))
+                    rune1->SetGoState(state);
+                if (GameObject* rune2 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_RUNE_2)))
+                    rune2->SetGoState(state);
+                if (GameObject* rune3 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_RUNE_3)))
+                    rune3->SetGoState(state);
+                if (GameObject* rune4 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_RUNE_4)))
+                    rune4->SetGoState(state);
+                if (GameObject* rune5 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_RUNE_5)))
+                    rune5->SetGoState(state);
+                if (GameObject* rune6 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_RUNE_6)))
+                    rune6->SetGoState(state);
+                if (GameObject* rune7 = me->GetMap()->GetGameObject(instance->GetData64(GO_EMBERSEER_RUNE_7)))
+                    rune7->SetGoState(state);
+            }
+        }
+
         void UpdateAI(uint32 diff)
         {
             events.Update(diff);
@@ -217,8 +222,13 @@ public:
                         GetCreatureListWithEntryInGrid(creatureList, me, NPC_BLACKHAND_INCARCERATOR, 35.0f);
                         for (std::list<Creature*>::iterator itr = creatureList.begin(); itr != creatureList.end(); ++itr)
                             if (Creature* creatureList = *itr)
+                            {
                                 if (!creatureList->IsAlive())
+                                {
                                     creatureList->Respawn();
+                                }
+                                creatureList->AI()->SetData(1, 2);
+                            }
                         break;
                     }
                     case EVENT_PRE_FIGHT_1:
@@ -227,12 +237,10 @@ public:
                         std::list<Creature*> creatureList;
                         GetCreatureListWithEntryInGrid(creatureList, me, NPC_BLACKHAND_INCARCERATOR, 35.0f);
                         for (std::list<Creature*>::iterator itr = creatureList.begin(); itr != creatureList.end(); ++itr)
+                        {
                             if (Creature* creatureList = *itr)
                                 creatureList->AI()->SetData(1, 1);
-
-                        // Lock Blackrock Altar
-                        if (GameObject* altar = me->GetMap()->GetGameObject(instance->GetData64(GO_BLACKROCK_ALTAR)))
-                            altar->SetFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
+                        }
                         events.ScheduleEvent(EVENT_PRE_FIGHT_2, 32000);
                         break;
                     }
@@ -241,14 +249,10 @@ public:
                         me->CastSpell(me, SPELL_EMBERSEER_GROWING);
                         Talk(EMOTE_ONE_STACK);
                         break;
-                    case EVENT_RESET_ALTAR:
-                        if (GameObject* altar = me->GetMap()->GetGameObject(instance->GetData64(GO_BLACKROCK_ALTAR)))
-                            altar->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_INTERACT_COND);
-                        break;
                     case EVENT_FIRE_SHIELD:
                         // #### Spell isn't doing any damage ??? ####
-                        DoCast(SPELL_FIRE_SHIELD);
-                        events.ScheduleEvent(SPELL_FIRE_SHIELD, 3000);
+                        DoCast(me, SPELL_FIRE_SHIELD);
+                        events.ScheduleEvent(EVENT_FIRE_SHIELD, 3000);
                         break;
                     case EVENT_PLAYER_CHECK:
                         {
@@ -257,7 +261,7 @@ public:
                             Map::PlayerList const &players = me->GetMap()->GetPlayers();
                             for (Map::PlayerList::const_iterator itr = players.begin(); itr != players.end(); ++itr)
                                 if (Player* player = itr->GetSource()->ToPlayer())
-                                    if (!player->HasAura(SPELL_EMBERSEER_START))
+                                    if (!player->HasAura(SPELL_EMBERSEER_OBJECT_VISUAL))
                                         _hasAura = false;
 
                             if (_hasAura)
@@ -267,33 +271,32 @@ public:
                             }
                         break;
                         }
-                    default:
+                    case EVENT_ENTER_COMBAT:
+                        AttackStart(me->SelectNearestPlayer(30.0f));
                         break;
-                }
-            }
-
-            if (!UpdateVictim())
-                return;
-
-            if (me->HasUnitState(UNIT_STATE_CASTING))
-                return;
-
-            while (uint32 eventId = events.ExecuteEvent())
-            {
-                switch (eventId)
-                {
                     case EVENT_FIRENOVA:
-                        DoCast(SPELL_FIRENOVA);
+                        if (UpdateVictim())
+                        {
+                            DoCast(me, SPELL_FIRENOVA);
                         events.ScheduleEvent(EVENT_FIRENOVA, 6000);
+                        }
                         break;
                     case EVENT_FLAMEBUFFET:
-                        DoCast(SPELL_FLAMEBUFFET);
+                        if (UpdateVictim())
+                        {
+                            DoCast(me, SPELL_FLAMEBUFFET);
                         events.ScheduleEvent(EVENT_FLAMEBUFFET, 14000);
+                        }
                         break;
                     case EVENT_PYROBLAST:
-                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
-                            DoCast(target, SPELL_PYROBLAST);
+                        if (UpdateVictim())
+                        {
+                            if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100, true))
+                                DoCast(target, SPELL_PYROBLAST);
                         events.ScheduleEvent(EVENT_PYROBLAST, 15000);
+                        }
+                        break;
+                    default:
                         break;
                 }
             }
@@ -332,7 +335,8 @@ public:
         void Reset()
         {
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC|UNIT_FLAG_IMMUNE_TO_NPC);
-            _events.ScheduleEvent(EVENT_ENCAGED_EMBERSEER, 1000);
+            if (Creature* Emberseer = me->FindNearestCreature(NPC_PYROGAURD_EMBERSEER, 30.0f, true))
+                Emberseer->AI()->SetData(1, 3);
         }
 
         void JustDied(Unit* /*killer*/)
@@ -348,6 +352,11 @@ public:
                 me->InterruptSpell(CURRENT_CHANNELED_SPELL);
                 _events.CancelEvent(EVENT_ENCAGED_EMBERSEER);
             }
+
+            if (data == 1 && value == 2)
+            {
+                _events.ScheduleEvent(EVENT_ENCAGED_EMBERSEER, 5000);
+            }
         }
 
         void EnterCombat(Unit* /*who*/)
@@ -355,9 +364,10 @@ public:
             // Used to close doors
             if (Creature* Emberseer = me->FindNearestCreature(NPC_PYROGAURD_EMBERSEER, 30.0f, true))
                 Emberseer->AI()->SetData(1, 2);
-
+            me->CallForHelp(60.0f);
             _events.ScheduleEvent(EVENT_STRIKE, urand(8000, 16000));
             _events.ScheduleEvent(EVENT_ENCAGE, urand(10000, 20000));
+            me->CallForHelp(60.0f); // double call because not all are aggroing on first call.
         }
 
         void UpdateAI(uint32 diff)
@@ -375,7 +385,6 @@ public:
                                 if(!me->HasAura(SPELL_ENCAGE_EMBERSEER))
                                     if (Creature* Emberseer = me->FindNearestCreature(NPC_PYROGAURD_EMBERSEER, 30.0f, true))
                                         DoCast(Emberseer, SPELL_ENCAGE_EMBERSEER);
-                            _events.ScheduleEvent(EVENT_ENCAGED_EMBERSEER, 5000);
                             break;
                     }
                 }

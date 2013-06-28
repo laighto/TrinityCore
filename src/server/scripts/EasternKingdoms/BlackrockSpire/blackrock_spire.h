@@ -40,13 +40,13 @@ enum DataTypes
     DATA_GENERAL_DRAKKISATH         = 13,
     // Extra
     DATA_DRAGONSPIRE_ROOM           = 14,
-    DATA_ROOM_1_RUNE                = 15,
-    DATA_ROOM_2_RUNE                = 16,
-    DATA_ROOM_3_RUNE                = 17,
-    DATA_ROOM_4_RUNE                = 18,
-    DATA_ROOM_5_RUNE                = 19,
-    DATA_ROOM_6_RUNE                = 20,
-    DATA_ROOM_7_RUNE                = 21
+    DATA_HALL_RUNE_1                = 15,
+    DATA_HALL_RUNE_2                = 16,
+    DATA_HALL_RUNE_3                = 17,
+    DATA_HALL_RUNE_4                = 18,
+    DATA_HALL_RUNE_5                = 19,
+    DATA_HALL_RUNE_6                = 20,
+    DATA_HALL_RUNE_7                = 21
 };
 
 enum CreaturesIds
@@ -68,15 +68,18 @@ enum CreaturesIds
     NPC_BLACKHAND_DREADWEAVER       = 9817,
     NPC_BLACKHAND_SUMMONER          = 9818,
     NPC_BLACKHAND_VETERAN           = 9819,
-    NPC_BLACKHAND_INCARCERATOR      = 10316
+    NPC_BLACKHAND_INCARCERATOR      = 10316,
+    NPC_LORD_VICTOR_NEFARIUS        = 10162,
+    NPC_REND_BLACKHAND              = 10429
 };
 
 enum AdditionalData
 {
     SPELL_SUMMON_ROOKERY_WHELP      = 15745,
     EVENT_PYROGUARD_EMBERSEER       = 4884,
-    AREATRIGGER_ENTER_UBRS          = 2046,
-    AREATRIGGER_STADIUM             = 2026
+    AREATRIGGER                     = 1,
+    AREATRIGGER_DRAGONSPIRE_HALL    = 2046,
+    AREATRIGGER_BLACKROCK_STADIUM   = 2026
 };
 
 enum GameObjectsIds
@@ -91,15 +94,14 @@ enum GameObjectsIds
     GO_GYTH_EXIT_DOOR               = 175186,
     GO_DRAKKISATH_DOOR_1            = 175946,
     GO_DRAKKISATH_DOOR_2            = 175947,
-    GO_BLACKROCK_ALTAR              = 175706, // Altar used to start Pyroguard Emberseer event
     // Runes in dragonspire hall
-    GO_ROOM_1_RUNE                  = 175197,
-    GO_ROOM_2_RUNE                  = 175199,
-    GO_ROOM_3_RUNE                  = 175195,
-    GO_ROOM_4_RUNE                  = 175200,
-    GO_ROOM_5_RUNE                  = 175198,
-    GO_ROOM_6_RUNE                  = 175196,
-    GO_ROOM_7_RUNE                  = 175194,
+    GO_HALL_RUNE_1                  = 175197,
+    GO_HALL_RUNE_2                  = 175199,
+    GO_HALL_RUNE_3                  = 175195,
+    GO_HALL_RUNE_4                  = 175200,
+    GO_HALL_RUNE_5                  = 175198,
+    GO_HALL_RUNE_6                  = 175196,
+    GO_HALL_RUNE_7                  = 175194,
     // Runes in emberseers room
     GO_EMBERSEER_RUNE_1             = 175266,
     GO_EMBERSEER_RUNE_2             = 175267,
@@ -107,7 +109,9 @@ enum GameObjectsIds
     GO_EMBERSEER_RUNE_4             = 175269,
     GO_EMBERSEER_RUNE_5             = 175270,
     GO_EMBERSEER_RUNE_6             = 175271,
-    GO_EMBERSEER_RUNE_7             = 175272
+    GO_EMBERSEER_RUNE_7             = 175272,
+    // For Gyth event
+    GO_DR_PORTCULLIS                = 175185
 };
 
 #endif
