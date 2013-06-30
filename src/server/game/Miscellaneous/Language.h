@@ -752,6 +752,8 @@ enum TrinityStrings
 
     LANG_PLAYER_CAN_NOT_SET_FRIEND      = 788,
     LANG_PLAYER_SET_FRIEND_SUCCESS      = 789,
+    RECRUIT_ONLINE                      = 790,
+    RECRUITER_ONLINE                    = 791,
 
     // Room for BG/ARENA                = 773-784, 788-799 not used
     LANG_ARENA_TESTING                  = 785,
@@ -1217,6 +1219,7 @@ enum TrinityStrings
     // Use for custom patches             11000-11999
     LANG_AUTO_BROADCAST                 = 11000,
     LANG_INVALID_REALMID                = 11001,
+    LANG_BOSS_ANNOUNCER                 = 11002,
 
     // UT Awards
     LANG_UTA_DOUBLE_KILL                = 20100,
