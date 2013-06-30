@@ -58,7 +58,7 @@ public:
             killed->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
 
             //Frost
-            if (roll_chance_f(0.1f))
+            if (roll_chance_f(1.0f))
             {
                 killer->AddItem(49426, 1);
                 sWorld->SendWorldText(12015, killer->GetName().c_str());
@@ -71,7 +71,7 @@ public:
         }*/
 
         //Add ancient shard
-        if (roll_chance_f(0.3f) && killer->InBattleground())
+        if (roll_chance_f(1.0f) && killer->InBattleground())
             killer->AddItem(23359, 1);
 
       /*  //WORLD MASS EVENT
@@ -243,7 +243,7 @@ public:
         }
 
         //Gift
-        if (roll_chance_f(25.0f))
+        if (roll_chance_f(10.0f))
             player->SummonGameObject(600004, boss->GetPositionX()+0.1f, boss->GetPositionY()+0.1f, boss->GetPositionZ()+0.1f, 0, 0, 0, 0, 0, 0);
     }
 
