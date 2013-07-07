@@ -28,7 +28,7 @@ enum DataTypes
     TYPE_CROWN                  = 5
 };
 
-enum Creatures
+enum Creaturestrio
 {
     NPC_FRYE                = 36272,
     NPC_HUMMEL              = 36296,
