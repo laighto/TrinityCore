@@ -45,6 +45,8 @@ enum EpochHunter
     SPELL_WING_BUFFET           = 31475
 };
 
+#define THRALL_ENTRY    17876
+
 class boss_epoch_hunter : public CreatureScript
 {
 public:
@@ -68,6 +70,20 @@ public:
         uint32 ImpendingDeath_Timer;
         uint32 WingBuffet_Timer;
         uint32 Mda_Timer;
+
+        void MoveInLineOfSight(Unit* thrall) OVERRIDE
+        {
+            if (thrall->GetEntry() == THRALL_ENTRY)
+            {
+                //Talk(SAY_ENTER);
+                sWorld->SendZoneText(me->GetZoneId(),"TEST LINE OF SIGHT");
+            }
+        }
+
+        void JustSummoned (Creature* /*summon*/) OVERRIDE
+        {
+            Talk(SAY_ENTER);
+        }
 
         void Reset() OVERRIDE
         {
