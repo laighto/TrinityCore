@@ -97,21 +97,26 @@ static Location BrokenWP[]=
 #define AKAMA_Y         400.601013f
 #define AKAMA_Z         112.783997f
 
-// Spells
-#define SPELL_VERTEX_SHADE_BLACK    39833
-#define SPELL_SHADE_SOUL_CHANNEL    40401
-#define SPELL_DESTRUCTIVE_POISON    40874
-#define SPELL_LIGHTNING_BOLT        42024
-#define SPELL_AKAMA_SOUL_CHANNEL    40447
-#define SPELL_AKAMA_SOUL_RETRIEVE   40902
-#define AKAMA_SOUL_EXPEL            40855
-#define SPELL_SHADE_SOUL_CHANNEL_2  40520
 
-// Channeler entry
-#define CREATURE_CHANNELER          23421
-#define CREATURE_SORCERER           23215
-#define CREATURE_DEFENDER           23216
-#define CREATURE_BROKEN             23319
+enum Spells
+{
+    SPELL_VERTEX_SHADE_BLACK    = 39833,
+    SPELL_SHADE_SOUL_CHANNEL    = 40401,
+    SPELL_DESTRUCTIVE_POISON    = 40874,
+    SPELL_LIGHTNING_BOLT        = 42024,
+    SPELL_AKAMA_SOUL_CHANNEL    = 40447,
+    SPELL_AKAMA_SOUL_RETRIEVE   = 40902,
+    SPELL_AKAMA_SOUL_EXPEL      = 40855,
+    SPELL_SHADE_SOUL_CHANNEL_2  = 40520
+};
+
+enum Creatures
+{
+    NPC_CHANNELER               = 23421,
+    NPC_SORCERER                = 23215,
+    NPC_DEFENDER                = 23216,
+    NPC_BROKEN                  = 23319
+};
 
 const uint32 spawnEntries[4]= { 23523, 23318, 23524 };
 
@@ -120,7 +125,7 @@ class npc_ashtongue_channeler : public CreatureScript
 public:
     npc_ashtongue_channeler() : CreatureScript("npc_ashtongue_channeler") { }
 
-    CreatureAI* GetAI(Creature* creature) const
+    CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
         return new npc_ashtongue_channelerAI (creature);
     }
@@ -134,12 +139,13 @@ public:
 
         uint64 ShadeGUID;
 
-        void Reset() {}
-        void JustDied(Unit* /*killer*/);
-        void EnterCombat(Unit* /*who*/) {}
-        void AttackStart(Unit* /*who*/) {}
-        void MoveInLineOfSight(Unit* /*who*/) {}
-        void UpdateAI(uint32 /*diff*/) {}
+        void Reset() OVERRIDE {}
+        void JustDied(Unit* /*killer*/) OVERRIDE;
+        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void AttackStart(Unit* /*who*/) OVERRIDE {}
+        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE {}
+
+        void UpdateAI(uint32 /*diff*/) OVERRIDE {}
     };
 
 };
@@ -149,7 +155,7 @@ class npc_ashtongue_sorcerer : public CreatureScript
 public:
     npc_ashtongue_sorcerer() : CreatureScript("npc_ashtongue_sorcerer") { }
 
-    CreatureAI* GetAI(Creature* creature) const
+    CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
         return new npc_ashtongue_sorcererAI (creature);
     }
@@ -165,17 +171,18 @@ public:
         uint32 CheckTimer;
         bool StartBanishing;
 
-        void Reset()
+        void Reset() OVERRIDE
         {
             StartBanishing = false;
             CheckTimer = 5000;
         }
 
-        void JustDied(Unit* /*killer*/);
-        void EnterCombat(Unit* /*who*/) {}
-        void AttackStart(Unit* /*who*/) {}
-        void MoveInLineOfSight(Unit* /*who*/) {}
-        void UpdateAI(uint32 diff)
+        void JustDied(Unit* /*killer*/) OVERRIDE;
+        void EnterCombat(Unit* /*who*/) OVERRIDE {}
+        void AttackStart(Unit* /*who*/) OVERRIDE {}
+        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE {}
+
+        void UpdateAI(uint32 diff) OVERRIDE
         {
             if (StartBanishing)
                 return;
@@ -207,7 +214,7 @@ class boss_shade_of_akama : public CreatureScript
 public:
     boss_shade_of_akama() : CreatureScript("boss_shade_of_akama") { }
 
-    CreatureAI* GetAI(Creature* creature) const
+    CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
         return new boss_shade_of_akamaAI (creature);
     }
@@ -244,7 +251,7 @@ public:
         bool HasKilledAkamaAndReseting;
         SummonList summons;
 
-        void Reset()
+        void Reset() OVERRIDE
         {
             reseting = true;
             HasKilledAkamaAndReseting = false;
@@ -286,22 +293,26 @@ public:
 
             reseting = false;
         }
-        void JustDied(Unit* /*killer*/)
+
+        void JustDied(Unit* /*killer*/) OVERRIDE
         {
             summons.DespawnAll();
         }
-        void JustSummoned(Creature* summon)
+
+        void JustSummoned(Creature* summon) OVERRIDE
         {
-            if (summon->GetEntry() == CREATURE_DEFENDER || summon->GetEntry() == 23523 || summon->GetEntry() == 23318 || summon->GetEntry() == 23524)
+            if (summon->GetEntry() == NPC_DEFENDER || summon->GetEntry() == 23523 || summon->GetEntry() == 23318 || summon->GetEntry() == 23524)
                 summons.Summon(summon);
         }
-        void SummonedCreatureDespawn(Creature* summon)
+
+        void SummonedCreatureDespawn(Creature* summon) OVERRIDE
         {
-            if (summon->GetEntry() == CREATURE_DEFENDER || summon->GetEntry() == 23523 || summon->GetEntry() == 23318 || summon->GetEntry() == 23524)
+            if (summon->GetEntry() == NPC_DEFENDER || summon->GetEntry() == 23523 || summon->GetEntry() == 23318 || summon->GetEntry() == 23524)
                 summons.Despawn(summon);
         }
 
-        void MoveInLineOfSight(Unit* /*who*/)
+        void MoveInLineOfSight(Unit* /*who*/) OVERRIDE
+
         {
             if (!GridSearcherSucceeded)
             {
@@ -326,11 +337,13 @@ public:
                             GridSearcherSucceeded = true;
                         }
                     }
-                } else TC_LOG_ERROR(LOG_FILTER_TSCR, "SD2 ERROR: No Channelers are stored in the list. This encounter will not work properly");
+                }
+                else
+                    TC_LOG_ERROR(LOG_FILTER_TSCR, "SD2 ERROR: No Channelers are stored in the list. This encounter will not work properly");
             }
         }
 
-        void AttackStart(Unit* who)
+        void AttackStart(Unit* who) OVERRIDE
         {
             if (!who || IsBanished)
                 return;
@@ -363,7 +376,7 @@ public:
             // max of 6 sorcerers can be summoned
             if ((rand()%3 == 0) && (DeathCount > 0) && (SorcererCount < 7))
             {
-                Creature* Sorcerer = me->SummonCreature(CREATURE_SORCERER, X, Y, Z_SPAWN, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
+                Creature* Sorcerer = me->SummonCreature(NPC_SORCERER, X, Y, Z_SPAWN, 0, TEMPSUMMON_DEAD_DESPAWN, 0);
                 if (Sorcerer)
                 {
                     CAST_AI(npc_ashtongue_sorcerer::npc_ashtongue_sorcererAI, Sorcerer->AI())->ShadeGUID = me->GetGUID();
@@ -394,7 +407,7 @@ public:
         void FindChannelers()
         {
             std::list<Creature*> ChannelerList;
-            me->GetCreatureListWithEntryInGrid(ChannelerList, CREATURE_CHANNELER, 50.0f);
+            me->GetCreatureListWithEntryInGrid(ChannelerList, NPC_CHANNELER, 50.0f);
 
             if (!ChannelerList.empty())
             {
@@ -423,7 +436,7 @@ public:
 
         void SetAkamaGUID(uint64 guid) { AkamaGUID = guid; }
 
-        void UpdateAI(uint32 diff)
+        void UpdateAI(uint32 diff) OVERRIDE
         {
             if (!me->IsInCombat())
                 return;
@@ -440,7 +453,7 @@ public:
                 if (DefenderTimer <= diff)
                 {
                     uint32 ran = rand()%2;
-                    Creature* Defender = me->SummonCreature(CREATURE_DEFENDER, SpawnLocations[ran].x, SpawnLocations[ran].y, Z_SPAWN, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000);
+                    Creature* Defender = me->SummonCreature(NPC_DEFENDER, SpawnLocations[ran].x, SpawnLocations[ran].y, Z_SPAWN, 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 25000);
                     if (Defender)
                     {
                         Defender->SetWalk(false);
@@ -554,7 +567,7 @@ class npc_akama_shade : public CreatureScript
 public:
     npc_akama_shade() : CreatureScript("npc_akama_shade") { }
 
-    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) OVERRIDE
     {
         player->PlayerTalkClass->ClearMenus();
         if (action == GOSSIP_ACTION_INFO_DEF + 1)               //Fight time
@@ -566,7 +579,7 @@ public:
         return true;
     }
 
-    bool OnGossipHello(Player* player, Creature* creature)
+    bool OnGossipHello(Player* player, Creature* creature) OVERRIDE
     {
         if (player->IsAlive())
         {
@@ -577,7 +590,7 @@ public:
         return true;
     }
 
-    CreatureAI* GetAI(Creature* creature) const
+    CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
         return new npc_akamaAI (creature);
     }
@@ -627,7 +640,7 @@ public:
         bool HasYelledOnce;
         SummonList summons;
 
-        void Reset()
+        void Reset() OVERRIDE
         {
             DestructivePoisonTimer = 15000;
             LightningBoltTimer = 10000;
@@ -641,18 +654,19 @@ public:
             summons.DespawnAll();
         }
 
-        void JustSummoned(Creature* summon)
+        void JustSummoned(Creature* summon) OVERRIDE
         {
-            if (summon->GetEntry() == CREATURE_BROKEN)
+            if (summon->GetEntry() == NPC_BROKEN)
                 summons.Summon(summon);
         }
-        void SummonedCreatureDespawn(Creature* summon)
+
+        void SummonedCreatureDespawn(Creature* summon) OVERRIDE
         {
-            if (summon->GetEntry() == CREATURE_BROKEN)
+            if (summon->GetEntry() == NPC_BROKEN)
                 summons.Despawn(summon);
         }
 
-        void EnterCombat(Unit* /*who*/) {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE {}
 
         void BeginEvent(Player* player)
         {
@@ -682,7 +696,7 @@ public:
             }
         }
 
-        void MovementInform(uint32 type, uint32 id)
+        void MovementInform(uint32 type, uint32 id) OVERRIDE
         {
             if (type != POINT_MOTION_TYPE)
                 return;
@@ -705,7 +719,7 @@ public:
             }
         }
 
-        void JustDied(Unit* /*killer*/)
+        void JustDied(Unit* /*killer*/) OVERRIDE
         {
             Talk(SAY_DEATH);
             EventBegun = false;
@@ -725,7 +739,7 @@ public:
             summons.DespawnAll();
         }
 
-        void UpdateAI(uint32 diff)
+        void UpdateAI(uint32 diff) OVERRIDE
         {
             if (!EventBegun)
                 return;
@@ -799,7 +813,7 @@ public:
                         float y = BrokenCoords[BrokenSummonIndex].y + (1*5);
                         float z = BrokenCoords[BrokenSummonIndex].z;
                         float o = BrokenCoords[BrokenSummonIndex].o;
-                        Creature* Broken = me->SummonCreature(CREATURE_BROKEN, x, y, z, o, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 360000);
+                        Creature* Broken = me->SummonCreature(NPC_BROKEN, x, y, z, o, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 360000);
                         if (Broken)
                         {
                             float wx = BrokenWP[BrokenSummonIndex].x + (i*5);

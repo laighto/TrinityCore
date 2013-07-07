@@ -173,7 +173,7 @@ public:
             EnterEvadeMode();
         }
 
-        void Reset()
+        void Reset() OVERRIDE
         {
             _Reset();
 
@@ -181,7 +181,7 @@ public:
             Enraged = false;
         }
 
-        void EnterCombat(Unit* /*who*/)
+        void EnterCombat(Unit* /*who*/) OVERRIDE
         {
             if (instance && instance->GetBossState(BOSS_FLAMEGOR) != DONE)
             {
@@ -203,7 +203,7 @@ public:
                 object->UseDoorOrButton();
         }
 
-        void UpdateAI(uint32 diff)
+        void UpdateAI(uint32 diff) OVERRIDE
         {
             if (!UpdateVictim())
                 return;
@@ -286,7 +286,7 @@ public:
         bool Enraged;
     };
 
-    CreatureAI* GetAI(Creature* creature) const
+    CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
         return new boss_chromaggusAI (creature);
     }
