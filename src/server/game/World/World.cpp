@@ -1249,6 +1249,13 @@ void World::LoadConfigSettings(bool reload)
     m_int_configs[CONFIG_WINTERGRASP_NOBATTLETIME] = ConfigMgr::GetIntDefault("Wintergrasp.NoBattleTimer", 150);
     m_int_configs[CONFIG_WINTERGRASP_RESTART_AFTER_CRASH] = ConfigMgr::GetIntDefault("Wintergrasp.CrashRestartTimer", 10);
 
+    //Random BG Custom Reward
+    m_bool_configs[CONFIG_RANDOM_BG_ITEM_REW] = ConfigMgr::GetBoolDefault("RandomBG.CustomItem.Enable", false);
+    m_int_configs[CONFIG_RANDOM_BG_WIN_ITEM_ID] = ConfigMgr::GetBoolDefault("RandomBG.CustomItem.ID", 49426);
+    m_int_configs[CONFIG_RANDOM_BG_LOSE_ITEM_ID] = ConfigMgr::GetBoolDefault("RandomBG.CustomItem.ID", 49426);
+    m_int_configs[CONFIG_RANDOM_BG_WIN_COUNT] = ConfigMgr::GetBoolDefault("RandomBG.CustomItem.WinCount", 1);
+    m_int_configs[CONFIG_RANDOM_BG_LOS_COUNT] = ConfigMgr::GetBoolDefault("RandomBG.CustomItem.LosCount", 1);
+
     // Stats limits
     m_bool_configs[CONFIG_STATS_LIMITS_ENABLE] = ConfigMgr::GetBoolDefault("Stats.Limits.Enable", false);
     m_float_configs[CONFIG_STATS_LIMITS_DODGE] = ConfigMgr::GetFloatDefault("Stats.Limits.Dodge", 95.0f);

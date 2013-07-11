@@ -2125,6 +2125,30 @@ Battleground.GiveXPForKills = 0
 
 Battleground.Random.ResetHour = 6
 
+# RandomBG.CustomItem.Enable
+# Enable or disable random bg custom items
+# (Default: 0)
+
+RandomBG.CustomItem.Enable = 0
+
+# RandomBG.CustomItem.ID
+# Custom item ID
+# (Default: 49426) Emblem of frost
+
+RandomBG.CustomItem.ID = 49426
+
+# RandomBG.CustomItem.WinCount
+# Count items winner
+# (Default: 3)
+
+RandomBG.CustomItem.WinCount = 1
+
+# RandomBG.CustomItem.LosCount
+# Count items loser
+# (Default: 1)
+
+RandomBG.CustomItem.LosCount = 1
+
 #
 ###################################################################################################
 
