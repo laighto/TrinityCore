@@ -1545,7 +1545,7 @@ public:
             }
         }
 
-        void UpdateAI (uint32 /*diff*/)
+        void UpdateAI(uint32 /*diff*/)
         {
         }
 
@@ -1577,7 +1577,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new npc_arcane_overloadAI (creature);
+        return new npc_arcane_overloadAI(creature);
     }
 };
 
@@ -1642,7 +1642,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new npc_wyrmrest_skytalonAI (creature);
+        return new npc_wyrmrest_skytalonAI(creature);
     }
 };
 
@@ -1668,7 +1668,7 @@ class npc_static_field : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const OVERRIDE
         {
-            return new npc_static_fieldAI (creature);
+            return new npc_static_fieldAI(creature);
         }
 };
 
