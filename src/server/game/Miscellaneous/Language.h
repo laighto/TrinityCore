@@ -750,10 +750,11 @@ enum TrinityStrings
 //  LANG_BG_AB_START_TWO_MINUTES        = 754, - defined above
 //  LANG_BG_EY_START_TWO_MINUTES        = 755, - defined above
 
-    LANG_PLAYER_CAN_NOT_SET_FRIEND      = 788,
-    LANG_PLAYER_SET_FRIEND_SUCCESS      = 789,
+    LANG_PLAYER_CAN_NOT_SET_RECRUITER   = 788,
+    LANG_PLAYER_SET_RECRUITER_SUCCESS   = 789,
     RECRUIT_ONLINE                      = 790,
     RECRUITER_ONLINE                    = 791,
+    LANG_PLAYER_DELETE_RECRUITER        = 792,
 
     // Room for BG/ARENA                = 773-784, 788-799 not used
     LANG_ARENA_TESTING                  = 785,

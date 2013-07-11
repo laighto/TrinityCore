@@ -31,20 +31,21 @@ public:
     {
         static ChatCommand customCommandTable[] =
         {
-            { "friend",         SEC_PLAYER,     true,  &HandleSetPlayerFriendCommand,         "", NULL },
+            { "friend",         SEC_PLAYER,     true,  &HandleSetPlayerRecruitCommand,         "", NULL },
+            { "delete",         SEC_PLAYER,     true,  &HandleDeletePlayerRecruitCommand,         "", NULL },
             { NULL,             0,                     false, NULL,                                           "", NULL }
         };
 
         static ChatCommand commandTable[] =
         {
-            { "promote",      SEC_PLAYER,     true, NULL,                     "",  customCommandTable},
+            { "recruit",      SEC_PLAYER,     true, NULL,                     "",  customCommandTable},
             { NULL,             0,                  false, NULL,                               "", NULL }
         };
 
         return commandTable;
     }
 
-    static bool HandleSetPlayerFriendCommand(ChatHandler* handler, const char* args)
+    static bool HandleSetPlayerRecruitCommand(ChatHandler* handler, const char* args)
     {
 
         Player* target;
@@ -64,16 +65,16 @@ public:
             {
                 if (handler->GetSession()->GetRecruiterId() == 0)
                 {
-                    PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SET_FRIEND);
+                    PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SET_RECRUITER);
                     stmt->setUInt64(0, FriendAccount);
                     stmt->setUInt64(1, InitiatorAccount);
                     LoginDatabase.Execute(stmt);
 
-                    handler->PSendSysMessage(LANG_PLAYER_SET_FRIEND_SUCCESS, targetName.c_str());
+                    handler->PSendSysMessage(LANG_PLAYER_SET_RECRUITER_SUCCESS, targetName.c_str());
                 }
                 else
                 {
-                    handler->PSendSysMessage(LANG_PLAYER_CAN_NOT_SET_FRIEND);
+                    handler->PSendSysMessage(LANG_PLAYER_CAN_NOT_SET_RECRUITER);
                     //handler->PSendSysMessage("%u", recruiter);
                 }
             }
@@ -86,6 +87,18 @@ public:
         return true;
     }
 
+    static bool HandleDeletePlayerRecruitCommand(ChatHandler* handler, const char* /*args*/)
+    {
+        Player* initiator = handler->GetSession()->GetPlayer();
+        uint64 InitiatorAccount = sObjectMgr->GetPlayerAccountIdByGUID(initiator->GetGUID());
+        
+        PreparedStatement* stmt;
+        stmt = LoginDatabase.GetPreparedStatement(LOGIN_DELETE_RECRUITER);
+        stmt->setUInt64(0, InitiatorAccount);
+        LoginDatabase.Execute(stmt);
+
+        handler->PSendSysMessage(LANG_PLAYER_DELETE_RECRUITER);
+    }
 };
 
 void AddSC_custom_commandscript()
