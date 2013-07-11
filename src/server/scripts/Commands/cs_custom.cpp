@@ -98,6 +98,8 @@ public:
         LoginDatabase.Execute(stmt);
 
         handler->PSendSysMessage(LANG_PLAYER_DELETE_RECRUITER);
+
+        return true;
     }
 };
 

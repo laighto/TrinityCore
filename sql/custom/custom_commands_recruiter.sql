@@ -5,7 +5,7 @@ DELETE FROM `command` WHERE `name`='recruit friend';
 DELETE FROM `command` WHERE `name`='recruit delete';
 INSERT INTO `command` (`name`, `security`, `help`) VALUES 
 ('recruit friend', 0, 'Syntax: .recruit friend $CharacterName\r\nAllow set ingame friend(recruiter) to get party bonuses'),
-('recruit delete', 1, 'Syntax: .recruit delete $CharacterName\r\nAllow delete recruiter data');
+('recruit delete', 1, 'Syntax: .recruit delete\r\nAllow delete recruiter data');
 
 DELETE FROM `trinity_string` WHERE entry IN (788, 789, 790, 791);
 INSERT INTO `trinity_string` (`entry`, `content_default`, `content_loc1`, `content_loc2`, `content_loc3`, `content_loc4`, `content_loc5`, `content_loc6`, `content_loc7`, `content_loc8`) VALUES
