@@ -395,3 +395,8 @@ UPDATE `creature_template` SET `unit_flags`=2, `flags_extra`=2 WHERE `entry`=386
 -- Prevent players from exploiting the Rocket pack item outside of raid
 UPDATE `item_template` SET `area` = 4812 WHERE `entry` = 49278;
 UPDATE `item_template` SET `map` = 631 WHERE `entry` = 49278;
+
+INSERT INTO `areatrigger_scripts` (entry, ScriptName) VALUES
+(5623, 'at_icc_start_sindragosa_gauntlet');
+UPDATE `creature_template` SET `modelid1` = 25455, `modelid2` = 0, `unit_flags` = 33555202, `flags_extra` = 129, `ScriptName` = 'npc_sindragosas_ward' WHERE `entry` = 37503;
+INSERT INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES ('68645', 'spell_icc_rocket_pack');
