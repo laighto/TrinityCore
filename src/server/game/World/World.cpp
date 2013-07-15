@@ -1251,10 +1251,10 @@ void World::LoadConfigSettings(bool reload)
 
     //Random BG Custom Reward
     m_bool_configs[CONFIG_RANDOM_BG_ITEM_REW] = ConfigMgr::GetBoolDefault("RandomBG.CustomItem.Enable", false);
-    m_int_configs[CONFIG_RANDOM_BG_WIN_ITEM_ID] = ConfigMgr::GetBoolDefault("RandomBG.CustomItem.ID", 49426);
-    m_int_configs[CONFIG_RANDOM_BG_LOSE_ITEM_ID] = ConfigMgr::GetBoolDefault("RandomBG.CustomItem.ID", 49426);
-    m_int_configs[CONFIG_RANDOM_BG_WIN_COUNT] = ConfigMgr::GetBoolDefault("RandomBG.CustomItem.WinCount", 1);
-    m_int_configs[CONFIG_RANDOM_BG_LOS_COUNT] = ConfigMgr::GetBoolDefault("RandomBG.CustomItem.LosCount", 1);
+    m_int_configs[CONFIG_RANDOM_BG_WIN_ITEM_ID] = ConfigMgr::GetBoolDefault("RandomBG.Win.CustomItem.ID", 49426);
+    m_int_configs[CONFIG_RANDOM_BG_LOSE_ITEM_ID] = ConfigMgr::GetBoolDefault("RandomBG.Lose.CustomItem.ID", 49426);
+    m_int_configs[CONFIG_RANDOM_BG_WIN_COUNT] = ConfigMgr::GetBoolDefault("RandomBG.CustomItem.WineCount", 1);
+    m_int_configs[CONFIG_RANDOM_BG_LOSE_COUNT] = ConfigMgr::GetBoolDefault("RandomBG.CustomItem.LoseCount", 1);
 
     // Stats limits
     m_bool_configs[CONFIG_STATS_LIMITS_ENABLE] = ConfigMgr::GetBoolDefault("Stats.Limits.Enable", false);
