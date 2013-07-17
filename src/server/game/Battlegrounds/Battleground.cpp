@@ -705,10 +705,10 @@ void Battleground::RewardHonorToTeam(uint32 Honor, uint32 TeamID)
         {
             UpdatePlayerScore(player, SCORE_BONUS_HONOR, Honor);
 
-            //Reward Emblem of Frost
-            uint32 countitem = urand(0, 10);
-            if (countitem == 1)
-                player->AddItem(49426, countitem);
+           // Reward Emblem of Frost
+           // uint32 countitem = urand(0, 10);
+           // if (countitem == 1)
+           //     player->AddItem(49426, countitem);
         }
 }
 
