@@ -954,7 +954,7 @@ void Battleground::EndBattleground(uint32 winner)
                     player->SetRandomWinner(true);
 
                 if (sWorld->getBoolConfig(CONFIG_RANDOM_BG_ITEM_REW))
-                    player->AddItem(sWorld->getIntConfig(CONFIG_RANDOM_BG_WIN_ITEM_ID),sWorld->getIntConfig(CONFIG_RANDOM_BG_LOS_COUNT)); 
+                    player->AddItem(sWorld->getIntConfig(CONFIG_RANDOM_BG_WIN_ITEM_ID),sWorld->getIntConfig(CONFIG_RANDOM_BG_WIN_COUNT)); 
             }
 
             player->UpdateAchievementCriteria(ACHIEVEMENT_CRITERIA_TYPE_WIN_BG, 1);
@@ -966,7 +966,7 @@ void Battleground::EndBattleground(uint32 winner)
                 UpdatePlayerScore(player, SCORE_BONUS_HONOR, GetBonusHonorFromKill(loser_kills));
 
                 if (sWorld->getBoolConfig(CONFIG_RANDOM_BG_ITEM_REW))
-                    player->AddItem(sWorld->getIntConfig(CONFIG_RANDOM_BG_LOSE_ITEM_ID),sWorld->getIntConfig(CONFIG_RANDOM_BG_LOS_COUNT)); 
+                    player->AddItem(sWorld->getIntConfig(CONFIG_RANDOM_BG_LOSE_ITEM_ID),sWorld->getIntConfig(CONFIG_RANDOM_BG_LOSE_COUNT)); 
             }
         }
 
