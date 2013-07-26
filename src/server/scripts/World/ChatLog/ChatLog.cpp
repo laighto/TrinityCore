@@ -162,7 +162,7 @@ void ChatLog::_Initialize()
         {
             // Initialize lexics cutter parameters
             _lexicsInnormativeCut = sConfigMgr->GetBoolDefault("ChatLog.Lexics.Cut.Enable", true);
-            _lexicsCutReplacement = sConfigMgr->GetStringDefault("ChatLog.Lexics.Cut.Replacement", "&!@^%!^&*!!!");
+            //_lexicsCutReplacement = sConfigMgr->GetStringDefault("ChatLog.Lexics.Cut.Replacement", "&!@^%!^&*!!!");
             _lexicsAction = LexicsActions(sConfigMgr->GetIntDefault("ChatLog.Lexics.Action", LEXICS_ACTION_LOG));
             _lexicsActionDuration = sConfigMgr->GetIntDefault("ChatLog.Lexics.Action.Duration", 0);
 
@@ -280,7 +280,10 @@ void ChatLog::_Punish(Player* player, std::string& msg)
 
     // Cut innormative lexics
     if (_lexicsInnormativeCut)
+    {
+        _lexicsCutReplacement = sConfigMgr->GetStringDefault("ChatLog.Lexics.Cut.Replacement", "&!@^%!^&*!!!");
         msg = _lexicsCutReplacement;
+    }
 
     if (!player || !player->GetSession())
         return;
