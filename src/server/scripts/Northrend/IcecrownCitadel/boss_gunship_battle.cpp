@@ -1370,7 +1370,10 @@ class npc_korkron_axethrower_rifleman : public CreatureScript
             void UpdateAI(uint32 diff)
             {
                 if (_instance->GetBossState(DATA_GUNSHIP_EVENT) != IN_PROGRESS)
+                {
+                    me->DespawnOrUnsummon(1);
                     return;
+                }
                 
                 if (me->HasUnitState(UNIT_STATE_CASTING))
                     return;
@@ -1476,8 +1479,11 @@ class npc_sergeant : public CreatureScript
 
             void UpdateAI(uint32 diff)
             {
-                if(_instance->GetBossState(DATA_GUNSHIP_EVENT) != IN_PROGRESS)
+                if (_instance->GetBossState(DATA_GUNSHIP_EVENT) != IN_PROGRESS)
+                {
+                    me->DespawnOrUnsummon(1);
                     return;
+                }
 
                 if (me->HasUnitState(UNIT_STATE_CASTING))
                     return;
@@ -1607,8 +1613,11 @@ class npc_marine_or_reaver : public CreatureScript
 
             void UpdateAI(uint32 diff)
             {
-                if(_instance->GetBossState(DATA_GUNSHIP_EVENT) != IN_PROGRESS)
+                if (_instance->GetBossState(DATA_GUNSHIP_EVENT) != IN_PROGRESS)
+                {
+                    me->DespawnOrUnsummon(1);
                     return;
+                }
 
                 if (me->HasUnitState(UNIT_STATE_CASTING))
                     return;
@@ -1751,8 +1760,11 @@ class npc_gunship_mage : public CreatureScript
 
             void UpdateAI(uint32 diff)
             {
-                if(_instance->GetBossState(DATA_GUNSHIP_EVENT) != IN_PROGRESS)
+                if (_instance->GetBossState(DATA_GUNSHIP_EVENT) != IN_PROGRESS)
+                {
+                    me->DespawnOrUnsummon(1);
                     return;
+                }
 
 				me->SetReactState(REACT_DEFENSIVE); // Dodato
 
@@ -1901,8 +1913,11 @@ class npc_mortar_soldier_or_rocketeer : public CreatureScript
 
             void UpdateAI(uint32 diff)
             {
-                if(_instance->GetBossState(DATA_GUNSHIP_EVENT) != IN_PROGRESS)
+                if (_instance->GetBossState(DATA_GUNSHIP_EVENT) != IN_PROGRESS)
+                {
+                    me->DespawnOrUnsummon(1);
                     return;
+                }
 
 				me->SetReactState(REACT_DEFENSIVE); // Dodato
 
@@ -2154,6 +2169,7 @@ class npc_saurfang_gunship : public CreatureScript
                          events.ScheduleEvent(EVENT_OUTRO_HORDE_1, 3500);
                          events.ScheduleEvent(EVENT_OUTRO_HORDE_2, 21000);
                          events.ScheduleEvent(EVENT_OUTRO_HORDE_3, 32000);
+                         _instance->SaveToDB();
                          break;
                      case ACTION_FAIL:
                          events.CancelEvent(EVENT_WIPE_CHECK);

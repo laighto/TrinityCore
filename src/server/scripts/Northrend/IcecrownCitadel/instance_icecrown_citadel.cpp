@@ -782,8 +782,8 @@ class instance_icecrown_citadel : public InstanceMapScript
                     case DATA_LADY_DEATHWHISPER:
                         if (state == DONE)
                         {
-                            SetBossState(DATA_GUNSHIP_EVENT, state);    // TEMP HACK UNTIL GUNSHIP SCRIPTED
-                            SaveToDB();
+                            //SetBossState(DATA_GUNSHIP_EVENT, state);    // TEMP HACK UNTIL GUNSHIP SCRIPTED
+                            //SaveToDB();
 
                             if (GameObject* elevator = instance->GetGameObject(LadyDeathwisperElevatorGUID))
                             {
