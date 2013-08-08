@@ -79,6 +79,8 @@
 #include "WorldPacket.h"
 #include "WorldSession.h"
 #include "MovementStructures.h"
+#include "GameObjectAI.h"
+
 
 #define ZONE_UPDATE_INTERVAL (1*IN_MILLISECONDS)
 
@@ -14812,6 +14814,41 @@ void Player::SendPreparedQuest(uint64 guid)
                     AddQuest(quest, object);
                     if (CanCompleteQuest(questId))
                         CompleteQuest(questId);
+
+                    switch (object->GetTypeId())
+                     {
+                        case TYPEID_UNIT:
+                            sScriptMgr->OnQuestAccept(this, (object->ToCreature()), quest);
+                            (object->ToCreature())->AI()->sQuestAccept(this, quest);
+                        break;
+                        case TYPEID_ITEM:
+                        case TYPEID_CONTAINER:
+                        {
+                            sScriptMgr->OnQuestAccept(this, ((Item*)object), quest);
+
+                            // destroy not required for quest finish quest starting item
+                            bool destroyItem = true;
+                            for (int i = 0; i < QUEST_ITEM_OBJECTIVES_COUNT; ++i)
+                            {
+                                if ((quest->RequiredItemId[i] == ((Item*)object)->GetEntry()) && (((Item*)object)->GetTemplate()->MaxCount > 0))
+                                {
+                                    destroyItem = false;
+                                    break;
+                                }
+                            }
+
+                            if (destroyItem)
+                                DestroyItem(((Item*)object)->GetBagSlot(), ((Item*)object)->GetSlot(), true);
+
+                            break;
+                        }
+                        case TYPEID_GAMEOBJECT:
+                            sScriptMgr->OnQuestAccept(this, ((GameObject*)object), quest);
+                            (object->ToGameObject())->AI()->QuestAccept(this, quest);
+                            break;
+                        default:
+                            break;
+                      }
                 }
 
                 if ((quest->IsAutoComplete() && quest->IsRepeatable() && !quest->IsDailyOrWeekly()) || quest->HasFlag(QUEST_FLAGS_AUTOCOMPLETE))
@@ -14983,7 +15020,7 @@ bool Player::CanCompleteQuest(uint32 quest_id)
             return false;                                   // not allow re-complete quest
 
         // auto complete quest
-        if ((qInfo->IsAutoComplete() || qInfo->GetFlags() & QUEST_FLAGS_AUTOCOMPLETE) && CanTakeQuest(qInfo, false))
+        if (qInfo->IsAutoComplete() && CanTakeQuest(qInfo, false))
             return true;
 
         QuestStatusMap::iterator itr = m_QuestStatus.find(quest_id);
@@ -15063,7 +15100,7 @@ bool Player::CanCompleteRepeatableQuest(Quest const* quest)
 bool Player::CanRewardQuest(Quest const* quest, bool msg)
 {
     // not auto complete quest and not completed quest (only cheating case, then ignore without message)
-    if (!quest->IsDFQuest() && !quest->IsAutoComplete() && !(quest->GetFlags() & QUEST_FLAGS_AUTOCOMPLETE) && GetQuestStatus(quest->GetQuestId()) != QUEST_STATUS_COMPLETE)
+    if (!quest->IsDFQuest() && !quest->IsAutoComplete() && GetQuestStatus(quest->GetQuestId()) != QUEST_STATUS_COMPLETE)
         return false;
 
     // daily quest can't be rewarded (25 daily quest already completed)
@@ -15210,6 +15247,18 @@ void Player::AddQuest(Quest const* quest, Object* questGiver)
 
     StartTimedAchievement(ACHIEVEMENT_TIMED_TYPE_QUEST, quest_id);
 
+    // Some spells applied at quest activation
+    SpellAreaForQuestMapBounds saBounds = sSpellMgr->GetSpellAreaForQuestMapBounds(quest_id);
+    if (saBounds.first != saBounds.second)
+    {
+        uint32 zone, area;
+        GetZoneAndAreaId(zone, area);
+        for (SpellAreaForAreaMap::const_iterator itr = saBounds.first; itr != saBounds.second; ++itr)
+            if (itr->second->autocast && itr->second->IsFitToRequirements(this, zone, area))
+                if (!HasAura(itr->second->spellId))
+                    CastSpell(this, itr->second->spellId, true);
+    }
+
     UpdateForQuestWorldObjects();
 }
 
@@ -15227,6 +15276,8 @@ void Player::CompleteQuest(uint32 quest_id)
         {
             if (qInfo->HasFlag(QUEST_FLAGS_TRACKING))
                 RewardQuest(qInfo, 0, this, false);
+            else if (qInfo->HasSpecialFlag(QUEST_SPECIAL_FLAGS_EXPLORATION_OR_EVENT))
+                SendQuestComplete(qInfo);
             else
                 SendQuestComplete(qInfo);
         }
@@ -15391,9 +15442,10 @@ void Player::RewardQuest(Quest const* quest, uint32 reward, Object* questGiver, 
     m_RewardedQuests.insert(quest_id);
     m_RewardedQuestsSave[quest_id] = true;
 
-    PhaseUpdateData phaseUpdateData;
-    phaseUpdateData.AddQuestUpdate(quest_id);
-    phaseMgr.NotifyConditionChanged(phaseUpdateData);
+    //PhaseUpdateData phaseUpdateData;
+    //phaseUpdateData.AddQuestUpdate(quest_id);
+    //phaseMgr.NotifyConditionChanged(phaseUpdateData);
+     SetQuestStatus(quest_id, QUEST_STATUS_REWARDED); // only call add/remove areauras
 
     // StoreNewItem, mail reward, etc. save data directly to the database
     // to prevent exploitable data desynchronisation we save the quest status to the database too
@@ -15966,7 +16018,7 @@ bool Player::CanShareQuest(uint32 quest_id) const
 
 void Player::SetQuestStatus(uint32 quest_id, QuestStatus status)
 {
-    if (sObjectMgr->GetQuestTemplate(quest_id))
+    if (status != QUEST_STATUS_REWARDED && sObjectMgr->GetQuestTemplate(quest_id))
     {
         m_QuestStatus[quest_id].Status = status;
         m_QuestStatusSave[quest_id] = true;
@@ -15997,8 +16049,11 @@ void Player::SetQuestStatus(uint32 quest_id, QuestStatus status)
             GetZoneAndAreaId(zone, area);
 
         for (SpellAreaForAreaMap::const_iterator itr = saBounds.first; itr != saBounds.second; ++itr)
+        {
+          if (!itr->second->areaId || zone == itr->second->areaId || area == itr->second->areaId)
             if (!itr->second->IsFitToRequirements(this, zone, area))
                 RemoveAurasDueToSpell(itr->second->spellId);
+        }
     }
 
     UpdateForQuestWorldObjects();
