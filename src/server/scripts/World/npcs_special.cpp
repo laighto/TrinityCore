@@ -2023,10 +2023,10 @@ public:
 
         void SpellHit(Unit* caster, const SpellInfo* spell) OVERRIDE
         {
-            //Fix Quest 25147 - Charge
+            //IMPLEMENTED questRewards Training skills on 3rd Level
             if (caster->GetTypeId() == TYPEID_PLAYER)
-              if (spell->Id == 100)
-                if (caster->ToPlayer()->GetQuestStatus(25147) != QUEST_STATUS_COMPLETE)
+                if (spell->Id == 20271 || spell->Id == 100 || spell->Id == 2098 || spell->Id == 56641 || spell->Id == 5143 || spell->Id == 73899 || spell->Id == 348)
+                //if (caster->ToPlayer()->GetQuestStatus(27091) != QUEST_STATUS_COMPLETE || caster->ToPlayer()->GetQuestStatus(14013) != QUEST_STATUS_COMPLETE || caster->ToPlayer()->GetQuestStatus(25147) != QUEST_STATUS_COMPLETE)
                     caster->ToPlayer()->KilledMonsterCredit(44175, 0);
         }
 
