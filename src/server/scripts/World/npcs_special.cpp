@@ -2021,6 +2021,15 @@ public:
             Reset();
         }
 
+        void SpellHit(Unit* caster, const SpellInfo* spell) OVERRIDE
+        {
+            //Fix Quest 25147 - Charge
+            if (caster->GetTypeId() == TYPEID_PLAYER)
+              if (spell->Id == 100)
+                if (caster->ToPlayer()->GetQuestStatus(25147) != QUEST_STATUS_COMPLETE)
+                    caster->ToPlayer()->KilledMonsterCredit(44175, 0);
+        }
+
         void DamageTaken(Unit* /*doneBy*/, uint32& damage) OVERRIDE
         {
             resetTimer = 5000;
@@ -2061,6 +2070,100 @@ public:
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
         return new npc_training_dummyAI(creature);
+    }
+};
+
+// Low HP Dummy
+class npc_dummy_low : public CreatureScript
+{
+public:
+    npc_dummy_low() : CreatureScript("npc_dummy_low") { }
+
+    struct npc_dummy_lowAI : ScriptedAI
+    {
+        npc_dummy_lowAI(Creature* creature) : ScriptedAI(creature)
+        {
+            entry = creature->GetEntry();
+        }
+
+        uint32 entry;
+        uint32 resetTimer;
+        uint32 despawnTimer;
+
+        void Reset() OVERRIDE
+        {
+            me->SetControlled(true, UNIT_STATE_STUNNED);//disable rotate
+            me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);//imune to knock aways like blast wave
+
+            resetTimer = 5000;
+            despawnTimer = 15000;
+
+            me->SetHealth(me->GetMaxHealth() * 0.20);
+        }
+
+        void EnterEvadeMode() OVERRIDE
+        {
+            if (!_EnterEvadeMode())
+                return;
+
+            Reset();
+        }
+
+        void SpellHit(Unit* caster, SpellInfo const* /*spell*/) OVERRIDE
+        {
+            if (caster->GetTypeId() == TYPEID_PLAYER)
+                me->SetHealth(me->GetMaxHealth() * 0.20);
+        }
+
+        void DamageTaken(Unit* /*doneBy*/, uint32& damage) OVERRIDE
+        {
+            resetTimer = 5000;
+            damage = 0;
+            me->SetHealth(me->GetMaxHealth() * 0.20);
+        }
+
+        void EnterCombat(Unit* /*who*/) OVERRIDE
+        {
+            if (entry != NPC_ADVANCED_TARGET_DUMMY && entry != NPC_TARGET_DUMMY)
+                return;
+        }
+
+        void UpdateAI(uint32 diff) OVERRIDE
+        {
+            if (!UpdateVictim())
+                return;
+            
+            if (!me->HasUnitState(UNIT_STATE_STUNNED))
+                me->SetControlled(true, UNIT_STATE_STUNNED);//disable rotate
+
+            if (entry != NPC_ADVANCED_TARGET_DUMMY && entry != NPC_TARGET_DUMMY)
+            {
+                me->SetHealth(me->GetMaxHealth() * 0.20);
+
+                if (resetTimer <= diff)
+                {
+                    EnterEvadeMode();
+                    resetTimer = 5000;
+                }
+                else
+                    resetTimer -= diff;
+                return;
+            }
+            else
+            {
+                if (despawnTimer <= diff)
+                    me->DespawnOrUnsummon();
+                else
+                    despawnTimer -= diff;
+            }
+        }
+        void MoveInLineOfSight(Unit* /*who*/)  OVERRIDE 
+            {return;}
+    };
+
+    CreatureAI* GetAI(Creature* creature) const
+    {
+        return new npc_dummy_lowAI(creature);
     }
 };
 
@@ -2993,6 +3096,7 @@ void AddSC_npcs_special()
     new npc_lightwell();
     new npc_mojo();
     new npc_training_dummy();
+    new npc_dummy_low();
     new npc_shadowfiend();
     new npc_wormhole();
     new npc_pet_trainer();
