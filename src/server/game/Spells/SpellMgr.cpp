@@ -3752,6 +3752,10 @@ void SpellMgr::LoadSpellInfoCorrections()
             case 49376: // Feral Charge (Cat Form)
                 spellInfo->AttributesEx3 &= ~SPELL_ATTR3_CANT_TRIGGER_PROC;
                 break;
+            //Server custom
+            case 66795:
+                spellInfo->Effects[EFFECT_1].TargetA = SpellImplicitTargetInfo(TARGET_SRC_CASTER | TARGET_GAMEOBJECT_SRC_AREA);
+                break;
             default:
                 break;
         }
