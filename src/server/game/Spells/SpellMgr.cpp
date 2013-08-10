@@ -3754,7 +3754,7 @@ void SpellMgr::LoadSpellInfoCorrections()
                 break;
             //Server custom
             case 66795:
-                spellInfo->Effects[EFFECT_1].TargetA = SpellImplicitTargetInfo(TARGET_SRC_CASTER | TARGET_GAMEOBJECT_SRC_AREA);
+                spellInfo->Effects[EFFECT_1].TargetA = SpellImplicitTargetInfo(TARGET_GAMEOBJECT_SRC_AREA);
                 break;
             default:
                 break;
