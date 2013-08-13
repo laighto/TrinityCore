@@ -56,6 +56,18 @@ public:
             me->CastSpell(me, SPELL_ENRAGE, true);
         }
 
+        void SpellHit(Unit* caster, const SpellInfo* spell) OVERRIDE
+        {
+            //IMPLEMENTED questRewards Good Help is Hard to Find (14069)
+            if (caster->GetTypeId() == TYPEID_PLAYER)
+                if (spell->Id == 66306 && me->HasAura(45111) && caster->ToPlayer()->GetQuestStatus(14069) != QUEST_STATUS_COMPLETE)
+                {
+                    caster->ToPlayer()->KilledMonsterCredit(34830, 0);
+                    me->RemoveAllAuras();
+                    me->DespawnOrUnsummon(10000);
+                }
+        }
+
         void MovementInform(uint32 /*type*/, uint32 id) OVERRIDE
         {
             if (id == 1)
