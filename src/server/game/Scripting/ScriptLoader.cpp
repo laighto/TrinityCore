@@ -102,6 +102,7 @@ void AddSC_boss_drekthar();
 void AddSC_boss_galvangar();
 void AddSC_boss_vanndar();
 void AddSC_boss_alizabal();                  //Baradin Hold
+void AddSC_boss_pit_lord_argaloth();
 void AddSC_instance_baradin_hold();
 void AddSC_blackrock_depths();               //Blackrock Depths
 void AddSC_boss_ambassador_flamelash();
@@ -336,8 +337,9 @@ void AddSC_npc_anubisath_sentinel();
 void AddSC_instance_temple_of_ahnqiraj();
 void AddSC_wailing_caverns();                //Wailing caverns
 void AddSC_instance_wailing_caverns();
-void AddSC_zulfarrak();                     //Zul'Farrak generic
-void AddSC_instance_zulfarrak();            //Zul'Farrak instance script
+void AddSC_boss_zum_rah();                   //Zul'Farrak
+void AddSC_zulfarrak();
+void AddSC_instance_zulfarrak();
 void AddSC_instance_halls_of_origination();
 void AddSC_boss_temple_guardian_anhuur();
 void AddSC_boss_earthrager_ptah();
@@ -760,6 +762,7 @@ void AddEasternKingdomsScripts()
     AddSC_boss_galvangar();
     AddSC_boss_vanndar();
     AddSC_boss_alizabal();                  //Baradin Hold
+    AddSC_boss_pit_lord_argaloth();
     AddSC_instance_baradin_hold();
     AddSC_blackrock_depths();               //Blackrock Depths
     AddSC_boss_ambassador_flamelash();
@@ -999,8 +1002,9 @@ void AddKalimdorScripts()
     AddSC_instance_temple_of_ahnqiraj();
     AddSC_wailing_caverns();                //Wailing caverns
     AddSC_instance_wailing_caverns();
-    AddSC_zulfarrak();                      //Zul'Farrak generic
-    AddSC_instance_zulfarrak();             //Zul'Farrak instance script
+    AddSC_boss_zum_rah();                   //Zul'Farrak
+    AddSC_zulfarrak();
+    AddSC_instance_zulfarrak();
 
     AddSC_ashenvale();
     AddSC_azshara();
