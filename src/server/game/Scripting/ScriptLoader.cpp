@@ -350,8 +350,9 @@ void AddSC_npc_anubisath_sentinel();
 void AddSC_instance_temple_of_ahnqiraj();
 void AddSC_wailing_caverns();                //Wailing caverns
 void AddSC_instance_wailing_caverns();
-void AddSC_zulfarrak();                     //Zul'Farrak generic
-void AddSC_instance_zulfarrak();            //Zul'Farrak instance script
+void AddSC_boss_zum_rah();                   //Zul'Farrak
+void AddSC_zulfarrak();
+void AddSC_instance_zulfarrak();
 
 void AddSC_ashenvale();
 void AddSC_azshara();
@@ -630,6 +631,13 @@ void AddSC_zangarmarsh();
 // Events
 void AddSC_event_childrens_week();
 
+// Pets
+void AddSC_deathknight_pet_scripts();
+void AddSC_hunter_pet_scripts();
+void AddSC_mage_pet_scripts();
+void AddSC_priest_pet_scripts();
+void AddSC_shaman_pet_scripts();
+
 // battlegrounds
 
 // outdoor pvp
@@ -659,6 +667,7 @@ void AddScripts()
     AddOutlandScripts();
     AddNorthrendScripts();
     AddEventScripts();
+    AddPetScripts();
     AddBattlegroundScripts();
     AddOutdoorPvPScripts();
     AddCustomScripts();
@@ -1011,8 +1020,9 @@ void AddKalimdorScripts()
     AddSC_instance_temple_of_ahnqiraj();
     AddSC_wailing_caverns();                //Wailing caverns
     AddSC_instance_wailing_caverns();
-    AddSC_zulfarrak();                      //Zul'Farrak generic
-    AddSC_instance_zulfarrak();             //Zul'Farrak instance script
+    AddSC_boss_zum_rah();                   //Zul'Farrak
+    AddSC_zulfarrak();
+    AddSC_instance_zulfarrak();
 
     AddSC_ashenvale();
     AddSC_azshara();
@@ -1302,6 +1312,17 @@ void AddEventScripts()
 {
 #ifdef SCRIPTS
     AddSC_event_childrens_week();
+#endif
+}
+
+void AddPetScripts()
+{
+#ifdef SCRIPTS
+    AddSC_deathknight_pet_scripts();
+    AddSC_hunter_pet_scripts();
+    AddSC_mage_pet_scripts();
+    AddSC_priest_pet_scripts();
+    AddSC_shaman_pet_scripts();
 #endif
 }
 
