@@ -58,6 +58,7 @@ enum ScriptTexts
     SAY_INTRO_5            = 5,
     SAY_INTRO_6            = 6,
     SAY_INTRO_7            = 7,
+    SYA_RANDOM_TXT         = 11,
 };
 enum EventTypes
 {
