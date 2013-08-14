@@ -34,7 +34,7 @@ INSERT INTO `creature_text` (`entry`, `groupid`, `id`, `text`, `type`, `comment`
 ('38218', '10', '0',  'FATHER!!!', '14', 'q24904'),
 --
 ('38218', '11', '0',  'Your time is up, Forsaken scum!', '14', 'q24904'),
-('38218', '12', '1',  'Push them back!', '12', 'q24904'),
+('38218', '11', '1',  'Push them back!', '12', 'q24904'),
 ('38218', '11', '2',  'Attack!', '12', 'q24904'),
 ('38218', '12', '0',  'Abominations are blocking the way towards the military district! This won\'t be easy.', '12', 'q24904'),
 ('38218', '13', '0',  'We took back our city... we took back...', '12', 'q24904'),
