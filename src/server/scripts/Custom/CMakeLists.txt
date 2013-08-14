@@ -11,6 +11,8 @@
 set(scripts_STAT_SRCS
   ${scripts_STAT_SRCS}
   Custom/raider_jhash.cpp
+  Custom/battle_for_gilneas.cpp
+  Custom/battle_for_gilneas.h
 )
 
 message("  -> Prepared: Custom")

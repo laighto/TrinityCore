@@ -24,6 +24,7 @@ void AddSC_example_gossip_codebox();
 void AddSC_example_misc();
 void AddSC_example_commandscript();
 void AddSC_custom_script();
+void AddSC_bfgc_script();
 
 // spells
 void AddSC_deathknight_spell_scripts();
@@ -676,6 +677,7 @@ void AddExampleScripts()
     AddSC_example_misc();
     AddSC_example_commandscript();
     AddSC_custom_script();
+    AddSC_bfgc_script();
 }
 
 void AddSpellScripts()
