@@ -25,19 +25,44 @@
 #include "Player.h"
 #include "World.h"
 
+class npc_krennan_aranas : public CreatureScript
+{
+    public:
+        npc_krennan_aranas() : CreatureScript("npc_krennan_aranas") { }
+
+        bool OnGossipHello(Player* player, Creature* creature) OVERRIDE
+        {
+            if (player->IsActiveQuest(QUEST_BFGC) && !intro)
+            {
+                //Load gossip menu option from DB
+                player->PrepareGossipMenu(creature, 11061);
+                player->SendPreparedGossip(creature);
+            }
+            else 
+                player->PlayerTalkClass->SendGossipMenu(11189, creature->GetGUID());
+
+            return true;
+        }
+
+        bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) OVERRIDE
+        {
+            player->PlayerTalkClass->SendCloseGossip();
+            creature->AI()->Talk(0);
+            intro = true;
+            return true;
+        }
+};
+
 class npc_prince_liam : public CreatureScript
 {
     public:
         npc_prince_liam() : CreatureScript("npc_prince_liam") { }
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
-        {
-            return new npc_prince_liamAI(creature);
-        }
-
         struct npc_prince_liamAI : public ScriptedAI
         {
             npc_prince_liamAI(Creature* creature) : ScriptedAI(creature) {}
+
+            EventMap events;
  
             void Reset() OVERRIDE
             {
@@ -77,16 +102,6 @@ class npc_prince_liam : public CreatureScript
             void DamageTaken(Unit* attacker, uint32& damage) OVERRIDE
             {
                 me->Attack(attacker, true);
-            }
-
-            void EnterCombat(Unit* who) OVERRIDE
-            {
-
-            }
-
-            void EnterEvadeMode() OVERRIDE
-            {
-                //Talk(SAY_EVADE);
             }
 
             void UpdateAI(uint32 uiDiff) OVERRIDE
@@ -172,46 +187,11 @@ class npc_prince_liam : public CreatureScript
 
                 DoMeleeAttackIfReady();
             }
-
-            private:
-                EventMap events;
         };
 
-};
-
-npc_prince_liam linker;
-
-class npc_krennan_aranas : public CreatureScript
-{
-    public:
-        npc_krennan_aranas () : CreatureScript("npc_krennan_aranas") { }
-
-        bool OnGossipHello(Player* player, Creature* creature) OVERRIDE
+        CreatureAI* GetAI(Creature* creature) const OVERRIDE
         {
-            if (player->IsActiveQuest(QUEST_BFGC) && !intro)
-            {
-                //Load gossip menu option from DB
-                player->PrepareGossipMenu(creature, 11061);
-                player->SendPreparedGossip(creature);
-            }
-            else 
-                player->PlayerTalkClass->SendGossipMenu(11189, creature->GetGUID());
-
-            return true;
-        }
-
-        bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) OVERRIDE
-        {
-            player->PlayerTalkClass->SendCloseGossip();
-            creature->AI()->Talk(0);
-            intro = true;
-
-           //if (Creature* liam = creature->FindNearestCreature(PRINCE_LIAM_GREYMANE, 50.0f))
-           //    liam->AI()->Reset();
-           //player->CastSpell(player, SUMMON_DUROTAR_RIDIBG_WOLF, true);
-           // if (Creature* summon1 = creature->SummonCreature(RAIDER_KERR, -825.47f, -4900.59f, 19.63f, 1.086f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 300000);
-
-            return true;
+            return new npc_prince_liamAI(creature);
         }
 };
 
@@ -220,14 +200,16 @@ class npc_gilnean_millitia : public CreatureScript
     public:
         npc_gilnean_millitia() : CreatureScript("npc_gilnean_millitia") { }
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
-        {
-            return new npc_gilnean_millitiaAI(creature);
-        }
-
         struct npc_gilnean_millitiaAI : public ScriptedAI
         {
             npc_gilnean_millitiaAI(Creature* creature) : ScriptedAI(creature) {}
+
+            EventMap events;
+            int dist;
+            bool pos1;
+            bool pos2;
+            bool pos3;
+            bool pos4;
 
             void Reset() OVERRIDE
             {
@@ -331,7 +313,6 @@ class npc_gilnean_millitia : public CreatureScript
                             {
                                 me->GetMotionMaster()->MoveChase(target);
                                 me->Attack(target, false);
-                                //sWorld->SendGMText(30001, target->GetGUID());
                             }
                             if (!stage2)
                                 events.ScheduleEvent(STAGE1_B_FIGHT, urand(6000, 15000), 0, 0);
@@ -350,14 +331,12 @@ class npc_gilnean_millitia : public CreatureScript
 
                 DoMeleeAttackIfReady();
             }
-            private:
-                EventMap events;
-                int dist;
-                bool pos1;
-                bool pos2;
-                bool pos3;
-                bool pos4;
         };
+
+        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        {
+            return new npc_gilnean_millitiaAI(creature);
+        }
 };
 
 class npc_forsaken_crossbow : public CreatureScript
@@ -365,33 +344,27 @@ class npc_forsaken_crossbow : public CreatureScript
     public:
         npc_forsaken_crossbow() : CreatureScript("npc_forsaken_crossbow") { }
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
-        {
-            return new npc_forsaken_crossbowAI(creature);
-        }
-
         struct npc_forsaken_crossbowAI : public ScriptedAI
         {
             npc_forsaken_crossbowAI(Creature* creature) : ScriptedAI(creature) {}
  
-            void Reset() OVERRIDE
-            {
-                 
-            }
-
             void JustDied(Unit* /*killer*/) OVERRIDE
             {
                 crossbowman = crossbowman + 1;
                 //sWorld->SendGMText(30000, crossbowman);
             }
 
-            void Update(uint32 uiDiff) OVERRIDE
+            void UpdateAI(uint32 uiDiff) OVERRIDE
             {
                 if(resetall)
                     me->DespawnOrUnsummon(100);
-
             }
         };
+
+        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        {
+            return new npc_forsaken_crossbowAI(creature);
+        }
 };
 
 class npc_gorrerot : public CreatureScript
@@ -401,7 +374,7 @@ class npc_gorrerot : public CreatureScript
 
     void Update (uint32 diff) OVERRIDE
     {
-
+        return;
     }
 };
 
@@ -412,10 +385,9 @@ class npc_lady_sylvanas : public CreatureScript
 
     void Update (uint32 diff) OVERRIDE
     {
-
+        return;
     }
 };
-
 
 void AddSC_bfgc_script()
 {

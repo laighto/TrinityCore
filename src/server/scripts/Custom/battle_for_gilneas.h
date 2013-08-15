@@ -34,7 +34,7 @@ Position const eventPositionsTeamA[6] =
     {-1493.54f, 1405.87f, 35.556f, 2.84f}, // back middle               #2 STAGE 1
     {-1575.13f, 1317.56f, 35.556f, 3.190f}, // crosbowman complete, canon arrive #3 STAGE2
     {-506.1137f, 2213.306f, 539.2870f, 0.0f}, // back left                 #4
-    {-509.0040f, 2211.743f, 539.2870f, 0.0f}  // back right                #3
+    {-509.0040f, 2211.743f, 539.2870f, 0.0f},  // back right                #3
 };
 
 Position const eventPositionsTeamB[7] =
@@ -46,7 +46,6 @@ Position const eventPositionsTeamB[7] =
     {-1575.13f, 1317.56f, 35.556f, 3.190f}, // crosbowman complete, canon arrive #2 STAGE2 #4
     {-506.6607f, 2211.367f, 539.2870f, 0.0f}, // back middle               #3
     {-506.1137f, 2213.306f, 539.2870f, 0.0f}, // back left                 #4
-
 };
 
 enum ScriptTexts
@@ -80,23 +79,19 @@ enum EventTypes
     STAGE2_B                 = 16,
     RESET_ALL                = 17,
 };
-enum DataBattleTypes
-{
-    DATA_PRINCE_LIAM = 0,
-};
 
-enum QuestData 
+enum QuestDatas 
 {
     QUEST_BFGC = 24904,
 };
 
-enum SpellData 
+enum SpellDatas
 {
     SPELL_BFGC_CONPLETE = 72349,  // completes quest requirements
     SPELL_SOLDIER_OF_BFGC = 72069, // Liam's aura
 };
 
-enum NPCData
+enum NPCDatas
 {
     KRENNAN_ARANAS = 38553,
     PRINCE_LIAM_GREYMANE = 38218,
