@@ -148,6 +148,8 @@ public:
         void JustDied(Unit* /*killer*/) OVERRIDE
         {
             Talk(SAY_DEATH);
+            if (InstanceScript* instance = me->GetInstanceScript())
+                instance->SetData(TYPE_BARREL_DIVERSION, DONE);
         }
 
         void UpdateAI(uint32 diff) OVERRIDE
