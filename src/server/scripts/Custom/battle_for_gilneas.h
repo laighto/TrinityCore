@@ -23,29 +23,36 @@ bool event_intro;
 bool stage2;
 bool stage2b;
 bool resetall;
+bool military_quoter;
+bool gurerrot;
+bool s2center;
+bool boss_gurerrot_dead;
 uint32 militiacounter;
 uint32 crossbowman;
+uint32 abom;
 uint64 liamGUID;
 
-Position const eventPositionsTeamA[6] =
+Position const eventPositionsTeamA[7] =
 {
     {-1408.63f, 1260.13f, 36.43f, 1.82f}, // Liam Home Position  #0 
     {-1436.97f, 1360.36f, 35.556f, 4.03f}, // Battle Run straight         #1 STAGE1 
     {-1493.54f, 1405.87f, 35.556f, 2.84f}, // back middle               #2 STAGE 1
-    {-1575.13f, 1317.56f, 35.556f, 3.190f}, // crosbowman complete, canon arrive #3 STAGE2
-    {-506.1137f, 2213.306f, 539.2870f, 0.0f}, // back left                 #4
-    {-509.0040f, 2211.743f, 539.2870f, 0.0f},  // back right                #3
+    {-1575.13f, 1317.56f, 35.556f, 3.190f}, // crosbowman complete, canon arrive #3 STAGE2_PREPARE
+    {-1635.31f, 1305.91f, 19.66f, 3.09f}, // Stage 2               #4
+    {-1762.86f, 1347.87f, 19.43f, 0.65f},  // Center military district #5
+    {-1721.62f, 1398.47f, 21.67f, 0.85f},  // BOSS Gurerrot #6
 };
 
-Position const eventPositionsTeamB[7] =
+Position const eventPositionsTeamB[8] =
 {
     {-1430.48f, 1362.39f, 35.556f, 1.29f}, // Event START Run right STAGE1
     {-1444.30f, 1418.51f, 35.556f, 1.62f}, // Turn left STAGE1
     {-1503.71f, 1389.28f, 35.556f, 4.11f}, // Go straight-right
     {-1519.27f, 1341.73f, 35.556f, 3.09f},  // Stage1 #3
-    {-1575.13f, 1317.56f, 35.556f, 3.190f}, // crosbowman complete, canon arrive #2 STAGE2 #4
-    {-506.6607f, 2211.367f, 539.2870f, 0.0f}, // back middle               #3
-    {-506.1137f, 2213.306f, 539.2870f, 0.0f}, // back left                 #4
+    {-1575.13f, 1317.56f, 35.556f, 3.190f}, // crosbowman complete, canon arrive #2 STAGE2_PREPARE #4
+    {-1635.31f, 1305.91f, 19.66f, 3.09f}, // Stage 2  #5
+    {-1688.45f, 1347.13f, 15.13f, 0.65f},  // Center military district #6
+    {-1721.62f, 1398.47f, 21.67f, 0.85f},  // BOSS Gurerrot #7
 };
 
 enum ScriptTexts
@@ -57,7 +64,7 @@ enum ScriptTexts
     SAY_INTRO_5            = 5,
     SAY_INTRO_6            = 6,
     SAY_INTRO_7            = 7,
-    SYA_RANDOM_TXT         = 11,
+    SAY_RANDOM_TXT         = 11,
 };
 enum EventTypes
 {
@@ -78,6 +85,14 @@ enum EventTypes
     STAGE1_B_3               = 15,
     STAGE2_B                 = 16,
     RESET_ALL                = 17,
+    STAGE2_PREPARE           = 18,
+    STAGE2_A_FIGHT           = 19,
+    STAGE2_A_CENTER          = 20,
+    STAGE_1_BOSS             = 21,
+    STAGE_1_BOSS_FIGHT       = 22,
+    STAGE2_B_FIGHT           = 23,
+    STAGE2_B_1               = 24,
+
 };
 
 enum QuestDatas 

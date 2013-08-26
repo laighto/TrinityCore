@@ -66,6 +66,7 @@ class npc_prince_liam : public CreatureScript
  
             void Reset() OVERRIDE
             {
+                events.Reset();
                 me->Relocate(eventPositionsTeamA[0].GetPositionX(), eventPositionsTeamA[0].GetPositionY(), eventPositionsTeamA[0].GetPositionZ(), eventPositionsTeamA[0].GetOrientation());
                 event_active = false;
                 intro = false;
@@ -76,7 +77,12 @@ class npc_prince_liam : public CreatureScript
                 me->Mount(2409, 512);
                 liamGUID = me->GetGUID();
                 crossbowman = 0;
+                abom = 0;
+                military_quoter = false;
+                gurerrot = false;
                 militiacounter = 0;
+                s2center = false;
+                boss_gurerrot_dead = false;
                 resetall = false;
             }
 
@@ -99,9 +105,50 @@ class npc_prince_liam : public CreatureScript
                 events.ScheduleEvent(RESET_ALL, 900000, 0, 0);
             }
 
+            void SearchTarget ()
+            {
+                if(!military_quoter)
+                {
+                    if (Unit* target = me->FindNearestCreature(FORSAKEN_CROSSBOWMAN, 70.0f))
+                    {
+                        me->GetMotionMaster()->MoveChase(target);
+                        me->Attack(target, false);
+                        if (urand(0,5) > 4)
+                            Talk(SAY_RANDOM_TXT);
+                    }
+                }
+                else
+                {
+                    if (Unit* target = me->FindNearestCreature(VILE_ABOMINATION, 50.0f))
+                    {
+                        me->GetMotionMaster()->MoveChase(target);
+                        me->Attack(target, false);
+                        if (urand(0,5) > 4)
+                            Talk(SAY_RANDOM_TXT);
+                    }
+                    else if (Unit* target = me->FindNearestCreature(FORSAKEN_CROSSBOWMAN, 50.0f))
+                    {
+                        me->GetMotionMaster()->MoveChase(target);
+                        me->Attack(target, false);
+                        if (urand(0,5) > 4)
+                            Talk(SAY_RANDOM_TXT);
+                    }
+                }
+            }
+
             void DamageTaken(Unit* attacker, uint32& damage) OVERRIDE
             {
+                //me->GetMotionMaster()->Clear();
+                //me->GetMotionMaster()->MoveIdle();
                 me->Attack(attacker, true);
+                if (urand(0, 5) > 4)
+                    Talk(SAY_RANDOM_TXT);
+            }
+
+            void EnterCombat(Unit* /*who*/) OVERRIDE
+            {
+                me->GetMotionMaster()->Clear();
+                me->GetMotionMaster()->MoveIdle();
             }
 
             void UpdateAI(uint32 uiDiff) OVERRIDE
@@ -117,7 +164,6 @@ class npc_prince_liam : public CreatureScript
                     event_intro = true;
                 }
 
-                //me->CastSpell(me, SPELL_SOLDIER_OF_BFGC, false);
                 while (uint32 eventId = events.ExecuteEvent())
                 {
                     switch (eventId)
@@ -147,19 +193,12 @@ class npc_prince_liam : public CreatureScript
                             event_active = true;
                             me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
                             me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[1].GetPositionX(), eventPositionsTeamA[1].GetPositionY(), eventPositionsTeamA[1].GetPositionZ());
-                            //sWorld->SendGMText(30000, crossbowman);
                             events.ScheduleEvent(STAGE1_A, 10000, 0, 0);
                             events.ScheduleEvent(STAGE1, 12000, 0, 0);                 
                             break;
                         case STAGE1:
-                            if (Unit* target = me->FindNearestCreature(FORSAKEN_CROSSBOWMAN, 50.0f))
-                            {
-                                me->GetMotionMaster()->MoveChase(target);
-                                me->Attack(target, false);
-                                if (urand(0,10) > 7)
-                                    Talk(SYA_RANDOM_TXT);
-                                //sWorld->SendGMText(30001, target->GetGUID());
-                            }
+                            me->GetMotionMaster()->Clear();
+                            SearchTarget();
                             if (!stage2)
                                 events.ScheduleEvent(STAGE1, urand(2000, 6000), 0, 0);
                             break;
@@ -167,10 +206,34 @@ class npc_prince_liam : public CreatureScript
                             me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
                             me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[2].GetPositionX(), eventPositionsTeamA[2].GetPositionY(), eventPositionsTeamA[2].GetPositionZ());
                             break;
-                        case STAGE2:
+                        case STAGE2_PREPARE:
                             me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
                             me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[3].GetPositionX(), eventPositionsTeamA[3].GetPositionY(), eventPositionsTeamA[3].GetPositionZ());
-                            //sWorld->SendGMText(30000, crossbowman);
+                            events.ScheduleEvent(STAGE2, 20000, 0, 0);
+                            events.ScheduleEvent(STAGE2_A_FIGHT, 35000, 0, 0);
+                            break;
+                        case STAGE2: // Military quoter
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[4].GetPositionX(), eventPositionsTeamA[4].GetPositionY(), eventPositionsTeamA[4].GetPositionZ());
+                            military_quoter = true;
+                            break;
+                        case STAGE2_A_FIGHT:
+                            me->GetMotionMaster()->Clear();
+                            SearchTarget();
+                            if (!gurerrot)
+                                events.ScheduleEvent(STAGE2_A_FIGHT, urand(4000, 8000), 0, 0);
+                            break;
+                        case STAGE2_A_CENTER:
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[5].GetPositionX(), eventPositionsTeamA[5].GetPositionY(), eventPositionsTeamA[5].GetPositionZ());
+                            break;
+                        case STAGE_1_BOSS:
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[6].GetPositionX(), eventPositionsTeamA[6].GetPositionY(), eventPositionsTeamA[6].GetPositionZ());
+                             break;
+                        case STAGE_1_BOSS_FIGHT:
+                            events.Reset();
+                            me->GetMotionMaster()->Clear();
                             break;
                     }
                 }
@@ -178,8 +241,24 @@ class npc_prince_liam : public CreatureScript
                 if(crossbowman > 32 && !stage2)
                 {
                     events.Reset();
-                    events.ScheduleEvent(STAGE2, 1000, 0, 0);
-                    stage2 = true;
+                    events.ScheduleEvent(STAGE2_PREPARE, 1000, 0, 0);
+                     stage2 = true;
+                }
+
+                if(abom > 14 && !s2center)
+                {
+                    events.Reset();
+                    events.ScheduleEvent(STAGE2_A_CENTER, 1000, 0, 0);
+                    s2center = true;
+                }
+
+                if(abom > 18 && !gurerrot)
+                {
+                    gurerrot = true;
+                    events.Reset();
+                    events.ScheduleEvent(STAGE_1_BOSS, 1000, 0, 0);
+                    events.ScheduleEvent(STAGE_1_BOSS_FIGHT, 10000, 0, 0);
+                    abom = 0;
                 }
 
                 if(resetall)
@@ -210,6 +289,9 @@ class npc_gilnean_millitia : public CreatureScript
             bool pos2;
             bool pos3;
             bool pos4;
+            bool mpos1;
+            bool mpos2;
+            bool mpos3;
 
             void Reset() OVERRIDE
             {
@@ -217,6 +299,45 @@ class npc_gilnean_millitia : public CreatureScript
                  pos2 = false;
                  pos3 = false;
                  pos4 = false;
+                 mpos1 = false; //Military quoter enter
+                 mpos2 = false; //Military quoter center
+                 mpos3 = false; //boss gurerroth
+            }
+
+            void EnterCombat(Unit* /*who*/) OVERRIDE
+            {
+                me->GetMotionMaster()->Clear();
+                me->GetMotionMaster()->MoveIdle();
+            }
+
+            void DamageTaken(Unit* attacker, uint32& damage) OVERRIDE
+            {
+                me->Attack(attacker, true);
+            }
+
+            void SearchTarget()
+            {
+                if(!military_quoter)
+                {
+                    if (Unit* target = me->FindNearestCreature(FORSAKEN_CROSSBOWMAN, 60.0f))
+                    {
+                        me->GetMotionMaster()->MoveChase(target);
+                        me->Attack(target, false);
+                    }
+                }
+                else
+                {
+                    if (Unit* target = me->FindNearestCreature(VILE_ABOMINATION, 60.0f))
+                    {
+                        me->GetMotionMaster()->MoveChase(target);
+                        me->Attack(target, false);
+                    }
+                    else if (Unit* target = me->FindNearestCreature(FORSAKEN_CROSSBOWMAN, 50.0f))
+                    {
+                        me->GetMotionMaster()->MoveChase(target);
+                        me->Attack(target, false);
+                    }
+                }
             }
 
             void UpdateAI(uint32 uiDiff) OVERRIDE
@@ -234,7 +355,7 @@ class npc_gilnean_millitia : public CreatureScript
                     events.ScheduleEvent(STAGE1_B, 100, 0, 0);
                 }
                 
-                if(event_active && pos2 && crossbowman > 5)
+                if(event_active && pos2 && crossbowman > 2)
                 {
                     if (militiacounter > 20)
                     {
@@ -242,12 +363,12 @@ class npc_gilnean_millitia : public CreatureScript
                         pos2 = false;
                         pos3 = true;
                     }
-                    events.ScheduleEvent(STAGE1_B_1, urand(30000,40000), 0, 0);
+                    events.ScheduleEvent(STAGE1_B_1, urand(25000, 30000), 0, 0);
                 }
                 
-                if(event_active && pos3 && crossbowman>10)
+                if(event_active && pos3 && crossbowman > 10)
                 {
-                    if (militiacounter>20)
+                    if (militiacounter > 19)
                     {
                         militiacounter = 0;
                         pos3 = false;
@@ -258,7 +379,7 @@ class npc_gilnean_millitia : public CreatureScript
                 
                 if(event_active && pos4 && crossbowman > 20)
                 {
-                    if (militiacounter>20)
+                    if (militiacounter > 19)
                     {
                         militiacounter = 0;
                         pos4 = false;
@@ -268,9 +389,42 @@ class npc_gilnean_millitia : public CreatureScript
 
                 if(stage2 && !stage2b)
                 {
-                    if (militiacounter > 20)
+                    if (militiacounter > 19)
+                    {
+                        militiacounter = 0;
                         stage2b = true;
+                    }
                     events.ScheduleEvent(STAGE2_B, 1000, 0, 0);
+                }
+
+                if(military_quoter && !mpos1)
+                {
+                    if (militiacounter > 19)
+                    {
+                        militiacounter = 0;
+                        mpos1 = true;
+                    }
+                    events.ScheduleEvent(STAGE2, 1000, 0, 0);
+                }
+                else if (military_quoter && !mpos2 && abom > 10)
+                {
+                    if (militiacounter > 19)
+                    {
+                        militiacounter = 0;
+                        mpos2 = true;
+                    }
+                    events.ScheduleEvent(STAGE2_B_1, 1000, 0, 0);
+                }
+
+                if(gurerrot && !mpos3)
+                {
+                    if (militiacounter > 19)
+                    {
+                        militiacounter = 0;
+                        mpos3 = true;
+                    }
+                    events.Reset();
+                    events.ScheduleEvent(STAGE_1_BOSS, 1000, 0, 0);
                 }
 
                 if (me->GetHealthPct() < 5)
@@ -284,7 +438,7 @@ class npc_gilnean_millitia : public CreatureScript
                             dist = frand(-4, 4);
                             me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
                             me->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[0].GetPositionX()+dist, eventPositionsTeamB[0].GetPositionY()+dist, eventPositionsTeamB[0].GetPositionZ());
-                            events.ScheduleEvent(STAGE1_B_FIGHT, 10000, 0, 0);
+                            events.ScheduleEvent(STAGE1_B_FIGHT, 20000, 0, 0);
                             militiacounter++;
                             break;
                         case STAGE1_B_1:
@@ -309,13 +463,10 @@ class npc_gilnean_millitia : public CreatureScript
                             militiacounter++;
                             break;
                         case STAGE1_B_FIGHT:
-                            if (Unit* target = me->FindNearestCreature(FORSAKEN_CROSSBOWMAN, 50.0f))
-                            {
-                                me->GetMotionMaster()->MoveChase(target);
-                                me->Attack(target, false);
-                            }
+                            me->GetMotionMaster()->Clear();
+                            SearchTarget();
                             if (!stage2)
-                                events.ScheduleEvent(STAGE1_B_FIGHT, urand(6000, 15000), 0, 0);
+                                events.ScheduleEvent(STAGE1_B_FIGHT, urand(9000, 15000), 0, 0);
                             break;
                         case STAGE2_B:
                             dist = frand(-4, 4);
@@ -323,11 +474,40 @@ class npc_gilnean_millitia : public CreatureScript
                             me->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[4].GetPositionX()+dist, eventPositionsTeamB[4].GetPositionY()+dist, eventPositionsTeamB[4].GetPositionZ());
                             militiacounter++;
                             break;
+                        case STAGE2:  // Military quoter
+                            dist = frand(-5, 4);
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[5].GetPositionX()+dist, eventPositionsTeamB[5].GetPositionY()+dist, eventPositionsTeamB[5].GetPositionZ());
+                            events.RescheduleEvent(STAGE2_B_FIGHT, 15000, 0, 0);
+                            militiacounter++;
+                            break;
+                        case STAGE2_B_1:  // Military quoter center
+                            dist = frand(-5, 4);
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[6].GetPositionX()+dist, eventPositionsTeamB[6].GetPositionY()+dist, eventPositionsTeamB[6].GetPositionZ());
+                            events.RescheduleEvent(STAGE2_B_FIGHT, 15000, 0, 0);
+                            militiacounter++;
+                            break;
+                        case STAGE2_B_FIGHT:
+                            me->GetMotionMaster()->Clear();
+                            SearchTarget();
+                            if (!gurerrot)
+                                events.ScheduleEvent(STAGE2_A_FIGHT, urand(5000, 10000), 0, 0);
+                            break;
+                        case STAGE_1_BOSS:
+                            dist = frand(-5, 4);
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[7].GetPositionX()+dist, eventPositionsTeamB[7].GetPositionY()+dist, eventPositionsTeamB[7].GetPositionZ());
+                            militiacounter++;
+                            break;
                     }
                 }
                 
                 if(resetall)
+                {
                     me->DespawnOrUnsummon(100);
+                    Reset();
+                }
 
                 DoMeleeAttackIfReady();
             }
@@ -358,6 +538,7 @@ class npc_forsaken_crossbow : public CreatureScript
             {
                 if(resetall)
                     me->DespawnOrUnsummon(100);
+                DoMeleeAttackIfReady();
             }
         };
 
@@ -367,26 +548,110 @@ class npc_forsaken_crossbow : public CreatureScript
         }
 };
 
+class npc_vile_abomination : public CreatureScript
+{
+    public:
+        npc_vile_abomination() : CreatureScript("npc_vile_abomination") { }
+
+        struct npc_vile_abominationAI : public ScriptedAI
+        {
+            npc_vile_abominationAI(Creature* creature) : ScriptedAI(creature) {}
+ 
+            void JustDied(Unit* /*killer*/) OVERRIDE
+            {
+                abom = abom + 1;
+            }
+
+            void UpdateAI(uint32 uiDiff) OVERRIDE
+            {
+                if(resetall)
+                    me->DespawnOrUnsummon(100);
+                DoMeleeAttackIfReady();
+            }
+        };
+
+        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        {
+            return new npc_vile_abominationAI(creature);
+        }
+};
+
 class npc_gorrerot : public CreatureScript
 {
     public:
-        npc_gorrerot () : CreatureScript("npc_gorrerot") { }
+        npc_gorrerot() : CreatureScript("npc_gorrerot") { }
 
-    void Update (uint32 diff) OVERRIDE
-    {
-        return;
-    }
+        struct npc_gorrerotAI : public ScriptedAI
+        {
+            npc_gorrerotAI(Creature* creature) : ScriptedAI(creature) {}
+ 
+            EventMap events;
+
+            void Reset()
+            {
+                me->SetVisible(false);
+                me->SetReactState(REACT_PASSIVE);
+                me->AI()->EnterEvadeMode();
+            }
+
+            void JustDied(Unit* /*killer*/) OVERRIDE
+            {
+                boss_gurerrot_dead = true;
+            }
+
+            void UpdateAI(uint32 uiDiff) OVERRIDE
+            {
+                events.Update(uiDiff);
+
+                if(gurerrot)
+                {
+                    me->SetVisible(true);
+                    me->SetReactState(REACT_AGGRESSIVE);
+                }
+
+                if(resetall)
+                    Reset();
+
+                DoMeleeAttackIfReady();
+            }
+        };
+
+        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        {
+            return new npc_gorrerotAI(creature);
+        }
 };
 
 class npc_lady_sylvanas : public CreatureScript
 {
     public:
-        npc_lady_sylvanas () : CreatureScript("npc_lady_sylvanas") { }
+        npc_lady_sylvanas() : CreatureScript("npc_lady_sylvanas") { }
 
-    void Update (uint32 diff) OVERRIDE
-    {
-        return;
-    }
+        struct npc_lady_sylvanasAI : public ScriptedAI
+        {
+            npc_lady_sylvanasAI(Creature* creature) : ScriptedAI(creature) {}
+ 
+            void JustDied(Unit* /*killer*/) OVERRIDE
+            {
+                me->CastSpell(me, SPELL_BFGC_CONPLETE, false);
+            }
+
+            void UpdateAI(uint32 uiDiff) OVERRIDE
+            {
+                if (me->GetHealthPct() < 21)
+                {
+                    Talk(0);
+                    me->CastSpell(me, SPELL_BFGC_CONPLETE, false);
+                }
+
+                DoMeleeAttackIfReady();
+            }
+        };
+
+        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        {
+            return new npc_lady_sylvanasAI(creature);
+        }
 };
 
 void AddSC_bfgc_script()
@@ -395,6 +660,7 @@ void AddSC_bfgc_script()
     new npc_prince_liam;
     new npc_gilnean_millitia;
     new npc_forsaken_crossbow;
+    new npc_vile_abomination;
     new npc_gorrerot;
     new npc_lady_sylvanas;
 }

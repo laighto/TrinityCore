@@ -1196,6 +1196,11 @@ void Aura::HandleAuraSpecificMods(AuraApplication const* aurApp, Unit* caster, b
                         if (target->GetTypeId() == TYPEID_PLAYER)
                             target->ToPlayer()->RemoveSpellCooldown(20252, true);
                         break;
+                    case 72069:
+                        if (target->GetTypeId() == TYPEID_UNIT)
+                            if(target->GetEntry() == 38377)
+                                target->RemoveAura(72069);
+                        break;
                 }
                 break;
             case SPELLFAMILY_DRUID:
