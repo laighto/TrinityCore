@@ -63,10 +63,10 @@ class npc_prince_liam : public CreatureScript
             npc_prince_liamAI(Creature* creature) : ScriptedAI(creature) {}
 
             EventMap events;
+            bool ignoredamage;
  
             void Reset() OVERRIDE
             {
-                events.Reset();
                 me->Relocate(eventPositionsTeamA[0].GetPositionX(), eventPositionsTeamA[0].GetPositionY(), eventPositionsTeamA[0].GetPositionZ(), eventPositionsTeamA[0].GetOrientation());
                 event_active = false;
                 intro = false;
@@ -75,15 +75,33 @@ class npc_prince_liam : public CreatureScript
                 stage2b = false;
                 me->CastSpell(me, SPELL_SOLDIER_OF_BFGC, false);
                 me->Mount(2409, 512);
-                liamGUID = me->GetGUID();
                 crossbowman = 0;
                 abom = 0;
                 military_quoter = false;
                 gurerrot = false;
-                militiacounter = 0;
                 s2center = false;
                 boss_gurerrot_dead = false;
                 resetall = false;
+
+                pos1 = false;
+                pos2 = false;
+                pos3 = false;
+                pos4 = false;
+                mpos1 = false; //Military quoter enter
+                mpos2 = false; //Military quoter center
+                mpos3 = false; //boss gurerroth
+                events.Reset();
+                SpawnMilitia();
+                s3pos = false;
+                endpoint = false;
+                ignoredamage = true;
+            }
+
+            void SpawnMilitia()
+            {
+                for (int i=0; i < 20; i++) 
+                    if(Creature* creature = me->SummonCreature(GILNEAN_MILLITIA, eventPositionsMilitia[i].GetPositionX(), eventPositionsMilitia[i].GetPositionY(), eventPositionsMilitia[i].GetPositionZ(), eventPositionsMilitia[i].GetOrientation(), TEMPSUMMON_DEAD_DESPAWN, 300000))
+                        militia[i] = creature;
             }
 
             void JustDied(Unit* /*killer*/) OVERRIDE
@@ -101,55 +119,100 @@ class npc_prince_liam : public CreatureScript
                 events.ScheduleEvent(EVENT_INTRO_5, 33000, 0, 0);
                 events.ScheduleEvent(EVENT_INTRO_6, 41000, 0, 0);
                 events.ScheduleEvent(EVENT_INTRO_7, 45000, 0, 0);
-                events.ScheduleEvent(EVENT_BEGIN_BATTLE, 49000, 0, 0);
+                events.ScheduleEvent(EVENT_BEGIN_BATTLE, 48000, 0, 0);
                 events.ScheduleEvent(RESET_ALL, 900000, 0, 0);
             }
 
-            void SearchTarget ()
+            void SearchTarget() OVERRIDE
             {
-                if(!military_quoter)
+                if(!military_quoter || s3pos && !ignoredamage)
                 {
                     if (Unit* target = me->FindNearestCreature(FORSAKEN_CROSSBOWMAN, 70.0f))
-                    {
-                        me->GetMotionMaster()->MoveChase(target);
-                        me->Attack(target, false);
-                        if (urand(0,5) > 4)
-                            Talk(SAY_RANDOM_TXT);
+                    {                  
+                        if (target->GetDistance2d(me) < 6)
+                        {
+                            me->GetMotionMaster()->MoveChase(target);
+                            me->Attack(target, true);
+                            if (urand(0, 6) > 5)
+                                Talk(SAY_RANDOM_TXT);
+                        }
+                        else if (target->GetDistance2d(me) < 30)
+                        {
+                            me->GetMotionMaster()->MoveChase(target, 8.0f);
+                            me->CastSpell(target, SPELL_SHOOT, false);
+                            if (urand(0, 6) > 5)
+                                Talk(SAY_RANDOM_TXT);
+                        }
+                        else 
+                        {
+                            me->GetMotionMaster()->MoveChase(target);
+                            me->Attack(target, true);
+                        }
                     }
                 }
-                else
+                else if (!ignoredamage)
                 {
-                    if (Unit* target = me->FindNearestCreature(VILE_ABOMINATION, 50.0f))
-                    {
-                        me->GetMotionMaster()->MoveChase(target);
-                        me->Attack(target, false);
-                        if (urand(0,5) > 4)
-                            Talk(SAY_RANDOM_TXT);
+                    if (Unit* target = me->FindNearestCreature(VILE_ABOMINATION, 70.0f))
+                    {                  
+                        if (target->GetDistance2d(me) < 6)
+                        {
+                            me->GetMotionMaster()->MoveChase(target);
+                            me->Attack(target, true);
+                            if (urand(0, 6) > 5)
+                                Talk(SAY_RANDOM_TXT);
+                        }
+                        else if (target->GetDistance2d(me) < 30)
+                        {
+                            me->GetMotionMaster()->MoveChase(target, 8.0f);
+                            me->CastSpell(target, SPELL_SHOOT, false);
+                            if (urand(0, 6) > 5)
+                                Talk(SAY_RANDOM_TXT);
+                        }
+                        else 
+                        {
+                            me->GetMotionMaster()->MoveChase(target);
+                            me->Attack(target, true);
+                        }
                     }
-                    else if (Unit* target = me->FindNearestCreature(FORSAKEN_CROSSBOWMAN, 50.0f))
-                    {
-                        me->GetMotionMaster()->MoveChase(target);
-                        me->Attack(target, false);
-                        if (urand(0,5) > 4)
-                            Talk(SAY_RANDOM_TXT);
+                    else if (Unit* target = me->FindNearestCreature(FORSAKEN_CROSSBOWMAN, 60.0f))
+                    {                  
+                        if (target->GetDistance2d(me) < 6)
+                        {
+                            me->GetMotionMaster()->MoveChase(target);
+                            me->Attack(target, true);
+                            if (urand(0, 6) > 5)
+                                Talk(SAY_RANDOM_TXT);
+                        }
+                        else if (target->GetDistance2d(me) < 30)
+                        {
+                            me->GetMotionMaster()->MoveChase(target, 10.0f);
+                            me->CastSpell(target, SPELL_SHOOT, false);
+                            if (urand(0, 6) > 5)
+                                Talk(SAY_RANDOM_TXT);
+                        }
+                        else 
+                        {
+                            me->GetMotionMaster()->MoveChase(target);
+                            me->Attack(target, true);
+                        }
                     }
                 }
             }
 
             void DamageTaken(Unit* attacker, uint32& damage) OVERRIDE
             {
-                //me->GetMotionMaster()->Clear();
-                //me->GetMotionMaster()->MoveIdle();
-                me->Attack(attacker, true);
-                if (urand(0, 5) > 4)
-                    Talk(SAY_RANDOM_TXT);
+                if (damage >= me->GetHealth())
+                    damage = 1;
+
+                if(!ignoredamage)
+                    me->Attack(attacker, true);
             }
 
-            void EnterCombat(Unit* /*who*/) OVERRIDE
+           /* void EnterCombat(Unit* /*who*//*) OVERRIDE
             {
-                me->GetMotionMaster()->Clear();
-                me->GetMotionMaster()->MoveIdle();
-            }
+                //me->GetMotionMaster()->Clear();
+               // me->GetMotionMaster()->MoveIdle();
+            }*/
 
             void UpdateAI(uint32 uiDiff) OVERRIDE
             {
@@ -192,62 +255,124 @@ class npc_prince_liam : public CreatureScript
                         case EVENT_BEGIN_BATTLE:
                             event_active = true;
                             me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[1].GetPositionX(), eventPositionsTeamA[1].GetPositionY(), eventPositionsTeamA[1].GetPositionZ());
-                            events.ScheduleEvent(STAGE1_A, 10000, 0, 0);
-                            events.ScheduleEvent(STAGE1, 12000, 0, 0);                 
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[1].GetPositionX(), eventPositionsTeamA[1].GetPositionY(), eventPositionsTeamA[1].GetPositionZ(), true);
+                            events.ScheduleEvent(STAGE_1_CENTER, 15000, 0, 0);
+                            events.ScheduleEvent(STAGE_1_FIGHT, 20000, 0, 0);                 
                             break;
-                        case STAGE1:
-                            me->GetMotionMaster()->Clear();
+                        case STAGE_1_FIGHT:
+                            //me->GetMotionMaster()->Clear();
                             SearchTarget();
                             if (!stage2)
-                                events.ScheduleEvent(STAGE1, urand(2000, 6000), 0, 0);
+                                events.ScheduleEvent(STAGE_1_FIGHT, 3000, 0, 0);
+                            ignoredamage = false;
                             break;
-                        case STAGE1_A:
+                        case STAGE_1_CENTER:
                             me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[2].GetPositionX(), eventPositionsTeamA[2].GetPositionY(), eventPositionsTeamA[2].GetPositionZ());
+                            me->GetMotionMaster()->Clear();
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[2].GetPositionX(), eventPositionsTeamA[2].GetPositionY(), eventPositionsTeamA[2].GetPositionZ(), true);
+                            ignoredamage = true;
+                            events.RescheduleEvent(STAGE_1_FIGHT, 5000, 0, 0);
                             break;
                         case STAGE2_PREPARE:
+                            ignoredamage = true;
+                            me->CombatStop(true);
                             me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[3].GetPositionX(), eventPositionsTeamA[3].GetPositionY(), eventPositionsTeamA[3].GetPositionZ());
-                            events.ScheduleEvent(STAGE2, 20000, 0, 0);
-                            events.ScheduleEvent(STAGE2_A_FIGHT, 35000, 0, 0);
+                            me->GetMotionMaster()->Clear();
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[3].GetPositionX(), eventPositionsTeamA[3].GetPositionY(), eventPositionsTeamA[3].GetPositionZ(), true);
+                            ignoredamage = true;
                             break;
                         case STAGE2: // Military quoter
                             me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[4].GetPositionX(), eventPositionsTeamA[4].GetPositionY(), eventPositionsTeamA[4].GetPositionZ());
+                            me->GetMotionMaster()->Clear();
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[4].GetPositionX(), eventPositionsTeamA[4].GetPositionY(), eventPositionsTeamA[4].GetPositionZ(), true);
                             military_quoter = true;
+                            ignoredamage = true;
+                            events.RescheduleEvent(STAGE2_A_FIGHT, 5000, 0, 0);
                             break;
                         case STAGE2_A_FIGHT:
-                            me->GetMotionMaster()->Clear();
+                            ignoredamage = false;
                             SearchTarget();
                             if (!gurerrot)
-                                events.ScheduleEvent(STAGE2_A_FIGHT, urand(4000, 8000), 0, 0);
+                                events.ScheduleEvent(STAGE2_A_FIGHT, 3500, 0, 0);
                             break;
                         case STAGE2_A_CENTER:
                             me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[5].GetPositionX(), eventPositionsTeamA[5].GetPositionY(), eventPositionsTeamA[5].GetPositionZ());
-                            break;
-                        case STAGE_1_BOSS:
-                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[6].GetPositionX(), eventPositionsTeamA[6].GetPositionY(), eventPositionsTeamA[6].GetPositionZ());
-                             break;
-                        case STAGE_1_BOSS_FIGHT:
-                            events.Reset();
                             me->GetMotionMaster()->Clear();
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[5].GetPositionX(), eventPositionsTeamA[5].GetPositionY(), eventPositionsTeamA[5].GetPositionZ(), true);
+                            ignoredamage = true;
+                            events.RescheduleEvent(STAGE2_A_FIGHT, 5000, 0, 0);
                             break;
+                        case STAGE_BOSS_G:
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                            ignoredamage = true;
+                            me->GetMotionMaster()->Clear();
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[6].GetPositionX(), eventPositionsTeamA[6].GetPositionY(), eventPositionsTeamA[6].GetPositionZ(), true);
+                            ignoredamage = true;
+                            break;
+                        case STAGE_BOSS_FIGHT_G:
+                            ignoredamage = false;
+                            if (Unit* target = me->FindNearestCreature(GORERROT, 20.0f))
+                            {
+                                me->GetMotionMaster()->MoveChase(target, 6.0f);
+                                me->CastSpell(target, SPELL_SHOOT, false);
+                            }
+                            if (!boss_gurerrot_dead)
+                                events.ScheduleEvent(STAGE_BOSS_FIGHT_G, 3500, 0, 0);
+                            break;
+                        case STAGE_3_POINT_1:
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                            me->GetMotionMaster()->Clear();
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[7].GetPositionX(), eventPositionsTeamA[7].GetPositionY(), eventPositionsTeamA[7].GetPositionZ(), true);
+                            ignoredamage = true;
+                            break;
+                        case STAGE_3_POINT_2:
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                            me->GetMotionMaster()->Clear();
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[8].GetPositionX(), eventPositionsTeamA[8].GetPositionY(), eventPositionsTeamA[8].GetPositionZ(), true);
+                            ignoredamage = true;
+                            events.RescheduleEvent(STAGE_3_FIGHT_A, 7000, 0, 0);
+                            break;
+                        case STAGE_3_POINT_3:
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                            me->GetMotionMaster()->Clear();
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[9].GetPositionX(), eventPositionsTeamA[9].GetPositionY(), eventPositionsTeamA[9].GetPositionZ(), true);
+                            ignoredamage = true;
+                            events.RescheduleEvent(STAGE_3_FIGHT_A, 7000, 0, 0);
+                            break;
+                        case STAGE_3_POINT_4:
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                            me->GetMotionMaster()->Clear();
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[10].GetPositionX(), eventPositionsTeamA[10].GetPositionY(), eventPositionsTeamA[10].GetPositionZ(), true);
+                            ignoredamage = true;
+                            events.RescheduleEvent(STAGE_3_FIGHT_A, 7000, 0, 0);
+                            break;
+                        case STAGE_3_POINT_5:
+                            endpoint = true;
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                            me->GetMotionMaster()->Clear();
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[11].GetPositionX(), eventPositionsTeamA[11].GetPositionY(), eventPositionsTeamA[11].GetPositionZ(), true);
+                            ignoredamage = true;
+                            break;
+                        case STAGE_3_FIGHT_A:
+                            SearchTarget();
+                            if (!endpoint)
+                                events.ScheduleEvent(STAGE_3_FIGHT_A, 3500, 0, 0);
+                            ignoredamage = false;
+                            break;
+
                     }
                 }
 
-                if(crossbowman > 32 && !stage2)
+                if(crossbowman > 33 && !stage2)
                 {
-                    events.Reset();
                     events.ScheduleEvent(STAGE2_PREPARE, 1000, 0, 0);
-                     stage2 = true;
+                    events.ScheduleEvent(STAGE2, 20000, 0, 0);
+                    events.RescheduleEvent(STAGE2_A_FIGHT, 30000, 0, 0);
+                    stage2 = true;
                 }
 
-                if(abom > 14 && !s2center)
+                if(abom > 15 && !s2center)
                 {
-                    events.Reset();
                     events.ScheduleEvent(STAGE2_A_CENTER, 1000, 0, 0);
                     s2center = true;
                 }
@@ -255,11 +380,23 @@ class npc_prince_liam : public CreatureScript
                 if(abom > 18 && !gurerrot)
                 {
                     gurerrot = true;
-                    events.Reset();
-                    events.ScheduleEvent(STAGE_1_BOSS, 1000, 0, 0);
-                    events.ScheduleEvent(STAGE_1_BOSS_FIGHT, 10000, 0, 0);
+                    events.ScheduleEvent(STAGE_BOSS_G, 1000, 0, 0);
+                    events.ScheduleEvent(STAGE_BOSS_FIGHT_G, 10000, 0, 0);
                     abom = 0;
                 }
+
+                if (boss_gurerrot_dead && !s3pos)
+                {
+                    events.ScheduleEvent(STAGE_3_POINT_1, 8000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_POINT_2, 30000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_POINT_3, 65000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_POINT_4, 80000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_POINT_4, 95000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_POINT_5, 100000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_FIGHT_A, 16000, 0, 0);
+                    s3pos = true;
+                }
+
 
                 if(resetall)
                     me->DespawnOrUnsummon(100);
@@ -284,229 +421,407 @@ class npc_gilnean_millitia : public CreatureScript
             npc_gilnean_millitiaAI(Creature* creature) : ScriptedAI(creature) {}
 
             EventMap events;
-            int dist;
-            bool pos1;
-            bool pos2;
-            bool pos3;
-            bool pos4;
-            bool mpos1;
-            bool mpos2;
-            bool mpos3;
+            float dist;
+            bool ignoredamage;
 
             void Reset() OVERRIDE
             {
-                 pos1 = false;
-                 pos2 = false;
-                 pos3 = false;
-                 pos4 = false;
-                 mpos1 = false; //Military quoter enter
-                 mpos2 = false; //Military quoter center
-                 mpos3 = false; //boss gurerroth
+                events.Reset();
+                s3posb = false;
+                ignoredamage = false;
             }
 
-            void EnterCombat(Unit* /*who*/) OVERRIDE
+           /* void EnterCombat(Unit* /*who*//*) OVERRIDE
             {
-                me->GetMotionMaster()->Clear();
-                me->GetMotionMaster()->MoveIdle();
-            }
+                if (me->GetVictim())
+                    if(urand(0, 1) == 1)
+                        me->CastSpell(me->GetVictim(), SPELL_SHOOT, false);
+                    else me->Attack(me->GetVictim(), false);
+            }*/
 
             void DamageTaken(Unit* attacker, uint32& damage) OVERRIDE
             {
-                me->Attack(attacker, true);
+                if (damage >= me->GetHealth())
+                    damage = 1;
+
+                if(!ignoredamage)
+                {
+                    me->GetMotionMaster()->MoveChase(attacker);
+                    me->Attack(attacker, true);
+                }
             }
 
-            void SearchTarget()
+            void SearchTargets(Unit* attacker) OVERRIDE
             {
-                if(!military_quoter)
+                if(!military_quoter || s3posb && !ignoredamage)
                 {
-                    if (Unit* target = me->FindNearestCreature(FORSAKEN_CROSSBOWMAN, 60.0f))
-                    {
-                        me->GetMotionMaster()->MoveChase(target);
-                        me->Attack(target, false);
+                    if (Unit* target = attacker->FindNearestCreature(FORSAKEN_CROSSBOWMAN, 80.0f))
+                    {                  
+                        if (target->GetDistance2d(attacker) < 6)
+                        {
+                            attacker->GetMotionMaster()->MoveChase(target);
+                            attacker->Attack(target, true);
+                        }
+                        else if (target->GetDistance2d(attacker) < 30)
+                        {
+                            attacker->CastSpell(target, SPELL_SHOOT, false);
+                        }
+                        else 
+                        {
+                            attacker->GetMotionMaster()->MoveChase(target, 10.0f);
+                            attacker->Attack(target, true);
+                        }
                     }
                 }
-                else
+                else if (!ignoredamage)
                 {
-                    if (Unit* target = me->FindNearestCreature(VILE_ABOMINATION, 60.0f))
-                    {
-                        me->GetMotionMaster()->MoveChase(target);
-                        me->Attack(target, false);
+                    if (Unit* target = attacker->FindNearestCreature(VILE_ABOMINATION, 70.0f))
+                    {                  
+                        if (target->GetDistance2d(attacker) < 6)
+                        {
+                            attacker->GetMotionMaster()->MoveChase(target);
+                            attacker->Attack(target, true);
+                        }
+                        else if (target->GetDistance2d(attacker) < 30)
+                        {
+                            attacker->CastSpell(target, SPELL_SHOOT, false);
+                        }
+                        else 
+                        {
+                            attacker->GetMotionMaster()->MoveChase(target, 10.0f);
+                            attacker->Attack(target, true);
+                        }
                     }
-                    else if (Unit* target = me->FindNearestCreature(FORSAKEN_CROSSBOWMAN, 50.0f))
-                    {
-                        me->GetMotionMaster()->MoveChase(target);
-                        me->Attack(target, false);
+                    else if (Unit* target = attacker->FindNearestCreature(FORSAKEN_CROSSBOWMAN, 50.0f))
+                    {                  
+                        if (target->GetDistance2d(attacker) < 6)
+                        {
+                            attacker->GetMotionMaster()->MoveChase(target);
+                            attacker->Attack(target, true);
+                        }
+                        else if (target->GetDistance2d(attacker) < 30)
+                        {
+                            attacker->CastSpell(target, SPELL_SHOOT, false);
+                        }
+                        else 
+                        {
+                            attacker->GetMotionMaster()->MoveChase(target, 10.0f);
+                            attacker->Attack(target, true);
+                        }
                     }
                 }
             }
+
+           /* void DoMeleeAttackIfReady() OVERRIDE
+            {
+                if (me->GetVictim())
+                {
+                    me->GetMotionMaster()->MoveIdle();
+                    me->Attack(me->GetVictim(), false);
+                }
+            }*/
 
             void UpdateAI(uint32 uiDiff) OVERRIDE
             {
                 events.Update(uiDiff);
 
-                if(event_active && !pos1)
-                {
-                    if (militiacounter > 20)
-                    {
-                        militiacounter = 0;
-                        pos1 = true;
-                        pos2 = true;
-                    }
-                    events.ScheduleEvent(STAGE1_B, 100, 0, 0);
-                }
-                
-                if(event_active && pos2 && crossbowman > 2)
-                {
-                    if (militiacounter > 20)
-                    {
-                        militiacounter = 0;
-                        pos2 = false;
-                        pos3 = true;
-                    }
-                    events.ScheduleEvent(STAGE1_B_1, urand(25000, 30000), 0, 0);
-                }
-                
-                if(event_active && pos3 && crossbowman > 10)
-                {
-                    if (militiacounter > 19)
-                    {
-                        militiacounter = 0;
-                        pos3 = false;
-                        pos4 = true;
-                    }
-                    events.ScheduleEvent(STAGE1_B_2, urand(30000,40000), 0, 0);
-                }
-                
-                if(event_active && pos4 && crossbowman > 20)
-                {
-                    if (militiacounter > 19)
-                    {
-                        militiacounter = 0;
-                        pos4 = false;
-                    }
-                    events.ScheduleEvent(STAGE1_B_3, urand(30000,40000), 0, 0);
-                }
-
-                if(stage2 && !stage2b)
-                {
-                    if (militiacounter > 19)
-                    {
-                        militiacounter = 0;
-                        stage2b = true;
-                    }
-                    events.ScheduleEvent(STAGE2_B, 1000, 0, 0);
-                }
-
-                if(military_quoter && !mpos1)
-                {
-                    if (militiacounter > 19)
-                    {
-                        militiacounter = 0;
-                        mpos1 = true;
-                    }
-                    events.ScheduleEvent(STAGE2, 1000, 0, 0);
-                }
-                else if (military_quoter && !mpos2 && abom > 10)
-                {
-                    if (militiacounter > 19)
-                    {
-                        militiacounter = 0;
-                        mpos2 = true;
-                    }
-                    events.ScheduleEvent(STAGE2_B_1, 1000, 0, 0);
-                }
-
-                if(gurerrot && !mpos3)
-                {
-                    if (militiacounter > 19)
-                    {
-                        militiacounter = 0;
-                        mpos3 = true;
-                    }
-                    events.Reset();
-                    events.ScheduleEvent(STAGE_1_BOSS, 1000, 0, 0);
-                }
-
-                if (me->GetHealthPct() < 5)
-                    me->SetFullHealth();
-
                 while (uint32 eventId = events.ExecuteEvent())
                 {
                     switch (eventId)
                     {
-                        case STAGE1_B:
-                            dist = frand(-4, 4);
-                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[0].GetPositionX()+dist, eventPositionsTeamB[0].GetPositionY()+dist, eventPositionsTeamB[0].GetPositionZ());
-                            events.ScheduleEvent(STAGE1_B_FIGHT, 20000, 0, 0);
-                            militiacounter++;
-                            break;
                         case STAGE1_B_1:
-                            dist = frand(-4, 4);
-                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[1].GetPositionX()+dist, eventPositionsTeamB[1].GetPositionY()+dist, eventPositionsTeamB[1].GetPositionZ());
-                            events.RescheduleEvent(STAGE1_B_FIGHT, 10000, 0, 0);
-                            militiacounter++;
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if(militia[i] && militia[i]->IsAlive())
+                                {
+                                    dist = frand(-4, 4);
+                                    militia[i]->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[1].GetPositionX()+dist, eventPositionsTeamB[1].GetPositionY()+dist, eventPositionsTeamB[1].GetPositionZ(), true);
+                                }
+                            }
+                            ignoredamage = true;
+                            events.ScheduleEvent(STAGE_1_B_FIGHT, 20000, 0, 0);
                             break;
                         case STAGE1_B_2:
-                            dist = frand(-4, 4);
-                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[2].GetPositionX()+dist, eventPositionsTeamB[2].GetPositionY()+dist, eventPositionsTeamB[2].GetPositionZ());
-                            events.RescheduleEvent(STAGE1_B_FIGHT, 10000, 0, 0);
-                            militiacounter++;
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if(militia[i] && militia[i]->IsAlive())
+                                {
+                                    dist = frand(-4, 4);
+                                    militia[i]->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[2].GetPositionX()+dist, eventPositionsTeamB[2].GetPositionY()+dist, eventPositionsTeamB[2].GetPositionZ(), true);
+                                }
+                            }
+                            ignoredamage = true;
                             break;
                         case STAGE1_B_3:
-                            dist = frand(-4, 4);
-                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[3].GetPositionX()+dist, eventPositionsTeamB[3].GetPositionY()+dist, eventPositionsTeamB[3].GetPositionZ());
-                            events.RescheduleEvent(STAGE1_B_FIGHT, 10000, 0, 0);
-                            militiacounter++;
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if (militia[i] && militia[i]->IsAlive())
+                                {
+                                    dist = frand(-4, 4);
+                                    militia[i]->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[3].GetPositionX()+dist, eventPositionsTeamB[3].GetPositionY()+dist, eventPositionsTeamB[3].GetPositionZ(), true);
+                                }
+                            }      
+                            ignoredamage = true;
                             break;
-                        case STAGE1_B_FIGHT:
-                            me->GetMotionMaster()->Clear();
-                            SearchTarget();
+                        case STAGE_1_B_FIGHT:
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if (militia[i] && militia[i]->IsAlive())
+                                {
+                                    SearchTargets(militia[i]);
+                                }
+                            }
+                            ignoredamage = false;
                             if (!stage2)
-                                events.ScheduleEvent(STAGE1_B_FIGHT, urand(9000, 15000), 0, 0);
+                                events.ScheduleEvent(STAGE_1_B_FIGHT, urand(3000, 5000), 0, 0);
                             break;
                         case STAGE2_B:
-                            dist = frand(-4, 4);
-                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[4].GetPositionX()+dist, eventPositionsTeamB[4].GetPositionY()+dist, eventPositionsTeamB[4].GetPositionZ());
-                            militiacounter++;
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if(militia[i] && militia[i]->IsAlive())
+                                {
+                                    dist = frand(-4, 4);
+                                    militia[i]->CombatStop(true);
+                                    militia[i]->GetMotionMaster()->Clear();
+                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[4].GetPositionX()+dist, eventPositionsTeamB[4].GetPositionY()+dist, eventPositionsTeamB[4].GetPositionZ(), true);
+                                }
+                            }
+                            ignoredamage = true;
                             break;
-                        case STAGE2:  // Military quoter
-                            dist = frand(-5, 4);
-                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[5].GetPositionX()+dist, eventPositionsTeamB[5].GetPositionY()+dist, eventPositionsTeamB[5].GetPositionZ());
-                            events.RescheduleEvent(STAGE2_B_FIGHT, 15000, 0, 0);
-                            militiacounter++;
+                        case STAGE2B:  // Military quoter
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if(militia[i] && militia[i]->IsAlive())
+                                {
+                                    dist = frand(-4, 4);
+                                    militia[i]->GetMotionMaster()->Clear();
+                                    militia[i]->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[5].GetPositionX()+dist, eventPositionsTeamB[5].GetPositionY()+dist, eventPositionsTeamB[5].GetPositionZ(), true);
+                                }
+                            }
+                            ignoredamage = true;
                             break;
                         case STAGE2_B_1:  // Military quoter center
-                            dist = frand(-5, 4);
-                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[6].GetPositionX()+dist, eventPositionsTeamB[6].GetPositionY()+dist, eventPositionsTeamB[6].GetPositionZ());
-                            events.RescheduleEvent(STAGE2_B_FIGHT, 15000, 0, 0);
-                            militiacounter++;
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if(militia[i] && militia[i]->IsAlive())
+                                {
+                                    dist = frand(-4, 4);
+                                    militia[i]->GetMotionMaster()->Clear();
+                                    militia[i]->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[6].GetPositionX()+dist, eventPositionsTeamB[6].GetPositionY()+dist, eventPositionsTeamB[6].GetPositionZ(), true);
+                                }
+                            }
+                            ignoredamage = true;
                             break;
-                        case STAGE2_B_FIGHT:
-                            me->GetMotionMaster()->Clear();
-                            SearchTarget();
+                        case STAGE_2_B_FIGHT:
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if(militia[i] && militia[i]->IsAlive())
+                                    SearchTargets(militia[i]);
+                            }
+                            ignoredamage = false;
                             if (!gurerrot)
-                                events.ScheduleEvent(STAGE2_A_FIGHT, urand(5000, 10000), 0, 0);
+                                events.ScheduleEvent(STAGE_2_B_FIGHT, urand(2000, 5000), 0, 0);
                             break;
-                        case STAGE_1_BOSS:
-                            dist = frand(-5, 4);
-                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[7].GetPositionX()+dist, eventPositionsTeamB[7].GetPositionY()+dist, eventPositionsTeamB[7].GetPositionZ());
-                            militiacounter++;
+                        case STAGE_BOSS_Gm:
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if(militia[i] && militia[i]->IsAlive())
+                                {
+                                    militia[i]->GetMotionMaster()->Clear();
+                                    dist = frand(-4, 4);
+                                    militia[i]->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[7].GetPositionX()+dist, eventPositionsTeamB[7].GetPositionY()+dist, eventPositionsTeamB[7].GetPositionZ(), true);
+                                }
+                            }
+                            ignoredamage = true;
+                            break;
+                        case STAGE_BOSS_FIGHT_Gm:
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if(militia[i] && militia[i]->IsAlive())
+                                {
+                                    if (Unit* target = militia[i]->FindNearestCreature(GORERROT, 50.0f))
+                                        if (urand(0, 1) == 1)
+                                        {
+                                            //militia[i]->GetMotionMaster()->MoveChase(target, 10.0f);
+                                            militia[i]->CastSpell(target, SPELL_SHOOT, false);
+                                        }
+                                }
+                            }
+                            ignoredamage = false;
+                            if (!boss_gurerrot_dead)
+                                events.ScheduleEvent(STAGE_BOSS_FIGHT_Gm, 3500, 0, 0);
+                            break;
+                        case STAGE_3_POINT_1:
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if(militia[i] && militia[i]->IsAlive())
+                                {
+                                    dist = frand(-4, 4);
+                                    militia[i]->SetSpeed(MOVE_RUN, militia[i]->GetSpeedRate(MOVE_RUN), true);
+                                    militia[i]->GetMotionMaster()->Clear();
+                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[7].GetPositionX()+dist, eventPositionsTeamA[7].GetPositionY()+dist, eventPositionsTeamA[7].GetPositionZ(), true);
+                                }
+                            }
+                            ignoredamage = true;
+                            break;
+                        case STAGE_3_POINT_2:
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if(militia[i] && militia[i]->IsAlive())
+                                {
+                                    dist = frand(-4, 4);
+                                    militia[i]->SetSpeed(MOVE_RUN, militia[i]->GetSpeedRate(MOVE_RUN), true);
+                                    militia[i]->GetMotionMaster()->Clear();
+                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[8].GetPositionX()+dist, eventPositionsTeamA[8].GetPositionY()+dist, eventPositionsTeamA[8].GetPositionZ(), true);
+                                }
+                            }
+                            events.RescheduleEvent(STAGE_3_FIGHT_B, 7000, 0, 0);
+                            ignoredamage = true;
+                            break;
+                        case STAGE_3_POINT_3:
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if(militia[i] && militia[i]->IsAlive())
+                                {
+                                    dist = frand(-4, 4);
+                                    militia[i]->SetSpeed(MOVE_RUN, militia[i]->GetSpeedRate(MOVE_RUN), true);
+                                    militia[i]->GetMotionMaster()->Clear();
+                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[9].GetPositionX()+dist, eventPositionsTeamA[9].GetPositionY()+dist, eventPositionsTeamA[9].GetPositionZ(), true);
+                                }
+                            }
+                            events.RescheduleEvent(STAGE_3_FIGHT_B, 7000, 0, 0);
+                            ignoredamage = true;
+                            break;
+                        case STAGE_3_POINT_4:
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if(militia[i] && militia[i]->IsAlive())
+                                {
+                                    dist = frand(-4, 4);
+                                    militia[i]->SetSpeed(MOVE_RUN, militia[i]->GetSpeedRate(MOVE_RUN), true);
+                                    militia[i]->GetMotionMaster()->Clear();
+                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[10].GetPositionX()+dist, eventPositionsTeamA[10].GetPositionY()+dist, eventPositionsTeamA[10].GetPositionZ(), true);
+                                }
+                            }
+                            events.RescheduleEvent(STAGE_3_FIGHT_B, 7000, 0, 0);
+                            ignoredamage = true;
+                            break;
+                        case STAGE_3_POINT_5:
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if(militia[i] && militia[i]->IsAlive())
+                                {
+                                    dist = frand(-4, 4);
+                                    militia[i]->SetSpeed(MOVE_RUN, militia[i]->GetSpeedRate(MOVE_RUN), true);
+                                    militia[i]->GetMotionMaster()->Clear();
+                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[11].GetPositionX()+dist, eventPositionsTeamA[11].GetPositionY()+dist, eventPositionsTeamA[11].GetPositionZ(), true);
+                                }
+                            }
+                            ignoredamage = true;
+                            break;
+                        case STAGE_3_FIGHT_B:
+                            for (int i = 0; i < 20; i++)
+                                if(militia[i] && militia[i]->IsAlive())
+                                    SearchTargets(militia[i]);
+                            ignoredamage = false;
+                            if (!endpoint)
+                                events.ScheduleEvent(STAGE_3_FIGHT_B, 3500, 0, 0);
                             break;
                     }
                 }
                 
+                if (event_active && !pos1)
+                {
+                    events.ScheduleEvent(STAGE_1_B_FIGHT, 15000, 0, 0);
+                    pos1 = true;
+                    events.ScheduleEvent(STAGE1_B_1, 100, 0, 0);
+                }
+                
+                if (event_active && crossbowman > 1 && !pos2)
+                {
+                    events.ScheduleEvent(STAGE_1_B_FIGHT, 6000, 0, 0);
+                    pos2 = true;
+                    pos3 = true;
+                }
+
+                if(event_active && pos3 && crossbowman > 10)
+                {
+                    pos3 = false;
+                    pos4 = true;
+                    events.ScheduleEvent(STAGE1_B_2, urand(2000,5000), 0, 0);
+                    events.RescheduleEvent(STAGE_1_B_FIGHT, 15000, 0, 0);
+                }
+                
+                if(event_active && pos4 && crossbowman > 23)
+                {
+                    pos4 = false;
+                    events.ScheduleEvent(STAGE1_B_3, urand(2000,5000), 0, 0);
+                    events.RescheduleEvent(STAGE_1_B_FIGHT, 15000, 0, 0);
+                }
+
+                if(stage2 && !stage2b)
+                {
+                    stage2b = true;
+                    events.ScheduleEvent(STAGE2_B, 1000, 0, 0);
+                }
+
+                if(military_quoter && !mpos1 && stage2b)
+                {
+                    mpos1 = true;
+                    events.ScheduleEvent(STAGE2B, 1000, 0, 0); //enter military quoter
+                    events.RescheduleEvent(STAGE_2_B_FIGHT, 10000, 0, 0);
+                }
+                else if (military_quoter && !mpos2 && abom > 10)
+                {
+                    mpos2 = true;
+                    events.ScheduleEvent(STAGE2_B_1, 1000, 0, 0); //move to center of military quoter
+                    events.ScheduleEvent(STAGE_2_B_FIGHT, 15000, 0, 0);
+                }
+
+                if(gurerrot && !mpos3)
+                {
+                    mpos3 = true;
+                    ignoredamage = true;
+                    events.ScheduleEvent(STAGE_BOSS_Gm, 1000, 0, 0);
+                    events.RescheduleEvent(STAGE_BOSS_FIGHT_Gm, 10000, 0, 0);
+                }
+
+                if (boss_gurerrot_dead && !s3posb)
+                {
+                    events.ScheduleEvent(STAGE_3_POINT_1, 8000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_POINT_2, 30000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_POINT_3, 65000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_POINT_4, 80000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_POINT_4, 95000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_POINT_5, 100000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_FIGHT_B, 16000, 0, 0);
+                    s3posb = true;
+                }
+
+                if (me->GetHealthPct() < 50)
+                    me->SetFullHealth();
+
                 if(resetall)
                 {
                     me->DespawnOrUnsummon(100);
                     Reset();
+                }
+
+                if (me->GetVictim() && !ignoredamage)
+                {
+                    if ((me->GetVictim())->GetDistance2d(me) < 6)
+                    {
+                        me->GetMotionMaster()->MoveChase(me->GetVictim());
+                        me->Attack(me->GetVictim(), true);
+                    }
+                    else if (urand(0, 4) == 3)
+                        me->CastSpell(me->GetVictim(), SPELL_SHOOT, false);
                 }
 
                 DoMeleeAttackIfReady();
@@ -537,7 +852,10 @@ class npc_forsaken_crossbow : public CreatureScript
             void UpdateAI(uint32 uiDiff) OVERRIDE
             {
                 if(resetall)
+                {
                     me->DespawnOrUnsummon(100);
+                    me->SetRespawnTime(300);
+                }
                 DoMeleeAttackIfReady();
             }
         };
@@ -565,7 +883,10 @@ class npc_vile_abomination : public CreatureScript
             void UpdateAI(uint32 uiDiff) OVERRIDE
             {
                 if(resetall)
+                {
                     me->DespawnOrUnsummon(100);
+                    me->SetRespawnTime(300);
+                }
                 DoMeleeAttackIfReady();
             }
         };

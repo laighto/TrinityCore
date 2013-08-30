@@ -1,10 +1,11 @@
 UPDATE `creature_template` SET `AIName` = '', `ScriptName` = 'npc_krennan_aranas' WHERE `entry` = 38553;
 UPDATE `creature_template` SET `AIName` = '', `Health_mod` = 12, `ScriptName` = 'npc_prince_liam' WHERE `entry` = 38218;
-UPDATE `creature_template` SET `AIName` = '', `ScriptName` = 'npc_gilnean_millitia' WHERE `entry` = 38221;
 UPDATE `creature_template` SET `AIName` = '', `ScriptName` = 'npc_gorrerot' WHERE `entry` = 38331;
 UPDATE `creature_template` SET `AIName` = '', `ScriptName` = 'npc_lady_sylvanas' WHERE `entry` = 38469;
 UPDATE `creature_template` SET `ScriptName` = 'npc_forsaken_crossbow' WHERE `entry` = 38210;
 UPDATE `creature_template` SET `ScriptName` = 'npc_vile_abomination' WHERE `entry` = 38420;
+DELETE FROM `creature` WHERE `id`=38221;
+UPDATE `creature_template` SET `dmg_multiplier` = 3, `Health_mod` = 2, `ScriptName` = 'npc_gilnean_millitia' WHERE `entry` = 38221;
 
 DELETE FROM `gossip_menu_option` WHERE `menu_id`=11061;
 INSERT INTO `gossip_menu_option` VALUES 
@@ -34,7 +35,7 @@ INSERT INTO `creature_text` (`entry`, `groupid`, `id`, `text`, `type`, `comment`
 ('38218', '9', '0',  'Crowley\'s troops are up ahead! Press on!', '14', 'q24904'),
 ('38218', '10', '0',  'FATHER!!!', '14', 'q24904'),
 --
-('38218', '11', '0',  'Your time is up, Forsaken scum!', '14', 'q24904'),
+('38218', '11', '0',  'Your time is up, Forsaken scum!', '12', 'q24904'),
 ('38218', '11', '1',  'Push them back!', '12', 'q24904'),
 ('38218', '11', '2',  'Attack!', '12', 'q24904'),
 ('38218', '12', '0',  'Abominations are blocking the way towards the military district! This won\'t be easy.', '12', 'q24904'),
