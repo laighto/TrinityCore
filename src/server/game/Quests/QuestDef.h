@@ -78,7 +78,7 @@ enum QuestShareMessages
     QUEST_PARTY_MSG_NOT_IN_PARTY            = 10
 };
 
-enum __QuestTradeSkill
+enum QuestTradeSkill
 {
     QUEST_TRSKILL_NONE           = 0,
     QUEST_TRSKILL_ALCHEMY        = 1,
@@ -109,7 +109,7 @@ enum QuestStatus
     MAX_QUEST_STATUS
 };
 
-enum __QuestGiverStatus
+enum QuestGiverStatus
 {
     DIALOG_STATUS_NONE                     = 0x000,
     DIALOG_STATUS_UNK                      = 0x001,
@@ -156,7 +156,7 @@ enum QuestFlags
     // ... 4.x added flags up to 0x80000000 - all unknown for now
 };
 
-enum __QuestSpecialFlags
+enum QuestSpecialFlags
 {
     QUEST_SPECIAL_FLAGS_NONE                 = 0x000,
     // Trinity flags for set SpecialFlags in DB if required but used only at server
@@ -302,7 +302,6 @@ class Quest
         uint32 RequiredSourceItemCount[QUEST_SOURCE_ITEM_IDS_COUNT];
         int32  RequiredNpcOrGo[QUEST_OBJECTIVES_COUNT];   // >0 Creature <0 Gameobject
         uint32 RequiredNpcOrGoCount[QUEST_OBJECTIVES_COUNT];
-        uint32 RequiredSpellCast[QUEST_OBJECTIVES_COUNT];
         uint32 RewardChoiceItemId[QUEST_REWARD_CHOICES_COUNT];
         uint32 RewardChoiceItemCount[QUEST_REWARD_CHOICES_COUNT];
         uint32 RewardItemId[QUEST_REWARDS_COUNT];
