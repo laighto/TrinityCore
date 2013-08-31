@@ -4,8 +4,11 @@ UPDATE `creature_template` SET `AIName` = '', `ScriptName` = 'npc_gorrerot' WHER
 UPDATE `creature_template` SET `AIName` = '', `ScriptName` = 'npc_lady_sylvanas' WHERE `entry` = 38469;
 UPDATE `creature_template` SET `ScriptName` = 'npc_forsaken_crossbow' WHERE `entry` = 38210;
 UPDATE `creature_template` SET `ScriptName` = 'npc_vile_abomination' WHERE `entry` = 38420;
+UPDATE `creature_template` SET `ScriptName` = 'npc_emberstone_canon_villager' WHERE `entry` = 38424;
+UPDATE `creature_template` SET `ScriptName` = 'npc_emberstone_canon_villager' WHERE `entry` = 38425;
 DELETE FROM `creature` WHERE `id`=38221;
 UPDATE `creature_template` SET `dmg_multiplier` = 3, `Health_mod` = 2, `ScriptName` = 'npc_gilnean_millitia' WHERE `entry` = 38221;
+UPDATE `creature_template` SET `ScriptName` = 'npc_king_genn_greymane' WHERE `entry` = 38470;
 
 DELETE FROM `gossip_menu_option` WHERE `menu_id`=11061;
 INSERT INTO `gossip_menu_option` VALUES 
@@ -69,3 +72,9 @@ UPDATE `creature_template` SET `AIName` = 'SmartAI' WHERE `entry` = 38377;
 DELETE FROM `smart_scripts` WHERE (`entryorguid`=38377 AND `source_type`=0);
 INSERT INTO `smart_scripts` (`entryorguid`, `source_type`, `id`, `link`, `event_type`, `event_phase_mask`, `event_chance`, `event_flags`, `event_param1`, `event_param2`, `event_param3`, `event_param4`, `action_type`, `action_param1`, `action_param2`, `action_param3`, `action_param4`, `action_param5`, `action_param6`, `target_type`, `target_param1`, `target_param2`, `target_param3`, `target_x`, `target_y`, `target_z`, `target_o`, `comment`) VALUES 
 (38377, 0, 0, 0, 27, 0, 100, 0, 1000, 1000, 0, 0, 11, 72839, 3, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, "Damaged catapult");
+
+DELETE FROM waypoint_data WHERE id=99999;
+INSERT INTO `waypoint_data` VALUES 
+(99999, 3, -1603.74, 1314.05, 18.2847, 0, 0, 1, 0, 100, 0),
+(99999, 2, -1588.6, 1316.2, 27.6428, 0, 0, 1, 0, 100, 0),
+(99999, 1, -1575.36, 1317.83, 35.6656, 0, 0, 1, 0, 100, 0);

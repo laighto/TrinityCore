@@ -25,6 +25,12 @@
 #include "Player.h"
 #include "World.h"
 
+#include "GridDefines.h"
+#include "GridNotifiers.h"
+#include "GridNotifiersImpl.h"
+#include "Cell.h"
+#include "CellImpl.h"
+
 class npc_krennan_aranas : public CreatureScript
 {
     public:
@@ -64,9 +70,11 @@ class npc_prince_liam : public CreatureScript
 
             EventMap events;
             bool ignoredamage;
+            bool prepared;
  
             void Reset() OVERRIDE
             {
+                me->SetVisible(true);
                 me->Relocate(eventPositionsTeamA[0].GetPositionX(), eventPositionsTeamA[0].GetPositionY(), eventPositionsTeamA[0].GetPositionZ(), eventPositionsTeamA[0].GetOrientation());
                 event_active = false;
                 intro = false;
@@ -95,6 +103,10 @@ class npc_prince_liam : public CreatureScript
                 s3pos = false;
                 endpoint = false;
                 ignoredamage = true;
+                stage4 = false;
+                boss2 = false;
+                bfgcdone = false;
+                prepared = false;
             }
 
             void SpawnMilitia()
@@ -108,6 +120,11 @@ class npc_prince_liam : public CreatureScript
             {
                 me->Relocate(eventPositionsTeamA[0].GetPositionX(), eventPositionsTeamA[0].GetPositionY(), eventPositionsTeamA[0].GetPositionZ(), eventPositionsTeamA[0].GetOrientation());
                 resetall = true;
+            }
+
+            void JustRespawned() OVERRIDE
+            {
+                Reset();
             }
 
             void Speech()
@@ -138,7 +155,7 @@ class npc_prince_liam : public CreatureScript
                         }
                         else if (target->GetDistance2d(me) < 30)
                         {
-                            me->GetMotionMaster()->MoveChase(target, 8.0f);
+                            me->GetMotionMaster()->MoveChase(target, 7.0f);
                             me->CastSpell(target, SPELL_SHOOT, false);
                             if (urand(0, 6) > 5)
                                 Talk(SAY_RANDOM_TXT);
@@ -260,7 +277,6 @@ class npc_prince_liam : public CreatureScript
                             events.ScheduleEvent(STAGE_1_FIGHT, 20000, 0, 0);                 
                             break;
                         case STAGE_1_FIGHT:
-                            //me->GetMotionMaster()->Clear();
                             SearchTarget();
                             if (!stage2)
                                 events.ScheduleEvent(STAGE_1_FIGHT, 3000, 0, 0);
@@ -276,18 +292,26 @@ class npc_prince_liam : public CreatureScript
                         case STAGE2_PREPARE:
                             ignoredamage = true;
                             me->CombatStop(true);
-                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
                             me->GetMotionMaster()->Clear();
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
                             me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[3].GetPositionX(), eventPositionsTeamA[3].GetPositionY(), eventPositionsTeamA[3].GetPositionZ(), true);
-                            ignoredamage = true;
+                            //me->Relocate(eventPositionsTeamA[3].GetPositionX(), eventPositionsTeamA[3].GetPositionY(), eventPositionsTeamA[3].GetPositionZ(), eventPositionsTeamA[3].GetOrientation());
+                            if (!prepared)
+                            {
+                                events.RescheduleEvent(STAGE2_PREPARE, 2000, 0, 0);
+                                prepared = true;
+                            }
                             break;
                         case STAGE2: // Military quoter
-                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
                             me->GetMotionMaster()->Clear();
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[4].GetPositionX(), eventPositionsTeamA[4].GetPositionY(), eventPositionsTeamA[4].GetPositionZ(), true);
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                            //me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[4].GetPositionX(), eventPositionsTeamA[4].GetPositionY(), eventPositionsTeamA[4].GetPositionZ(), true);
+                            //me->GetMotionMaster()->MovePath(99999, false); 
+                            me->SetVisible(false);
+                            me->Relocate(eventPositionsTeamA[4].GetPositionX(), eventPositionsTeamA[4].GetPositionY(), eventPositionsTeamA[4].GetPositionZ(), eventPositionsTeamA[4].GetOrientation());
                             military_quoter = true;
                             ignoredamage = true;
-                            events.RescheduleEvent(STAGE2_A_FIGHT, 5000, 0, 0);
+                            me->SetVisible(true);
                             break;
                         case STAGE2_A_FIGHT:
                             ignoredamage = false;
@@ -296,8 +320,9 @@ class npc_prince_liam : public CreatureScript
                                 events.ScheduleEvent(STAGE2_A_FIGHT, 3500, 0, 0);
                             break;
                         case STAGE2_A_CENTER:
-                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
                             me->GetMotionMaster()->Clear();
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                            me->StopMoving(); 
                             me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[5].GetPositionX(), eventPositionsTeamA[5].GetPositionY(), eventPositionsTeamA[5].GetPositionZ(), true);
                             ignoredamage = true;
                             events.RescheduleEvent(STAGE2_A_FIGHT, 5000, 0, 0);
@@ -311,11 +336,13 @@ class npc_prince_liam : public CreatureScript
                             break;
                         case STAGE_BOSS_FIGHT_G:
                             ignoredamage = false;
-                            if (Unit* target = me->FindNearestCreature(GORERROT, 20.0f))
+                            if (Unit* target = me->FindNearestCreature(GORERROT, 10.0f))
                             {
                                 me->GetMotionMaster()->MoveChase(target, 6.0f);
                                 me->CastSpell(target, SPELL_SHOOT, false);
                             }
+                            else events.ScheduleEvent(STAGE_BOSS_G, 100, 0, 0);
+
                             if (!boss_gurerrot_dead)
                                 events.ScheduleEvent(STAGE_BOSS_FIGHT_G, 3500, 0, 0);
                             break;
@@ -349,8 +376,7 @@ class npc_prince_liam : public CreatureScript
                         case STAGE_3_POINT_5:
                             endpoint = true;
                             me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                            me->GetMotionMaster()->Clear();
-                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[11].GetPositionX(), eventPositionsTeamA[11].GetPositionY(), eventPositionsTeamA[11].GetPositionZ(), true);
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[11].GetPositionX(), eventPositionsTeamA[11].GetPositionY(), eventPositionsTeamA[11].GetPositionZ(), false);
                             ignoredamage = true;
                             break;
                         case STAGE_3_FIGHT_A:
@@ -359,16 +385,20 @@ class npc_prince_liam : public CreatureScript
                                 events.ScheduleEvent(STAGE_3_FIGHT_A, 3500, 0, 0);
                             ignoredamage = false;
                             break;
-
+                        case STAGE_3_POINT_DESPAWN:
+                            me->SetVisible(false);
+                            stage4 = true;
+                            break;
                     }
                 }
 
                 if(crossbowman > 33 && !stage2)
                 {
-                    events.ScheduleEvent(STAGE2_PREPARE, 1000, 0, 0);
-                    events.ScheduleEvent(STAGE2, 20000, 0, 0);
-                    events.RescheduleEvent(STAGE2_A_FIGHT, 30000, 0, 0);
+                    ignoredamage = true;
                     stage2 = true;
+                    events.ScheduleEvent(STAGE2_PREPARE, 100, 0, 0);
+                    events.ScheduleEvent(STAGE2, 15000, 0, 0);
+                    events.ScheduleEvent(STAGE2_A_FIGHT, 20000, 0, 0);
                 }
 
                 if(abom > 15 && !s2center)
@@ -388,18 +418,22 @@ class npc_prince_liam : public CreatureScript
                 if (boss_gurerrot_dead && !s3pos)
                 {
                     events.ScheduleEvent(STAGE_3_POINT_1, 8000, 0, 0);
-                    events.ScheduleEvent(STAGE_3_POINT_2, 30000, 0, 0);
-                    events.ScheduleEvent(STAGE_3_POINT_3, 65000, 0, 0);
-                    events.ScheduleEvent(STAGE_3_POINT_4, 80000, 0, 0);
-                    events.ScheduleEvent(STAGE_3_POINT_4, 95000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_POINT_2, 25000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_POINT_3, 45000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_POINT_4, 70000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_POINT_4, 90000, 0, 0);
                     events.ScheduleEvent(STAGE_3_POINT_5, 100000, 0, 0);
+                    events.ScheduleEvent(STAGE_3_POINT_DESPAWN, 110000, 0, 0);
                     events.ScheduleEvent(STAGE_3_FIGHT_A, 16000, 0, 0);
                     s3pos = true;
                 }
 
-
-                if(resetall)
+                if(resetall || bfgcdone)
+                {
+                    me->Relocate(eventPositionsTeamA[0].GetPositionX(), eventPositionsTeamA[0].GetPositionY(), eventPositionsTeamA[0].GetPositionZ(), eventPositionsTeamA[0].GetOrientation());
+                    me->SetRespawnTime(120);
                     me->DespawnOrUnsummon(100);
+                }
 
                 DoMeleeAttackIfReady();
             }
@@ -423,12 +457,14 @@ class npc_gilnean_millitia : public CreatureScript
             EventMap events;
             float dist;
             bool ignoredamage;
+            bool boss2b;
 
             void Reset() OVERRIDE
             {
                 events.Reset();
                 s3posb = false;
                 ignoredamage = false;
+                boss2b = false;
             }
 
            /* void EnterCombat(Unit* /*who*//*) OVERRIDE
@@ -587,6 +623,7 @@ class npc_gilnean_millitia : public CreatureScript
                                     militia[i]->CombatStop(true);
                                     militia[i]->GetMotionMaster()->Clear();
                                     militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[4].GetPositionX()+dist, eventPositionsTeamB[4].GetPositionY()+dist, eventPositionsTeamB[4].GetPositionZ(), true);
+                                   // militia[i]->Relocate(eventPositionsTeamB[4].GetPositionX()+dist, eventPositionsTeamB[4].GetPositionY()+dist, eventPositionsTeamB[4].GetPositionZ(), eventPositionsTeamB[4].GetOrientation());
                                 }
                             }
                             ignoredamage = true;
@@ -598,8 +635,10 @@ class npc_gilnean_millitia : public CreatureScript
                                 {
                                     dist = frand(-4, 4);
                                     militia[i]->GetMotionMaster()->Clear();
+                                    //militia[i]->GetMotionMaster()->MovePath(99999, false);   
                                     militia[i]->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
-                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[5].GetPositionX()+dist, eventPositionsTeamB[5].GetPositionY()+dist, eventPositionsTeamB[5].GetPositionZ(), true);
+                                    //militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[5].GetPositionX()+dist, eventPositionsTeamB[5].GetPositionY()+dist, eventPositionsTeamB[5].GetPositionZ(), true);
+                                    militia[i]->Relocate(eventPositionsTeamB[5].GetPositionX(), eventPositionsTeamB[5].GetPositionY(), eventPositionsTeamB[5].GetPositionZ(), eventPositionsTeamB[5].GetOrientation());
                                 }
                             }
                             ignoredamage = true;
@@ -611,6 +650,7 @@ class npc_gilnean_millitia : public CreatureScript
                                 {
                                     dist = frand(-4, 4);
                                     militia[i]->GetMotionMaster()->Clear();
+                                    militia[i]->StopMoving();
                                     militia[i]->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
                                     militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[6].GetPositionX()+dist, eventPositionsTeamB[6].GetPositionY()+dist, eventPositionsTeamB[6].GetPositionZ(), true);
                                 }
@@ -632,7 +672,6 @@ class npc_gilnean_millitia : public CreatureScript
                             {
                                 if(militia[i] && militia[i]->IsAlive())
                                 {
-                                    militia[i]->GetMotionMaster()->Clear();
                                     dist = frand(-4, 4);
                                     militia[i]->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
                                     militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[7].GetPositionX()+dist, eventPositionsTeamB[7].GetPositionY()+dist, eventPositionsTeamB[7].GetPositionZ(), true);
@@ -645,17 +684,20 @@ class npc_gilnean_millitia : public CreatureScript
                             {
                                 if(militia[i] && militia[i]->IsAlive())
                                 {
-                                    if (Unit* target = militia[i]->FindNearestCreature(GORERROT, 50.0f))
+                                    if (Unit* target = militia[i]->FindNearestCreature(GORERROT, 10.0f))
+                                    {
                                         if (urand(0, 1) == 1)
                                         {
-                                            //militia[i]->GetMotionMaster()->MoveChase(target, 10.0f);
+                                            militia[i]->GetMotionMaster()->MoveChase(target, 10.0f);
                                             militia[i]->CastSpell(target, SPELL_SHOOT, false);
                                         }
+                                    }
+                                    else events.ScheduleEvent(STAGE_BOSS_Gm, 1000, 0, 0);
                                 }
                             }
                             ignoredamage = false;
                             if (!boss_gurerrot_dead)
-                                events.ScheduleEvent(STAGE_BOSS_FIGHT_Gm, 3500, 0, 0);
+                                events.ScheduleEvent(STAGE_BOSS_FIGHT_Gm, 2000, 0, 0);
                             break;
                         case STAGE_3_POINT_1:
                             for (int i = 0; i < 20; i++)
@@ -720,7 +762,7 @@ class npc_gilnean_millitia : public CreatureScript
                                     dist = frand(-4, 4);
                                     militia[i]->SetSpeed(MOVE_RUN, militia[i]->GetSpeedRate(MOVE_RUN), true);
                                     militia[i]->GetMotionMaster()->Clear();
-                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[11].GetPositionX()+dist, eventPositionsTeamA[11].GetPositionY()+dist, eventPositionsTeamA[11].GetPositionZ(), true);
+                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamA[11].GetPositionX()+dist, eventPositionsTeamA[11].GetPositionY()+dist, eventPositionsTeamA[11].GetPositionZ(), false);
                                 }
                             }
                             ignoredamage = true;
@@ -733,19 +775,45 @@ class npc_gilnean_millitia : public CreatureScript
                             if (!endpoint)
                                 events.ScheduleEvent(STAGE_3_FIGHT_B, 3500, 0, 0);
                             break;
+                        case STAGE_4:
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if(militia[i] && militia[i]->IsAlive())
+                                {
+                                    dist = frand(-5, 5);
+                                    militia[i]->SetSpeed(MOVE_RUN, militia[i]->GetSpeedRate(MOVE_RUN), true);
+                                    militia[i]->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[8].GetPositionX()+dist, eventPositionsTeamB[8].GetPositionY()+dist, eventPositionsTeamB[8].GetPositionZ(), true);
+                                }
+                            }
+                            break;
+                        case STAGE_4_FIGHT:
+                            for (int i = 0; i < 20; i++)
+                            {
+                                if(militia[i] && militia[i]->IsAlive())
+                                {
+                                    if (Unit* target = militia[i]->FindNearestCreature(LADY_SYLVANAS_WINDRUNNER, 100.0f))
+                                    {
+                                        militia[i]->GetMotionMaster()->MoveChase(target, 8.0f);
+                                        militia[i]->CastSpell(target, SPELL_SHOOT, false);
+                                    }
+                                    else events.ScheduleEvent(STAGE_4, 1000, 0, 0);
+                                }
+                            }
+                            if (!bfgcdone)
+                                events.ScheduleEvent(STAGE_4_FIGHT, 3500, 0, 0);
+                            break;
                     }
                 }
                 
                 if (event_active && !pos1)
                 {
-                    events.ScheduleEvent(STAGE_1_B_FIGHT, 15000, 0, 0);
                     pos1 = true;
                     events.ScheduleEvent(STAGE1_B_1, 100, 0, 0);
                 }
                 
                 if (event_active && crossbowman > 1 && !pos2)
                 {
-                    events.ScheduleEvent(STAGE_1_B_FIGHT, 6000, 0, 0);
+                    events.ScheduleEvent(STAGE_1_B_FIGHT, 7000, 0, 0);
                     pos2 = true;
                     pos3 = true;
                 }
@@ -773,15 +841,16 @@ class npc_gilnean_millitia : public CreatureScript
 
                 if(military_quoter && !mpos1 && stage2b)
                 {
+                    ignoredamage = true;
                     mpos1 = true;
-                    events.ScheduleEvent(STAGE2B, 1000, 0, 0); //enter military quoter
-                    events.RescheduleEvent(STAGE_2_B_FIGHT, 10000, 0, 0);
+                    events.ScheduleEvent(STAGE2B, 8000, 0, 0);
+                    events.RescheduleEvent(STAGE_2_B_FIGHT, 17000, 0, 0);
                 }
-                else if (military_quoter && !mpos2 && abom > 10)
+                else if (military_quoter && !mpos2 && abom > 12)
                 {
                     mpos2 = true;
                     events.ScheduleEvent(STAGE2_B_1, 1000, 0, 0); //move to center of military quoter
-                    events.ScheduleEvent(STAGE_2_B_FIGHT, 15000, 0, 0);
+                    events.RescheduleEvent(STAGE_2_B_FIGHT, 15000, 0, 0);
                 }
 
                 if(gurerrot && !mpos3)
@@ -820,8 +889,15 @@ class npc_gilnean_millitia : public CreatureScript
                         me->GetMotionMaster()->MoveChase(me->GetVictim());
                         me->Attack(me->GetVictim(), true);
                     }
-                    else if (urand(0, 4) == 3)
+                    else if (urand(0, 4) == 4)
                         me->CastSpell(me->GetVictim(), SPELL_SHOOT, false);
+                }
+
+                if (stage4 && !boss2b)
+                {
+                    events.ScheduleEvent(STAGE_4, 10000, 0, 0);
+                    events.ScheduleEvent(STAGE_4_FIGHT, 15000, 0, 0);
+                    boss2b = true;
                 }
 
                 DoMeleeAttackIfReady();
@@ -908,7 +984,7 @@ class npc_gorrerot : public CreatureScript
  
             EventMap events;
 
-            void Reset()
+            void Reset() OVERRIDE
             {
                 me->SetVisible(false);
                 me->SetReactState(REACT_PASSIVE);
@@ -943,6 +1019,121 @@ class npc_gorrerot : public CreatureScript
         }
 };
 
+class npc_king_genn_greymane : public CreatureScript
+{
+    public:
+        npc_king_genn_greymane() : CreatureScript("npc_king_genn_greymane") { }
+
+        struct npc_king_genn_greymaneAI : public ScriptedAI
+        {
+            npc_king_genn_greymaneAI(Creature* creature) : ScriptedAI(creature) {}
+ 
+            EventMap events;
+
+            void Reset() OVERRIDE
+            {
+                me->AI()->EnterEvadeMode();
+                events.Reset();
+            }
+
+            void DamageTaken(Unit* attacker, uint32& damage) OVERRIDE
+            {
+                if (damage >= me->GetHealth())
+                    damage = 1;
+
+                me->GetMotionMaster()->MoveChase(attacker);
+                me->Attack(attacker, true);
+            }
+
+            void UpdateAI(uint32 uiDiff) OVERRIDE
+            {
+                events.Update(uiDiff);
+
+                while (uint32 eventId = events.ExecuteEvent())
+                {
+                    switch (eventId)
+                    {
+                        case STAGE_4:
+                            me->SetSpeed(MOVE_RUN, me->GetSpeedRate(MOVE_RUN), true);
+                            me->GetMotionMaster()->MovePoint(0, eventPositionsTeamB[8].GetPositionX(), eventPositionsTeamB[8].GetPositionY(), eventPositionsTeamB[8].GetPositionZ(), true);
+                            break;
+                        case STAGE_4_FIGHT:
+                            if (Unit* target = me->FindNearestCreature(LADY_SYLVANAS_WINDRUNNER, 100.0f))
+                            {
+                                me->GetMotionMaster()->MoveChase(target, 1.0f);
+                                me->Attack(target, true);
+                            }
+                            else 
+                                events.ScheduleEvent(STAGE_4, 1000, 0, 0);
+
+                            if (!bfgcdone)
+                                events.ScheduleEvent(STAGE_4_FIGHT, 3000, 0, 0);
+                            break;
+                    }
+                }
+
+                if (me->GetHealthPct() < 50)
+                    me->SetFullHealth();
+
+                if (stage4 && !boss2)
+                {
+                    events.ScheduleEvent(STAGE_4, 1000, 0, 0);
+                    events.ScheduleEvent(STAGE_4_FIGHT, 10000, 0, 0);
+                    boss2 = true;
+                }
+
+                if(resetall || bfgcdone)
+                    Reset();
+
+                DoMeleeAttackIfReady();
+            }
+        };
+
+        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        {
+            return new npc_king_genn_greymaneAI(creature);
+        }
+};
+
+class npc_emberstone_canon_villager : public CreatureScript
+{
+    public:
+        npc_emberstone_canon_villager() : CreatureScript("npc_emberstone_canon_villager") { }
+
+        struct npc_emberstone_canon_villagerAI : public ScriptedAI
+        {
+            npc_emberstone_canon_villagerAI(Creature* creature) : ScriptedAI(creature) {}
+ 
+            EventMap events;
+
+            void Reset() OVERRIDE
+            {
+                me->SetVisible(false);
+            }
+
+            void UpdateAI(uint32 uiDiff) OVERRIDE
+            {
+                events.Update(uiDiff);
+
+                if (military_quoter)
+                {
+                    me->SetVisible(true);
+                    me->SetPhaseMask(262144, true);
+                }
+
+                if(resetall || bfgcdone)
+                    Reset();
+
+                DoMeleeAttackIfReady();
+            }
+        };
+
+        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        {
+            return new npc_emberstone_canon_villagerAI(creature);
+        }
+};
+
 class npc_lady_sylvanas : public CreatureScript
 {
     public:
@@ -955,6 +1146,7 @@ class npc_lady_sylvanas : public CreatureScript
             void JustDied(Unit* /*killer*/) OVERRIDE
             {
                 me->CastSpell(me, SPELL_BFGC_CONPLETE, false);
+                bfgcdone = true;
             }
 
             void UpdateAI(uint32 uiDiff) OVERRIDE
@@ -963,6 +1155,8 @@ class npc_lady_sylvanas : public CreatureScript
                 {
                     Talk(0);
                     me->CastSpell(me, SPELL_BFGC_CONPLETE, false);
+                    bfgcdone = true;
+                    me->DespawnOrUnsummon(3000);
                 }
 
                 DoMeleeAttackIfReady();
@@ -980,8 +1174,10 @@ void AddSC_bfgc_script()
     new npc_krennan_aranas;
     new npc_prince_liam;
     new npc_gilnean_millitia;
+    new npc_king_genn_greymane;
     new npc_forsaken_crossbow;
     new npc_vile_abomination;
     new npc_gorrerot;
+    new npc_emberstone_canon_villager;
     new npc_lady_sylvanas;
 }

@@ -39,7 +39,9 @@ bool mpos3;
 bool s3pos;
 bool s3posb;
 bool endpoint;
-
+bool stage4;
+bool boss2;
+bool bfgcdone;
 Creature* militia[20];
 
 Position const eventPositionsMilitia[20] =
@@ -80,10 +82,10 @@ Position const eventPositionsTeamA[12] =
     {-1804.03f, 1460.228f, 18.86f, 1.53f},  // Move to bridge #8
     {-1803.73f, 1518.038f, 19.78f, 1.49f},  // Move to bridge #9
     {-1794.12f, 1577.45f, 20.50f, 1.15f},  // Move after bridge #10
-    {-1741.31f, 1655.617f, 20.47f, 0.79f},  // End Point #11
+    {-1756.99f, 1643.99f, 20.38f, 0.53f},  // End Point #11
 };
 
-Position const eventPositionsTeamB[8] =
+Position const eventPositionsTeamB[9] =
 {
     {-1430.48f, 1362.39f, 35.556f, 1.29f}, // Event START Run right STAGE1
     {-1444.30f, 1418.51f, 35.556f, 1.62f}, // Turn left STAGE1
@@ -93,6 +95,7 @@ Position const eventPositionsTeamB[8] =
     {-1632.15f, 1308.01f, 19.66f, 3.30f}, // Stage 2  #5
     {-1688.45f, 1347.13f, 15.13f, 0.65f},  // Center military district #6
     {-1721.62f, 1398.47f, 21.67f, 0.85f},  // BOSS Gurerrot #7
+    {-1705.44f, 1633.82f, 20.49f, 5.51f},  // BOSS Sylvanas #8
 };
 
 enum ScriptTexts
@@ -143,6 +146,10 @@ enum EventTypes
     STAGE_3_POINT_3          = 31,
     STAGE_3_POINT_4          = 32,
     STAGE_3_POINT_5          = 33,
+    STAGE_3_POINT_DESPAWN    = 34,
+    STAGE_4                  = 35,
+    STAGE_4_FIGHT            = 36,
+
 };
 
 enum QuestDatas 
