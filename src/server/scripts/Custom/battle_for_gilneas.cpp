@@ -50,10 +50,10 @@ class npc_krennan_aranas : public CreatureScript
             return true;
         }
 
-        bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) OVERRIDE
+        bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 /*action*/) OVERRIDE
         {
             player->PlayerTalkClass->SendCloseGossip();
-            creature->AI()->Talk(0);
+            //creature->AI()->Talk(0);
             intro = true;
             return true;
         }
@@ -142,7 +142,7 @@ class npc_prince_liam : public CreatureScript
 
             void SearchTarget() OVERRIDE
             {
-                if(!military_quoter || s3pos && !ignoredamage)
+                if((!military_quoter || s3pos) && !ignoredamage)
                 {
                     if (Unit* target = me->FindNearestCreature(FORSAKEN_CROSSBOWMAN, 70.0f))
                     {                  
@@ -224,12 +224,6 @@ class npc_prince_liam : public CreatureScript
                 if(!ignoredamage)
                     me->Attack(attacker, true);
             }
-
-           /* void EnterCombat(Unit* /*who*//*) OVERRIDE
-            {
-                //me->GetMotionMaster()->Clear();
-               // me->GetMotionMaster()->MoveIdle();
-            }*/
 
             void UpdateAI(uint32 uiDiff) OVERRIDE
             {
@@ -467,14 +461,6 @@ class npc_gilnean_millitia : public CreatureScript
                 boss2b = false;
             }
 
-           /* void EnterCombat(Unit* /*who*//*) OVERRIDE
-            {
-                if (me->GetVictim())
-                    if(urand(0, 1) == 1)
-                        me->CastSpell(me->GetVictim(), SPELL_SHOOT, false);
-                    else me->Attack(me->GetVictim(), false);
-            }*/
-
             void DamageTaken(Unit* attacker, uint32& damage) OVERRIDE
             {
                 if (damage >= me->GetHealth())
@@ -489,7 +475,7 @@ class npc_gilnean_millitia : public CreatureScript
 
             void SearchTargets(Unit* attacker) OVERRIDE
             {
-                if(!military_quoter || s3posb && !ignoredamage)
+                if((!military_quoter || s3posb) && !ignoredamage)
                 {
                     if (Unit* target = attacker->FindNearestCreature(FORSAKEN_CROSSBOWMAN, 80.0f))
                     {                  
@@ -925,7 +911,7 @@ class npc_forsaken_crossbow : public CreatureScript
                 //sWorld->SendGMText(30000, crossbowman);
             }
 
-            void UpdateAI(uint32 uiDiff) OVERRIDE
+            void UpdateAI(uint32 /*uiDiff*/) OVERRIDE
             {
                 if(resetall)
                 {
@@ -956,7 +942,7 @@ class npc_vile_abomination : public CreatureScript
                 abom = abom + 1;
             }
 
-            void UpdateAI(uint32 uiDiff) OVERRIDE
+            void UpdateAI(uint32 /*uiDiff*/) OVERRIDE
             {
                 if(resetall)
                 {
@@ -1149,7 +1135,7 @@ class npc_lady_sylvanas : public CreatureScript
                 bfgcdone = true;
             }
 
-            void UpdateAI(uint32 uiDiff) OVERRIDE
+            void UpdateAI(uint32 /*uiDiff*/) OVERRIDE
             {
                 if (me->GetHealthPct() < 21)
                 {
