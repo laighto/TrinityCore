@@ -95,7 +95,7 @@ Position const eventPositionsTeamB[9] =
     {-1632.15f, 1308.01f, 19.66f, 3.30f}, // Stage 2  #5
     {-1688.45f, 1347.13f, 15.13f, 0.65f},  // Center military district #6
     {-1721.62f, 1398.47f, 21.67f, 0.85f},  // BOSS Gurerrot #7
-    {-1705.44f, 1633.82f, 20.49f, 5.51f},  // BOSS Sylvanas #8
+    {-1710.44f, 1637.82f, 20.49f, 5.51f},  // BOSS Sylvanas #8
 };
 
 enum ScriptTexts

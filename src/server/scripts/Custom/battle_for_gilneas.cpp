@@ -672,6 +672,11 @@ class npc_gilnean_millitia : public CreatureScript
                                 {
                                     if (Unit* target = militia[i]->FindNearestCreature(GORERROT, 10.0f))
                                     {
+                                        if (target->GetDistance2d(militia[i]) < 5)
+                                        {
+                                             militia[i]->GetMotionMaster()->MoveChase(target, 8.0f);
+                                             militia[i]->Attack(target, true);
+                                        }
                                         if (urand(0, 1) == 1)
                                         {
                                             militia[i]->GetMotionMaster()->MoveChase(target, 10.0f);
@@ -779,7 +784,7 @@ class npc_gilnean_millitia : public CreatureScript
                                 {
                                     if (Unit* target = militia[i]->FindNearestCreature(LADY_SYLVANAS_WINDRUNNER, 100.0f))
                                     {
-                                        militia[i]->GetMotionMaster()->MoveChase(target, 8.0f);
+                                        militia[i]->GetMotionMaster()->MoveChase(target, 16.0f);
                                         militia[i]->CastSpell(target, SPELL_SHOOT, false);
                                     }
                                     else events.ScheduleEvent(STAGE_4, 1000, 0, 0);
@@ -862,9 +867,9 @@ class npc_gilnean_millitia : public CreatureScript
                 if (me->GetHealthPct() < 50)
                     me->SetFullHealth();
 
-                if(resetall)
+                if(resetall || bfgcdone)
                 {
-                    me->DespawnOrUnsummon(100);
+                    me->DespawnOrUnsummon(1000);
                     Reset();
                 }
 
