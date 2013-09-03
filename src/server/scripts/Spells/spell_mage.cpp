@@ -81,6 +81,8 @@ enum MageSpells
     SPELL_MAGE_RING_OF_FROST_FREEZE              = 82691,
     SPELL_MAGE_RING_OF_FROST_DUMMY               = 91264,
 
+    SPELL_MAGE_PYROBLAST_INSTANT                 = 92315, //Instant
+
     SPELL_MAGE_FINGERS_OF_FROST                  = 44544
 };
 
@@ -95,7 +97,58 @@ enum MageIcons
 
 enum MiscSpells
 {
-    SPELL_PRIEST_SHADOW_WORD_DEATH                  = 32409
+    SPELL_PRIEST_SHADOW_WORD_DEATH                  = 32409,
+    SPELL_HOT_STREAK                                = 48108,
+};
+
+// 92315 - Pyroblast must consume Hot Streak 48108
+class spell_mage_pyroblast_instant : public SpellScriptLoader
+{
+   public:
+       spell_mage_pyroblast_instant() : SpellScriptLoader("spell_mage_pyroblast_instant") { }
+
+       class spell_mage_pyroblast_instant_SpellScript : public SpellScript
+       {
+           PrepareSpellScript(spell_mage_pyroblast_instant_SpellScript);
+
+           bool Validate(SpellInfo const* /*spellInfo*/)
+           {
+               if (!sSpellMgr->GetSpellInfo(SPELL_MAGE_PYROBLAST_INSTANT))
+                   return false;
+               return true;
+           }
+
+           void CountTargets(std::list<WorldObject*>& targetList)
+           {
+               _didHit = !targetList.empty();
+           }
+
+           void HandleRemoveHotStreak()
+           {
+               if (!_didHit)
+                   return;
+
+               if (Unit* caster = GetCaster())
+               {
+                   if (Aura* aurEff = caster->GetAura(SPELL_HOT_STREAK))
+                       caster->RemoveAura(SPELL_HOT_STREAK);
+               }
+           }
+
+           void Register()
+           {
+               OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_mage_pyroblast_instant_SpellScript::CountTargets, EFFECT_0, TARGET_UNIT_TARGET_ENEMY);
+               AfterCast += SpellCastFn(spell_mage_pyroblast_instant_SpellScript::HandleRemoveHotStreak);
+           }
+      
+       private:
+           bool _didHit;
+       };
+
+       SpellScript* GetSpellScript() const
+       {
+           return new spell_mage_pyroblast_instant_SpellScript();
+       }
 };
 
 // -31571 - Arcane Potency
@@ -1406,6 +1459,7 @@ class spell_mage_water_elemental_freeze : public SpellScriptLoader
 
 void AddSC_mage_spell_scripts()
 {
+    new spell_mage_pyroblast_instant();
     new spell_mage_arcane_potency();
     new spell_mage_blast_wave();
     new spell_mage_blazing_speed();
