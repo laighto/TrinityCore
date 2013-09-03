@@ -118,16 +118,8 @@ class spell_mage_pyroblast_instant : public SpellScriptLoader
                return true;
            }
 
-           void CountTargets(std::list<WorldObject*>& targetList)
-           {
-               _didHit = !targetList.empty();
-           }
-
            void HandleRemoveHotStreak()
            {
-               if (!_didHit)
-                   return;
-
                if (Unit* caster = GetCaster())
                {
                    if (Aura* aurEff = caster->GetAura(SPELL_HOT_STREAK))
@@ -137,12 +129,9 @@ class spell_mage_pyroblast_instant : public SpellScriptLoader
 
            void Register()
            {
-               OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_mage_pyroblast_instant_SpellScript::CountTargets, EFFECT_0, TARGET_UNIT_TARGET_ENEMY);
-               AfterCast += SpellCastFn(spell_mage_pyroblast_instant_SpellScript::HandleRemoveHotStreak);
+               OnCast += SpellCastFn(spell_mage_pyroblast_instant_SpellScript::HandleRemoveHotStreak);
            }
-      
-       private:
-           bool _didHit;
+
        };
 
        SpellScript* GetSpellScript() const
