@@ -75,6 +75,35 @@ enum MiscSpells
     SPELL_PRIEST_RENEWED_HOPE                       = 63944
 };
 
+//Cleave
+class spell_warr_cleave : public SpellScriptLoader
+{
+    public:
+        spell_warr_cleave() : SpellScriptLoader("spell_warr_cleave") { }
+
+    class spell_warr_cleave_SpellScript : public SpellScript
+    {
+        PrepareSpellScript(spell_warr_cleave_SpellScript);
+
+        void CalculateDamage(SpellEffIndex /*effect*/)
+        {
+            // 6 + AttackPower * 0.45
+            if (Unit* caster = GetCaster())
+            SetHitDamage(int32(6 + caster->GetTotalAttackPowerValue(BASE_ATTACK) * 0.45));
+        }
+
+        void Register()
+        {
+            OnEffectHitTarget += SpellEffectFn(spell_warr_cleave_SpellScript::CalculateDamage, EFFECT_0, SPELL_EFFECT_SCHOOL_DAMAGE);
+        }
+    };
+
+    SpellScript* GetSpellScript() const
+    {
+        return new spell_warr_cleave_SpellScript();
+    }
+};
+
 /// Updated 4.3.4
 class spell_warr_bloodthirst : public SpellScriptLoader
 {
@@ -1060,6 +1089,7 @@ class spell_warr_vigilance_trigger : public SpellScriptLoader
 
 void AddSC_warrior_spell_scripts()
 {
+    new spell_warr_cleave();
     new spell_warr_bloodthirst();
     new spell_warr_bloodthirst_heal();
     new spell_warr_charge();
