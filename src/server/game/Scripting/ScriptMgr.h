@@ -675,6 +675,9 @@ class PlayerScript : public UnitScript
 
     public:
 
+        // Called when a player get afk
+        virtual void OnPlayerAfk(Player* /*player*/) { }
+
         // Called when a player kills another player
         virtual void OnPVPKill(Player* /*killer*/, Player* /*killed*/) { }
 
@@ -1000,6 +1003,7 @@ class ScriptMgr
 
     public: /* PlayerScript */
 
+        void OnPlayerAfk(Player* player);
         void OnPVPKill(Player* killer, Player* killed);
         void OnCreatureKill(Player* killer, Creature* killed);
         void OnPlayerKilledByCreature(Creature* killer, Player* killed);

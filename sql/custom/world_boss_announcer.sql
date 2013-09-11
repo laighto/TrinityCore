@@ -1,0 +1,3 @@
+DELETE FROM `trinity_string` WHERE `entry` = 11002;
+INSERT INTO `trinity_string` (`entry`, `content_default`, `content_loc1`, `content_loc2`, `content_loc3`, `content_loc4`, `content_loc5`, `content_loc6`, `content_loc7`, `content_loc8`) VALUES
+ (11002, '|CFF7BBEF7[PVE Announcer]|r:|cffff0000 %s |r and his(her) group killed world boss |CFF18BE00[%s]|r !', NULL, NULL, NULL, NULL, NULL, NULL, NULL,'|CFF7BBEF7[ПВЕ анонс]|r:|cffff0000 %s |r и его(ее) группа убили |CFF18BE00[%s]|r !');

@@ -1139,6 +1139,11 @@ bool ScriptMgr::OnCriteriaCheck(uint32 scriptId, Player* source, Unit* target)
 }
 
 // Player
+void ScriptMgr::OnPlayerAfk(Player* player)
+{
+    FOREACH_SCRIPT(PlayerScript)->OnPlayerAfk(player);
+}
+
 void ScriptMgr::OnPVPKill(Player* killer, Player* killed)
 {
     FOREACH_SCRIPT(PlayerScript)->OnPVPKill(killer, killed);

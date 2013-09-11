@@ -10,6 +10,7 @@
 
 set(scripts_STAT_SRCS
   ${scripts_STAT_SRCS}
+  Commands/cs_recruit_a_friend.cpp
   Commands/cs_account.cpp
   Commands/cs_achievement.cpp
   Commands/cs_arena.cpp

@@ -43,7 +43,7 @@ class npc_raider_jhash : public CreatureScript
         }
 };
 
-void AddSC_custom_script()
+void AddSC_raider_jhash()
 {
     new npc_raider_jhash;
 }

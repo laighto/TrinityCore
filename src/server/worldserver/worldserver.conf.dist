@@ -2953,3 +2953,23 @@ PacketSpoof.BanDuration = 86400
 
 #
 ###################################################################################################
+
+###############################################################################
+#
+# Bool PvPEvent Gurubaqshi Arena
+# Enable/Disable Freeze (5 min stun after PVP die at Arena Gurubashi)
+
+PvPGurubashiEvent = 0
+
+# Bool AntiAfk system
+# Enable/Disable AntiAFK system)
+
+AntiAfk = 0
+
+# Bool Dalaran AntiAfk system
+# Enable/Disable Teleport to Gurubashi arena if AFK in Dalaran)
+
+DalaranAntiAfk = 0
+
+#
+##############################################################################

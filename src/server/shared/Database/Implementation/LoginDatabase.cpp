@@ -106,6 +106,9 @@ void LoginDatabaseConnection::DoPrepareStatements()
     PrepareStatement(LOGIN_INS_RBAC_ACCOUNT_ROLE, "INSERT INTO rbac_account_roles (accountId, roleId, granted, realmId) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE granted = VALUES(granted)", CONNECTION_ASYNC);
     PrepareStatement(LOGIN_DEL_RBAC_ACCOUNT_ROLE, "DELETE FROM rbac_account_roles WHERE accountId = ? AND roleId = ? AND (realmId = ? OR realmId = -1)", CONNECTION_ASYNC);
 
+    PrepareStatement(LOGIN_SET_RECRUITER, "UPDATE account SET recruiter = ? WHERE id = ?", CONNECTION_ASYNC);
+    PrepareStatement(LOGIN_DELETE_RECRUITER, "UPDATE account SET recruiter = 0 WHERE id = ?", CONNECTION_ASYNC);
+
     PrepareStatement(LOGIN_SEL_RBAC_ACCOUNT_PERMISSIONS, "SELECT permissionId, granted FROM rbac_account_permissions WHERE accountId = ? AND (realmId = ? OR realmId = -1) ORDER BY permissionId, realmId", CONNECTION_SYNCH);
     PrepareStatement(LOGIN_INS_RBAC_ACCOUNT_PERMISSION, "INSERT INTO rbac_account_permissions (accountId, permissionId, granted, realmId) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE granted = VALUES(granted)", CONNECTION_ASYNC);
     PrepareStatement(LOGIN_DEL_RBAC_ACCOUNT_PERMISSION, "DELETE FROM rbac_account_permissions WHERE accountId = ? AND permissionId = ? AND (realmId = ? OR realmId = -1)", CONNECTION_ASYNC);

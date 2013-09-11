@@ -1236,6 +1236,13 @@ enum TrinityStrings
     LANG_AUTO_BROADCAST                 = 11000,
     LANG_INVALID_REALMID                = 11001,
 
+    LANG_PLAYER_CAN_NOT_SET_RECRUITER   = 788,
+    LANG_PLAYER_SET_RECRUITER_SUCCESS   = 789,
+    RECRUIT_ONLINE                      = 790,
+    RECRUITER_ONLINE                    = 791,
+    LANG_PLAYER_DELETE_RECRUITER        = 792,
+    LANG_BOSS_ANNOUNCER                 = 11002,
+
     // NOT RESERVED IDS                   12000-1999999999
     // `db_script_string` table index     2000000000-2000009999 (MIN_DB_SCRIPT_STRING_ID-MAX_DB_SCRIPT_STRING_ID)
     // For other tables maybe             2000010000-2147483647 (max index)

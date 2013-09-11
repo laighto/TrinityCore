@@ -487,6 +487,9 @@ void WorldSession::HandleMessagechatOpcode(WorldPacket& recvData)
                         _player->ToggleDND();
 
                     _player->ToggleAFK();
+
+                    // Hook for OnPlayerAfk Event
+                    sScriptMgr->OnPlayerAfk(_player);
                 }
 
                 sScriptMgr->OnPlayerChat(_player, type, lang, msg);

@@ -24,6 +24,7 @@ void AddSC_example_gossip_codebox();
 void AddSC_example_misc();
 void AddSC_example_commandscript();
 void AddSC_custom_script();
+void AddSC_raider_jhash();
 void AddSC_bfgc_script();
 
 // spells
@@ -46,6 +47,7 @@ void AddSC_holiday_spell_scripts();
 void AddSC_SmartSCripts();
 
 //Commands
+void AddSC_custom_recruitafriend();
 void AddSC_account_commandscript();
 void AddSC_achievement_commandscript();
 void AddSC_arena_commandscript();
@@ -711,6 +713,7 @@ void AddExampleScripts()
     AddSC_example_misc();
     AddSC_example_commandscript();
     AddSC_custom_script();
+    AddSC_raider_jhash();
     AddSC_bfgc_script();
 }
 
@@ -735,6 +738,7 @@ void AddSpellScripts()
 
 void AddCommandScripts()
 {
+    AddSC_custom_recruitafriend();
     AddSC_account_commandscript();
     AddSC_achievement_commandscript();
     AddSC_arena_commandscript();
