@@ -13,6 +13,10 @@ set(scripts_STAT_SRCS
   World/achievement_scripts.cpp
   World/areatrigger_scripts.cpp
   World/boss_emerald_dragons.cpp
+  World/ChatLog/ChatLog.cpp
+  World/ChatLog/ChatLexicsCutter.cpp
+  World/ChatLog/ChatLog.h
+  World/ChatLog/ChatLexicsCutter.h
   World/chat_log.cpp
   World/go_scripts.cpp
   World/guards.cpp

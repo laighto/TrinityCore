@@ -1284,6 +1284,12 @@ void World::LoadConfigSettings(bool reload)
     m_bool_configs[ANTI_AFK] = sConfigMgr->GetBoolDefault("AntiAfk", false);
     m_bool_configs[ANTI_AFK_DALARAN] = sConfigMgr->GetBoolDefault("DalaranAntiAfk", false);
 
+    // chatlog
+    m_bool_configs[CONFIG_CHAT_LOG_LEXIS] = sConfigMgr->GetBoolDefault("ChatLog.Enable", false);
+    m_bool_configs[CONFIG_CHATLOG_LEXIS_ACTION_CUSTOM] = sConfigMgr->GetBoolDefault("ChatLog.Lexics.Action.Custom", false);
+    m_int_configs[CONFIG_CHATLOG_LEXIS_ACTION_CUSTOM_MODE] = sConfigMgr->GetIntDefault("ChatLog.Lexics.Action.Custom.Mode", 0);
+    m_int_configs[CONFIG_CHATLOG_LEXIS_ACTION_CUSTOM_SPELL] = sConfigMgr->GetIntDefault("ChatLog.Lexics.Action.Custom.Punish.Spell", 0);
+
     //packet spoof punishment
     m_int_configs[CONFIG_PACKET_SPOOF_POLICY] = sConfigMgr->GetIntDefault("PacketSpoof.Policy", (uint32)WorldSession::DosProtection::POLICY_KICK);
     m_int_configs[CONFIG_PACKET_SPOOF_BANMODE] = sConfigMgr->GetIntDefault("PacketSpoof.BanMode", (uint32)BAN_ACCOUNT);
