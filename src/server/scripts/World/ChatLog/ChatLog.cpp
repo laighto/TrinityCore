@@ -400,10 +400,6 @@ void ChatLog::OnChat(Player* player, uint32 type, uint32 lang, std::string& msg)
 
 void ChatLog::OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& msg, Player* receiver)
 {
-
-    if (lang == LANG_ADDON)
-        return;
-
     std::string origMsg(msg);
     if (!_ChatCommon(CHAT_LOG_WHISPER, player, msg))
         return;
@@ -418,9 +414,6 @@ void ChatLog::OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& 
 
 void ChatLog::OnChat(Player* player, uint32 type, uint32 lang, std::string& msg, Group* group)
 {
-    if (lang == LANG_ADDON)
-        return;
-
     std::string origMsg(msg);
     std::string logStr;
     _AppendPlayerName(player, logStr);
@@ -473,9 +466,6 @@ void ChatLog::OnChat(Player* player, uint32 type, uint32 lang, std::string& msg,
 
 void ChatLog::OnChat(Player* player, uint32 type, uint32 lang, std::string& msg, Guild* guild)
 {
-    if (lang == LANG_ADDON)
-        return;
-
     std::string origMsg(msg);
     if (!_ChatCommon(CHAT_LOG_GUILD, player, msg))
         return;
@@ -494,9 +484,6 @@ void ChatLog::OnChat(Player* player, uint32 type, uint32 lang, std::string& msg,
 
 void ChatLog::OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& msg, Channel* channel)
 {
-    if (lang == LANG_ADDON)
-        return;
-
     std::string origMsg(msg);
     if (!_ChatCommon(CHAT_LOG_CHANNEL, player, msg))
         return;
