@@ -111,7 +111,7 @@ class spell_mage_pyroblast_instant : public SpellScriptLoader
        {
            PrepareSpellScript(spell_mage_pyroblast_instant_SpellScript);
 
-           bool Validate(SpellInfo const* /*spellInfo*/)
+           bool Validate(SpellInfo const* /*spellInfo*/) OVERRIDE
            {
                if (!sSpellMgr->GetSpellInfo(SPELL_MAGE_PYROBLAST_INSTANT))
                    return false;
