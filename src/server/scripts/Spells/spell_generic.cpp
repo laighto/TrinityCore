@@ -3619,7 +3619,6 @@ class spell_gen_whisper_gulch_yogg_saron_whisper : public SpellScriptLoader
 
 void AddSC_generic_spell_scripts()
 {
-    new spell_sturdust_no_2();
     new spell_gen_absorb0_hitlimit1();
     new spell_gen_adaptive_warding();
     new spell_gen_alchemist_stone();
