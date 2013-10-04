@@ -26,6 +26,7 @@ void AddSC_example_commandscript();
 void AddSC_custom_script();
 void AddSC_raider_jhash();
 void AddSC_bfgc_script();
+void AddSC_warchief_cometh();
 
 // spells
 void AddSC_deathknight_spell_scripts();
@@ -719,6 +720,7 @@ void AddExampleScripts()
     AddSC_custom_script();
     AddSC_raider_jhash();
     AddSC_bfgc_script();
+    AddSC_warchief_cometh();
 }
 
 void AddSpellScripts()
