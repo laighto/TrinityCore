@@ -5469,6 +5469,18 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                 triggered_spell_id = 37436;
                 break;
             }
+
+            switch (dummySpell->Id)
+            {
+                case 79683: // Arcane Missiles!
+                {
+                    // Do not let arcane missiles missile remove the activation aura
+                    if (procSpell->Id == 7268)
+                        return false;
+                    break;
+                }
+            }
+            break;
         }
         case SPELLFAMILY_WARLOCK:
         {
