@@ -33,14 +33,14 @@ public:
     {
         static ChatCommand customCommandTable[] =
         {
-            { "friend",   RBAC_PERM_COMMAND_RECRUIT_A_FRIEND,     true,  &HandleSetPlayerRecruitCommand,     "", NULL },
-            { "delete",   RBAC_PERM_COMMAND_RECRUIT_A_FRIEND,     true,  &HandleDeletePlayerRecruitCommand,  "", NULL },
+            { "friend",   rbac::RBAC_PERM_COMMAND_RECRUIT_A_FRIEND,     true,  &HandleSetPlayerRecruitCommand,     "", NULL },
+            { "delete",   rbac::RBAC_PERM_COMMAND_RECRUIT_A_FRIEND,     true,  &HandleDeletePlayerRecruitCommand,  "", NULL },
             { NULL,               0,                     false, NULL,                               "", NULL }
         };
 
         static ChatCommand commandTable[] =
         {
-            { "recruit",  RBAC_PERM_COMMAND_RECRUIT_A_FRIEND,     true,  NULL,                 "",  customCommandTable},
+            { "recruit",  rbac::RBAC_PERM_COMMAND_RECRUIT_A_FRIEND,     true,  NULL,                 "",  customCommandTable},
             { NULL,                        0,                     false, NULL,                               "", NULL }
         };
 
