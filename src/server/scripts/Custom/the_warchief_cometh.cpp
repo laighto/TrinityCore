@@ -444,11 +444,11 @@ class npc_w_fallen_human : public CreatureScript
 
 void AddSC_warchief_cometh()
 {
-    new npc_w_sylvanas;
-    new npc_w_warchief;
-    new npc_w_elite;
-    new npc_w_cromush;
-    new npc_w_mortuus;
-    new npc_w_agatha;
-    new npc_w_fallen_human;
+    new npc_w_sylvanas();
+    new npc_w_warchief();
+    new npc_w_elite();
+    new npc_w_cromush();
+    new npc_w_mortuus();
+    new npc_w_agatha();
+    new npc_w_fallen_human();
 }

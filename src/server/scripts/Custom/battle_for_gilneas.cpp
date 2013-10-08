@@ -1162,13 +1162,13 @@ class npc_lady_sylvanas : public CreatureScript
 
 void AddSC_bfgc_script()
 {
-    new npc_krennan_aranas;
-    new npc_prince_liam;
-    new npc_gilnean_millitia;
-    new npc_king_genn_greymane;
-    new npc_forsaken_crossbow;
-    new npc_vile_abomination;
-    new npc_gorrerot;
-    new npc_emberstone_canon_villager;
-    new npc_lady_sylvanas;
+    new npc_krennan_aranas();
+    new npc_prince_liam();
+    new npc_gilnean_millitia();
+    new npc_king_genn_greymane();
+    new npc_forsaken_crossbow();
+    new npc_vile_abomination();
+    new npc_gorrerot();
+    new npc_emberstone_canon_villager();
+    new npc_lady_sylvanas();
 }

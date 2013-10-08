@@ -15,6 +15,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "custom_scripts.h"
 #include "ScriptMgr.h"
 #include "ScriptedCreature.h"
 #include "World.h"
@@ -233,9 +234,26 @@ public:
     }
 };
 
+//Quest Waiting to Exsanguinate 27045
+class go_abandoned_outhouse : public GameObjectScript
+{
+    public:
+        go_abandoned_outhouse() : GameObjectScript("go_abandoned_outhouse") { }
+
+        bool OnQuestAccept(Player* player, GameObject* /*go*/, Quest const* quest) OVERRIDE
+        {
+            if (quest->GetQuestId() == QUEST_WAITING_TO_EXSANGUINATE)
+            {
+                player->CastSpell(player, SPELL_SUMMON_DEATHSTALKER_YORICK, false); 
+            }
+            return true;
+        }
+};
+
 void AddSC_custom_script()
 {
     new mob_ressurect();
     new mod_afk();
     new Boss_Announcer();
+    new go_abandoned_outhouse();
 }
