@@ -383,6 +383,8 @@ class npc_prince_liam : public CreatureScript
                             me->SetVisible(false);
                             stage4 = true;
                             break;
+                        default:
+                            break;
                     }
                 }
 
@@ -793,6 +795,8 @@ class npc_gilnean_millitia : public CreatureScript
                             if (!bfgcdone)
                                 events.ScheduleEvent(STAGE_4_FIGHT, 3500, 0, 0);
                             break;
+                        default:
+                            break;
                     }
                 }
                 
@@ -1059,6 +1063,8 @@ class npc_king_genn_greymane : public CreatureScript
 
                             if (!bfgcdone)
                                 events.ScheduleEvent(STAGE_4_FIGHT, 3000, 0, 0);
+                            break;
+                        default:
                             break;
                     }
                 }
