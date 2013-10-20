@@ -335,10 +335,14 @@ class npc_apothecary_hummel : public CreatureScript
                 DoAction(APOTHECARY_DIED);
 
                 _instance->UpdateEncounterState(ENCOUNTER_CREDIT_KILL_CREATURE, 36296, NULL);
-                /*//CRASH
+
                 Map::PlayerList const& players = me->GetMap()->GetPlayers();
                 if (!players.isEmpty())
-                    sLFGMgr->FinishDungeon(players.begin()->getSource()->GetGroup()->GetGUID(), 288);*/
+                {
+                    if (Group* group = players.begin()->GetSource()->GetGroup())
+                        if (group->isLFGGroup())
+                            sLFGMgr->FinishDungeon(group->GetGUID(), 288);
+                } 
             }
         };
 
