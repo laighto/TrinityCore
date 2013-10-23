@@ -29,7 +29,12 @@ EndScriptData */
 #include "shadowfang_keep.h"
 #include "TemporarySummon.h"
 
-#define MAX_ENCOUNTER              4
+#define MAX_ENCOUNTER              5
+
+enum Apothecary
+{
+    ACTION_SPAWN_CRAZED         = 3
+};
 
 enum Yells
 {
@@ -91,6 +96,11 @@ public:
         uint64 DoorSorcererGUID;
         uint64 DoorArugalGUID;
 
+        uint64 fryeGUID;
+        uint64 hummelGUID;
+        uint64 baxterGUID;
+        uint32 spawnCrazedTimer;
+
         uint8 uiPhase;
         uint16 uiTimer;
 
@@ -106,6 +116,10 @@ public:
             DoorSorcererGUID = 0;
             DoorArugalGUID = 0;
 
+            fryeGUID = 0;
+            hummelGUID = 0;
+            baxterGUID = 0;
+
             uiPhase = 0;
             uiTimer = 0;
         }
@@ -117,6 +131,9 @@ public:
                 case NPC_ASH: uiAshGUID = creature->GetGUID(); break;
                 case NPC_ADA: uiAdaGUID = creature->GetGUID(); break;
                 case NPC_ARCHMAGE_ARUGAL: uiArchmageArugalGUID = creature->GetGUID(); break;
+                case NPC_FRYE: fryeGUID = creature->GetGUID(); break;
+                case NPC_HUMMEL: hummelGUID = creature->GetGUID(); break;
+                case NPC_BAXTER: baxterGUID = creature->GetGUID(); break;
             }
         }
 
@@ -186,6 +203,11 @@ public:
                         DoUseDoorOrButton(DoorArugalGUID);
                     m_auiEncounter[3] = data;
                     break;
+                case TYPE_CROWN:
+                    if (data == NOT_STARTED)
+                        spawnCrazedTimer = urand(7000, 14000);
+                    m_auiEncounter[4] = data;
+                    break;
             }
 
             if (data == DONE)
@@ -214,6 +236,20 @@ public:
                     return m_auiEncounter[2];
                 case TYPE_NANDOS:
                     return m_auiEncounter[3];
+                case TYPE_CROWN:
+                    return m_auiEncounter[4];
+            }
+            return 0;
+        }
+
+        uint64 GetData64(uint32 id) const
+        {
+            switch(id)
+            {
+                case DATA_DOOR:   return DoorCourtyardGUID;
+                case DATA_FRYE:   return fryeGUID;
+                case DATA_HUMMEL: return hummelGUID;
+                case DATA_BAXTER: return baxterGUID;
             }
             return 0;
         }
@@ -247,6 +283,18 @@ public:
 
         void Update(uint32 uiDiff)
         {
+            if (GetData(TYPE_CROWN) == IN_PROGRESS)
+            {
+                if (spawnCrazedTimer <= uiDiff)
+                {
+                    if (Creature* hummel = instance->GetCreature(hummelGUID))
+                        hummel->AI()->DoAction(ACTION_SPAWN_CRAZED);
+                    spawnCrazedTimer = urand(2000, 5000);
+                }
+                else
+                    spawnCrazedTimer -= uiDiff;
+            }
+
             if (GetData(TYPE_FENRUS) != DONE)
                 return;
 
