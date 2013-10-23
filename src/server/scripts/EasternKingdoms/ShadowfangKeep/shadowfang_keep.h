@@ -19,6 +19,8 @@
 #ifndef DEF_SHADOWFANG_H
 #define DEF_SHADOWFANG_H
 
+#define MAX_ENCOUNTER              5
+
 enum DataTypes
 {
     TYPE_FREE_NPC               = 1,
