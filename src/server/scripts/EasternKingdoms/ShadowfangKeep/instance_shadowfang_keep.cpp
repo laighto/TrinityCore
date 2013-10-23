@@ -101,6 +101,8 @@ public:
         uint64 baxterGUID;
         uint32 spawnCrazedTimer;
 
+        uint64 LordWaldenGUID;
+
         uint8 uiPhase;
         uint16 uiTimer;
 
@@ -120,6 +122,8 @@ public:
             hummelGUID = 0;
             baxterGUID = 0;
 
+            LordWaldenGUID = 0;
+
             uiPhase = 0;
             uiTimer = 0;
         }
@@ -134,6 +138,7 @@ public:
                 case NPC_FRYE: fryeGUID = creature->GetGUID(); break;
                 case NPC_HUMMEL: hummelGUID = creature->GetGUID(); break;
                 case NPC_BAXTER: baxterGUID = creature->GetGUID(); break;
+                case BOSS_LORD_WALDEN: LordWaldenGUID = creature->GetGUID(); break;
             }
         }
 
@@ -185,17 +190,9 @@ public:
                         DoSpeech();
                     m_auiEncounter[1] = data;
                     break;
-                case TYPE_FENRUS:
-                    switch (data)
-                    {
-                        case DONE:
-                            uiTimer = 1000;
-                            uiPhase = 1;
-                            break;
-                        case 7:
-                            DoUseDoorOrButton(DoorSorcererGUID);
-                            break;
-                    }
+                case DATA_LORD_WALDEN_EVENT:
+                    if (data == DONE)
+                        DoUseDoorOrButton(DoorSorcererGUID);
                     m_auiEncounter[2] = data;
                     break;
                 case TYPE_NANDOS:
@@ -207,6 +204,8 @@ public:
                     if (data == NOT_STARTED)
                         spawnCrazedTimer = urand(7000, 14000);
                     m_auiEncounter[4] = data;
+                    break;
+                default:
                     break;
             }
 
@@ -232,7 +231,7 @@ public:
                     return m_auiEncounter[0];
                 case TYPE_RETHILGORE:
                     return m_auiEncounter[1];
-                case TYPE_FENRUS:
+                case DATA_LORD_WALDEN_EVENT:
                     return m_auiEncounter[2];
                 case TYPE_NANDOS:
                     return m_auiEncounter[3];
@@ -250,6 +249,7 @@ public:
                 case DATA_FRYE:   return fryeGUID;
                 case DATA_HUMMEL: return hummelGUID;
                 case DATA_BAXTER: return baxterGUID;
+                case DATA_LORD_WALDEN: return LordWaldenGUID;
             }
             return 0;
         }

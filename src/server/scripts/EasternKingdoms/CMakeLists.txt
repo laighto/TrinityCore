@@ -174,6 +174,7 @@ set(scripts_STAT_SRCS
   EasternKingdoms/zone_silvermoon_city.cpp
   EasternKingdoms/zone_loch_modan.cpp
   EasternKingdoms/ShadowfangKeep/boss_apothecary_trio.cpp
+  EasternKingdoms/ShadowfangKeep/boss_lord_walden_c.cpp
   EasternKingdoms/ShadowfangKeep/shadowfang_keep.cpp
   EasternKingdoms/ShadowfangKeep/instance_shadowfang_keep.cpp
   EasternKingdoms/ShadowfangKeep/shadowfang_keep.h

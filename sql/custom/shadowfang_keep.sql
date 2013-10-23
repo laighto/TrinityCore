@@ -42,3 +42,30 @@ INSERT INTO `spell_linked_spell` (`spell_trigger`,`spell_effect`,`type`,`comment
 (68529,-68530,0,'Remove Cologne Immune when Perfume Immune is applied');
 
 -- implemented apothecary trio script Love In the Air based on old script by @w1sht0l1v3 mod by @chaosua
+
+--Lord Walden script
+UPDATE creature_template SET ScriptName = 'boss_lord_walden' WHERE entry = 46963;
+UPDATE creature_template SET ScriptName = 'npc_mystery_toxin' WHERE `entry` IN (50439,50522);
+
+DELETE FROM `creature_template_addon` WHERE `entry` IN (50439,50522);
+INSERT INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES (50522, 0, 0, 0, 0, 0, '34873');
+INSERT INTO `creature_template_addon` (`entry`, `path_id`, `mount`, `bytes1`, `bytes2`, `emote`, `auras`) VALUES (50439, 0, 0, 0, 0, 0, '34873');
+UPDATE `creature_template` SET `faction_A` = 14, `faction_H` = 14, `InhabitType` = 4, `flags_extra` = 2 WHERE `entry` IN (50439, 50522);
+DELETE FROM `creature` WHERE `id` IN (50439,50522);
+
+DELETE FROM spell_linked_spell WHERE spell_trigger = 93607 AND spell_effect = 93689;
+INSERT INTO `spell_linked_spell` (`spell_trigger`, `spell_effect`, `comment`) VALUES 
+(93607, 93689, 'SFK Lord Walden Toxic Catalyst');
+
+DELETE FROM `creature_text` WHERE `entry` = 46963;
+INSERT INTO `creature_text` (`entry`,`groupid`,`id`,`text`,`type`,`language`,`probability`,`emote`,`duration`,`sound`,`comment`) VALUES
+(46963, 0, 0,"Even here I find myself beset by fools!",14, 0, 100, 0, 0, 0, "Lord Walden - SAY_AGGRO"),
+(46963, 1, 0,"This childish effort ends now!",14, 0, 100, 0, 0, 0,"Lord Walden - SAY_KILL_1"),
+(46963, 2, 0,"You shall annoy me no longer!",14, 0, 100, 0, 0, 0,"Lord Walden - SAY_KILL_2"),
+(46963, 3, 0,"My new life was just beginning...",14, 0, 100, 0, 0, 0,"Lord Walden - SAY_DEATH");
+DELETE FROM locales_creature_text WHERE entry IN (@NPC_FRYE,@NPC_HUMMEL,@NPC_BAXTER);
+INSERT INTO `locales_creature_text`  (`entry`, `groupid`, `id`,`text_loc1`, `text_loc2`, `text_loc3`, `text_loc4`, `text_loc5`, `text_loc6`, `text_loc7`, `text_loc8`) VALUES 
+(46963, '0', '0', NULL,  NULL, NULL, NULL, NULL, NULL, NULL, 'Даже здесь мне нет покоя от глупцов!'),
+(46963, '1', '0', NULL,  NULL, NULL, NULL, NULL, NULL, NULL, 'Детские игры закончились!'),
+(46963, '2', '0', NULL,  NULL, NULL, NULL, NULL, NULL, NULL, 'Ты больше не будешь мне надоедать!'),
+(46963, '3', '0', NULL,  NULL, NULL, NULL, NULL, NULL, NULL, 'Моя новая жизнь только начиналась...!');

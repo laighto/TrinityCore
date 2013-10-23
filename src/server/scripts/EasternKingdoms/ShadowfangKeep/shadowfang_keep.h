@@ -34,7 +34,13 @@ enum Creaturesapothecary
 {
     NPC_FRYE                = 36272,
     NPC_HUMMEL              = 36296,
-    NPC_BAXTER              = 36565
+    NPC_BAXTER              = 36565,
+    BOSS_LORD_WALDEN        = 46963,
+};
+
+enum Data
+{
+    DATA_LORD_WALDEN_EVENT,
 };
 
 enum Data64
@@ -42,7 +48,8 @@ enum Data64
     DATA_DOOR,
     DATA_FRYE,
     DATA_HUMMEL,
-    DATA_BAXTER
+    DATA_BAXTER,
+    DATA_LORD_WALDEN,
 };
 
 #endif
