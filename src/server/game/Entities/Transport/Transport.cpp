@@ -26,124 +26,8 @@
 #include "DBCStores.h"
 #include "World.h"
 #include "GameObjectAI.h"
-#include "Player.h"
 #include "Vehicle.h"
-
-Transport* MapManager::LoadTransportInMap(Map* instance, uint32 goEntry, uint32 period)
-{
-    const GameObjectTemplate* goInfo = sObjectMgr->GetGameObjectTemplate(goEntry);
-
-    if (!goInfo)
-    {
-        return NULL;
-    }
-
-    if (goInfo->type != GAMEOBJECT_TYPE_MO_TRANSPORT)
-    {
-        return NULL;
-    }
-
-    Transport* t = new Transport(period, goInfo->ScriptId);
-    std::set<uint32> mapsUsed;
-    if (!t->GenerateWaypoints(goInfo->moTransport.taxiPathId, mapsUsed))
-    {
-        delete t;
-        return NULL;
-    }
-    uint32 transportLowGuid = sObjectMgr->GenerateLowGuid(HIGHGUID_MO_TRANSPORT);
-
-    if (!t->Create(transportLowGuid, goEntry, t->m_WayPoints[0].mapid, t->m_WayPoints[0].x, t->m_WayPoints[0].y, t->m_WayPoints[0].z-10, 0.0f, 0, 0))
-    {
-        delete t;
-        return NULL;
-    }
-
-    m_Transports.insert(t);
-    m_TransportsByInstanceIdMap[instance->GetInstanceId()].insert(t);
-    t->SetMap(instance);
-    t->AddToWorld();
-
-    return t;
-}
-
-void MapManager::UnLoadTransportFromMap(Transport* t)
-{
-    Map* map = t->GetMap();
-
-    for (Transport::CreatureSet::iterator itr = t->m_NPCPassengerSet.begin(); itr != t->m_NPCPassengerSet.end();)
-    {
-        if (Creature* npc = *itr)
-        {
-            npc->SetTransport(NULL);
-            npc->setActive(false);
-            npc->RemoveFromWorld();
-        }
-        ++itr;
-    }
-
-    UpdateData transData;
-    t->BuildOutOfRangeUpdateBlock(&transData);
-    WorldPacket out_packet;
-    transData.BuildPacket(&out_packet);
-
-    for (Map::PlayerList::const_iterator itr = map->GetPlayers().begin(); itr != map->GetPlayers().end(); ++itr)
-        if (t != itr->GetSource()->GetTransport())
-            itr->GetSource()->SendDirectMessage(&out_packet);
-
-    t->m_NPCPassengerSet.clear();         
-    m_TransportsByInstanceIdMap[t->GetInstanceId()].erase(t);
-    m_Transports.erase(t);
-    t->m_WayPoints.clear();
-    t->RemoveFromWorld();
-
-}
-
-void MapManager::LoadTransportForPlayers(Player* player)
-{
-    MapManager::TransportMap& tmap = sMapMgr->m_TransportsByInstanceIdMap;
-    
-    UpdateData transData;
-
-    MapManager::TransportSet& tset = tmap[player->GetInstanceId()];
-
-    for (MapManager::TransportSet::const_iterator i = tset.begin(); i != tset.end(); ++i)
-    {
-        (*i)->BuildCreateUpdateBlockForPlayer(&transData, player);
-    }
-
-    WorldPacket packet;
-    transData.BuildPacket(&packet);
-    player->SendDirectMessage(&packet);
-}
-
-void MapManager::UnLoadTransportForPlayers(Player* player)
-{
-    MapManager::TransportMap& tmap = sMapMgr->m_TransportsByInstanceIdMap;
-    
-    UpdateData transData;
-
-    MapManager::TransportSet& tset = tmap[player->GetInstanceId()];
-
-    for (MapManager::TransportSet::const_iterator i = tset.begin(); i != tset.end(); ++i)
-    {
-        for (Transport::CreatureSet::iterator itr = (*i)->m_NPCPassengerSet.begin(); itr != (*i)->m_NPCPassengerSet.end();)
-        {
-            if (Creature* npc = *itr)
-            {
-                npc->SetTransport(NULL);
-                npc->setActive(false);
-                npc->RemoveFromWorld();
-            }
-            ++itr;
-        }
-
-        (*i)->BuildOutOfRangeUpdateBlock(&transData);
-    }
-
-    WorldPacket packet;
-    transData.BuildPacket(&packet);
-    player->SendDirectMessage(&packet);
-}
+#include "Player.h"
 
 void MapManager::LoadTransports()
 {
@@ -794,6 +678,175 @@ uint32 Transport::AddNPCPassenger(uint32 tguid, uint32 entry, float x, float y, 
     return tguid;
 }
 
+void Transport::UpdatePosition(MovementInfo* mi)
+{
+    float transport_o = mi->pos.GetOrientation() - mi->transport.pos.GetOrientation();
+    float transport_x = mi->pos.m_positionX - (mi->transport.pos.m_positionX * std::cos(transport_o) - mi->transport.pos.m_positionY * std::sin(transport_o));
+    float transport_y = mi->pos.m_positionY - (mi->transport.pos.m_positionY * std::cos(transport_o) + mi->transport.pos.m_positionX * std::sin(transport_o));
+    float transport_z = mi->pos.m_positionZ - mi->transport.pos.m_positionZ;
+
+    Relocate(transport_x, transport_y, transport_z, transport_o);
+    UpdatePassengerPositions();
+    UpdatePlayerPositions();
+}
+
+void Transport::UpdatePassengerPositions()
+{
+    for (CreatureSet::iterator itr = m_NPCPassengerSet.begin(); itr != m_NPCPassengerSet.end(); ++itr)
+    {
+        Creature* npc = *itr;
+
+        float x, y, z, o;
+        npc->m_movementInfo.transport.pos.GetPosition(x, y, z, o);
+        CalculatePassengerPosition(x, y, z, &o);
+        GetMap()->CreatureRelocation(npc, x, y, z, o, false);
+        npc->GetTransportHomePosition(x, y, z, o);
+        CalculatePassengerPosition(x, y, z, &o);
+        npc->SetHomePosition(x, y, z, o);
+    }
+}
+
+void Transport::CalculatePassengerPosition(float& x, float& y, float& z, float* o /*= NULL*/) const
+{
+    float inx = x, iny = y, inz = z;
+    if (o)
+        *o = Position::NormalizeOrientation(GetOrientation() + *o);
+
+    x = GetPositionX() + inx * std::cos(GetOrientation()) - iny * std::sin(GetOrientation());
+    y = GetPositionY() + iny * std::cos(GetOrientation()) + inx * std::sin(GetOrientation());
+    z = GetPositionZ() + inz;
+}
+
+void Transport::CalculatePassengerOffset(float& x, float& y, float& z, float* o /*= NULL*/) const
+{
+    if (o)
+        *o = Position::NormalizeOrientation(*o - GetOrientation());
+
+    z -= GetPositionZ();
+    y -= GetPositionY();    // y = searchedY * std::cos(o) + searchedX * std::sin(o)
+    x -= GetPositionX();    // x = searchedX * std::cos(o) + searchedY * std::sin(o + pi)
+    float inx = x, iny = y;
+    y = (iny - inx * std::tan(GetOrientation())) / (std::cos(GetOrientation()) + std::sin(GetOrientation()) * std::tan(GetOrientation()));
+    x = (inx + iny * std::tan(GetOrientation())) / (std::cos(GetOrientation()) + std::sin(GetOrientation()) * std::tan(GetOrientation()));
+}
+
+
+Transport* MapManager::LoadTransportInMap(Map* instance, uint32 goEntry, uint32 period)
+{
+    const GameObjectTemplate* goInfo = sObjectMgr->GetGameObjectTemplate(goEntry);
+
+    if (!goInfo)
+    {
+        return NULL;
+    }
+
+    if (goInfo->type != GAMEOBJECT_TYPE_MO_TRANSPORT)
+    {
+        return NULL;
+    }
+
+    Transport* t = new Transport(period, goInfo->ScriptId);
+    std::set<uint32> mapsUsed;
+    if (!t->GenerateWaypoints(goInfo->moTransport.taxiPathId, mapsUsed))
+    {
+        delete t;
+        return NULL;
+    }
+    uint32 transportLowGuid = sObjectMgr->GenerateLowGuid(HIGHGUID_MO_TRANSPORT);
+
+    if (!t->Create(transportLowGuid, goEntry, t->m_WayPoints[0].mapid, t->m_WayPoints[0].x, t->m_WayPoints[0].y, t->m_WayPoints[0].z-10, 0.0f, 0, 0))
+    {
+        delete t;
+        return NULL;
+    }
+
+    m_Transports.insert(t);
+    m_TransportsByInstanceIdMap[instance->GetInstanceId()].insert(t);
+    t->SetMap(instance);
+    t->AddToWorld();
+
+    return t;
+}
+
+void MapManager::UnLoadTransportFromMap(Transport* t)
+{
+    Map* map = t->GetMap();
+
+    for (Transport::CreatureSet::iterator itr = t->m_NPCPassengerSet.begin(); itr != t->m_NPCPassengerSet.end();)
+    {
+        if (Creature* npc = *itr)
+        {
+            npc->SetTransport(NULL);
+            npc->setActive(false);
+            npc->RemoveFromWorld();
+        }
+        ++itr;
+    }
+
+    UpdateData transData;
+    t->BuildOutOfRangeUpdateBlock(&transData);
+    WorldPacket out_packet;
+    transData.BuildPacket(&out_packet);
+
+    for (Map::PlayerList::const_iterator itr = map->GetPlayers().begin(); itr != map->GetPlayers().end(); ++itr)
+        if (t != itr->GetSource()->GetTransport())
+            itr->GetSource()->SendDirectMessage(&out_packet);
+
+    t->m_NPCPassengerSet.clear();         
+    m_TransportsByInstanceIdMap[t->GetInstanceId()].erase(t);
+    m_Transports.erase(t);
+    t->m_WayPoints.clear();
+    t->RemoveFromWorld();
+
+}
+
+void MapManager::LoadTransportForPlayers(Player* player)
+{
+    MapManager::TransportMap& tmap = sMapMgr->m_TransportsByInstanceIdMap;
+    
+    UpdateData transData;
+
+    MapManager::TransportSet& tset = tmap[player->GetInstanceId()];
+
+    for (MapManager::TransportSet::const_iterator i = tset.begin(); i != tset.end(); ++i)
+    {
+        (*i)->BuildCreateUpdateBlockForPlayer(&transData, player);
+    }
+
+    WorldPacket packet;
+    transData.BuildPacket(&packet);
+    player->SendDirectMessage(&packet);
+}
+
+void MapManager::UnLoadTransportForPlayers(Player* player)
+{
+    MapManager::TransportMap& tmap = sMapMgr->m_TransportsByInstanceIdMap;
+    
+    UpdateData transData;
+
+    MapManager::TransportSet& tset = tmap[player->GetInstanceId()];
+
+    for (MapManager::TransportSet::const_iterator i = tset.begin(); i != tset.end(); ++i)
+    {
+        for (Transport::CreatureSet::iterator itr = (*i)->m_NPCPassengerSet.begin(); itr != (*i)->m_NPCPassengerSet.end();)
+        {
+            if (Creature* npc = *itr)
+            {
+                npc->SetTransport(NULL);
+                npc->setActive(false);
+                npc->RemoveFromWorld();
+            }
+            ++itr;
+        }
+
+        (*i)->BuildOutOfRangeUpdateBlock(&transData);
+    }
+
+    WorldPacket packet;
+    transData.BuildPacket(&packet);
+    player->SendDirectMessage(&packet);
+}
+
 // gunship data
 Creature* Transport::AddNPCPassengerInInstance(uint32 entry, float x, float y, float z, float o, uint32 anim)
 {
@@ -832,35 +885,6 @@ Creature* Transport::AddNPCPassengerInInstance(uint32 entry, float x, float y, f
     return creature;
 }
 
-void Transport::UpdatePosition(MovementInfo* mi)
-{
-    float transport_o = mi->pos.GetOrientation() - mi->transport.pos.GetOrientation();
-    float transport_x = mi->pos.m_positionX - (mi->transport.pos.m_positionX * std::cos(transport_o) - mi->transport.pos.m_positionY * std::sin(transport_o));
-    float transport_y = mi->pos.m_positionY - (mi->transport.pos.m_positionY * std::cos(transport_o) + mi->transport.pos.m_positionX * std::sin(transport_o));
-    float transport_z = mi->pos.m_positionZ - mi->transport.pos.m_positionZ;
-
-    Relocate(transport_x, transport_y, transport_z, transport_o);
-    UpdatePassengerPositions();
-    UpdatePlayerPositions();
-}
-
-void Transport::UpdatePassengerPositions()
-{
-    for (CreatureSet::iterator itr = m_NPCPassengerSet.begin(); itr != m_NPCPassengerSet.end(); ++itr)
-    {
-        Creature* npc = *itr;
-
-        float x, y, z, o;
-        npc->m_movementInfo.transport.pos.GetPosition(x, y, z, o);
-        CalculatePassengerPosition(x, y, z, &o);
-        GetMap()->CreatureRelocation(npc, x, y, z, o, false);
-        npc->GetTransportHomePosition(x, y, z, o);
-        CalculatePassengerPosition(x, y, z, &o);
-        npc->SetHomePosition(x, y, z, o);
-    }
-}
-
-// gunship Data
 void Transport::UpdatePlayerPositions()
 {
     for (PlayerSet::iterator itr = m_passengers.begin(); itr != m_passengers.end(); ++itr)
@@ -878,28 +902,4 @@ void Transport::UpdatePlayerPositions()
         transData.BuildPacket(&packet);
         plr->SendDirectMessage(&packet);
     }
-}
-
-void Transport::CalculatePassengerPosition(float& x, float& y, float& z, float* o /*= NULL*/) const
-{
-    float inx = x, iny = y, inz = z;
-    if (o)
-        *o = Position::NormalizeOrientation(GetOrientation() + *o);
-
-    x = GetPositionX() + inx * std::cos(GetOrientation()) - iny * std::sin(GetOrientation());
-    y = GetPositionY() + iny * std::cos(GetOrientation()) + inx * std::sin(GetOrientation());
-    z = GetPositionZ() + inz;
-}
-
-void Transport::CalculatePassengerOffset(float& x, float& y, float& z, float* o /*= NULL*/) const
-{
-    if (o)
-        *o = Position::NormalizeOrientation(*o - GetOrientation());
-
-    z -= GetPositionZ();
-    y -= GetPositionY();    // y = searchedY * std::cos(o) + searchedX * std::sin(o)
-    x -= GetPositionX();    // x = searchedX * std::cos(o) + searchedY * std::sin(o + pi)
-    float inx = x, iny = y;
-    y = (iny - inx * std::tan(GetOrientation())) / (std::cos(GetOrientation()) + std::sin(GetOrientation()) * std::tan(GetOrientation()));
-    x = (inx + iny * std::tan(GetOrientation())) / (std::cos(GetOrientation()) + std::sin(GetOrientation()) * std::tan(GetOrientation()));
 }
