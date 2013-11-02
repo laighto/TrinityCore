@@ -301,7 +301,7 @@ class npc_warden_mellichar : public CreatureScript
                 EventProgress_Timer = 22000;
                 Phase = 1;
 
-                me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                //me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
                 DoCast(me, SPELL_TARGET_OMEGA);
 
                 if (instance)
@@ -311,7 +311,6 @@ class npc_warden_mellichar : public CreatureScript
             void AttackStart(Unit* /*who*/) OVERRIDE {}
 
             void MoveInLineOfSight(Unit* who) OVERRIDE
-
             {
                 if (IsRunning)
                     return;
@@ -424,15 +423,17 @@ class npc_warden_mellichar : public CreatureScript
                         switch (Phase)
                         {
                         case 2:
-                            switch (urand(0, 1))
+                          /*  switch (urand(0, 1))
                             {
-                            case 0:
+                           /* case 0:
                                 me->SummonCreature(ENTRY_TRICKSTER, 478.326f, -148.505f, 42.56f, 3.19f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
                                 break;
                             case 1:
                                 me->SummonCreature(ENTRY_PH_HUNTER, 478.326f, -148.505f, 42.56f, 3.19f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
                                 break;
-                            }
+                            }*/
+                            me->SummonCreature(ENTRY_SKYRISS, 445.763f, -191.639f, 44.64f, 1.60f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
+                            Talk(YELL_WELCOME);
                             break;
                         case 3:
                             me->SummonCreature(ENTRY_MILLHOUSE, 413.292f, -148.378f, 42.56f, 6.27f, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 600000);
