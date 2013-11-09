@@ -171,7 +171,6 @@ set(scripts_STAT_SRCS
   EasternKingdoms/ScarletMonastery/boss_herod.cpp
   EasternKingdoms/ScarletMonastery/boss_scorn.cpp
   EasternKingdoms/zone_undercity.cpp
-  EasternKingdoms/zone_silvermoon_city.cpp
   EasternKingdoms/zone_loch_modan.cpp
   EasternKingdoms/ShadowfangKeep/boss_apothecary_trio.cpp
   EasternKingdoms/ShadowfangKeep/boss_lord_walden_c.cpp

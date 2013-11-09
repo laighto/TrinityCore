@@ -11865,9 +11865,7 @@ CharmInfo::CharmInfo(Unit* unit)
     }
 }
 
-CharmInfo::~CharmInfo()
-{
-}
+CharmInfo::~CharmInfo() { }
 
 void CharmInfo::RestoreState()
 {

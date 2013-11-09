@@ -2199,26 +2199,8 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
         if (!(options & TELE_TO_NOT_LEAVE_COMBAT))
             CombatStop();
 
-        // new final coordinates
-        float final_x = x;
-        float final_y = y;
-        float final_z = z;
-        float final_o = orientation;
-
-        // Calculate final positions if on transport
-        if (m_transport)
-        {
-            float tx, ty, tz, to;
-            m_movementInfo.transport.pos.GetPosition(tx, ty, tz, to);
-
-            final_x = x + tx * std::cos(orientation) - ty * std::sin(orientation);
-            final_y = y + ty * std::cos(orientation) + tx * std::sin(orientation);
-            final_z = z + tz;
-            final_o = Position::NormalizeOrientation(orientation + m_movementInfo.transport.pos.GetOrientation());
-        }
-
         // this will be used instead of the current location in SaveToDB
-        m_teleport_dest = WorldLocation(mapid, final_x, final_y, final_z, final_o);
+        m_teleport_dest = WorldLocation(mapid, x, y, z, orientation);
         SetFallInformation(0, z);
 
         // code for finish transfer called in WorldSession::HandleMovementOpcodes()
@@ -2229,7 +2211,7 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
         {
             Position oldPos;
             GetPosition(&oldPos);
-            Relocate(final_x, final_y, final_z, final_o);
+            Relocate(x, y, z, orientation);
             SendTeleportPacket(oldPos); // this automatically relocates to oldPos in order to broadcast the packet in the right place
         }
     }
@@ -2330,25 +2312,7 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
             if (oldmap)
                 oldmap->RemovePlayerFromMap(this, false);
 
-            // new final coordinates
-            float final_x = x;
-            float final_y = y;
-            float final_z = z;
-            float final_o = orientation;
-
-            // Calculate final positions if on transport
-            if (m_transport)
-            {
-                float tx, ty, tz, to;
-                m_movementInfo.transport.pos.GetPosition(tx, ty, tz, to);
-
-                final_x = x + tx * std::cos(orientation) - ty * std::sin(orientation);
-                final_y = y + ty * std::cos(orientation) + tx * std::sin(orientation);
-                final_z = z + tz;
-                final_o = Position::NormalizeOrientation(orientation + m_movementInfo.transport.pos.GetOrientation());
-            }
-
-            m_teleport_dest = WorldLocation(mapid, final_x, final_y, final_z, final_o);
+            m_teleport_dest = WorldLocation(mapid, x, y, z, orientation);
             SetFallInformation(0, z);
             // if the player is saved before worldportack (at logout for example)
             // this will be used instead of the current location in SaveToDB
@@ -22857,9 +22821,7 @@ inline void UpdateVisibilityOf_helper(std::set<uint64>& s64, Player* target, std
 }
 
 template<class T>
-inline void BeforeVisibilityDestroy(T* /*t*/, Player* /*p*/)
-{
-}
+inline void BeforeVisibilityDestroy(T* /*t*/, Player* /*p*/) { }
 
 template<>
 inline void BeforeVisibilityDestroy<Creature>(Creature* t, Player* p)
