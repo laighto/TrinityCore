@@ -1076,6 +1076,88 @@ class npc_scarlet_miner : public CreatureScript
 
 // npc 28912 quest 17217 boss 29001 mob 29007 go 191092
 
+enum Texts
+{
+    SAY_EYE_LAUNCHED = 1,
+    SAY_EYE_UNDER_CONTROL = 2,
+};
+
+class npc_eye_of_acherus : public CreatureScript
+{
+    public:
+        npc_eye_of_acherus() : CreatureScript("npc_eye_of_acherus") { }
+
+    CreatureAI* GetAI(Creature* creature) const OVERRIDE
+    {
+        return new npc_eye_of_acherusAI(creature);
+    }
+
+    struct npc_eye_of_acherusAI : public ScriptedAI
+    {
+        npc_eye_of_acherusAI(Creature* creature) : ScriptedAI(creature) { }
+
+        uint32 startTimer;
+        bool IsActive;
+        bool start;
+
+        void Reset() OVERRIDE
+        {
+            if (Unit* controller = me->GetCharmer())
+                me->SetLevel(controller->getLevel());
+
+            me->CastSpell(me, 51890, true);
+            me->SetDisplayId(26320);
+            Talk(SAY_EYE_LAUNCHED);
+            //me->SetHomePosition(2363.970589f, -5659.861328f, 504.316833f, 0);
+            //me->GetMotionMaster()->MoveCharge(1752.858276f, -5878.270996f, 145.136444f, 0); //position center
+            me->SetReactState(REACT_AGGRESSIVE);
+            me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE | UNIT_FLAG_STUNNED);
+
+            IsActive = false;
+            startTimer = 2000;
+            start = false;
+        }
+
+        void MovementInform(uint32 type, uint32 pointId) OVERRIDE
+        {
+            if (type != POINT_MOTION_TYPE || pointId != 0)
+               return;
+
+            // The little green morph is not blizz-like for this npc...
+            //me->SetDisplayId(25499);
+
+            // for some reason it does not work when this spell is casted before the waypoint movement
+            me->CastSpell(me, 51892, true);
+            me->CastSpell(me, 51890, true);
+            Talk(SAY_EYE_UNDER_CONTROL);
+            ((Player*)(me->GetCharmer()))->SetClientControl(me, 1);
+        }
+
+        void Update(uint32 diff) OVERRIDE
+        {
+            if (me->IsCharmed)
+            {
+                if (startTimer <= diff && !IsActive) // fly to start point
+                {
+                    me->CastSpell(me, 70889, true);
+                    me->CastSpell(me, 51892, true);
+                    me->CastSpell(me, 51890, true);
+
+                    me->CastSpell(me, 51923, true);
+                    me->SetSpeed(MOVE_FLIGHT, 3.4f, true);
+                    me->GetMotionMaster()->MovePoint(0, 1711.0f, -5820.0f, 147.0f);
+                    IsActive = true;
+                    return;
+                }
+                else
+                startTimer -= diff;
+            }
+            else
+            me->DespawnOrUnsummon();
+        }
+    };
+};
+
 void AddSC_the_scarlet_enclave_c1()
 {
     new npc_unworthy_initiate();
@@ -1089,4 +1171,5 @@ void AddSC_the_scarlet_enclave_c1()
     new npc_scarlet_ghoul();
     new npc_scarlet_miner();
     new npc_scarlet_miner_cart();
+    new npc_eye_of_acherus();
 }
