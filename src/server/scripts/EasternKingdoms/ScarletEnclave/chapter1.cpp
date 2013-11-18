@@ -1135,7 +1135,7 @@ class npc_eye_of_acherus : public CreatureScript
 
         void Update(uint32 diff) OVERRIDE
         {
-            if (me->IsCharmed)
+            if (me->IsCharmed())
             {
                 if (startTimer <= diff && !IsActive) // fly to start point
                 {
