@@ -114,6 +114,9 @@ struct boss_twinemperorsAI : public ScriptedAI
         Unit* pOtherBoss = GetOtherBoss();
         if (pOtherBoss)
         {
+            if(GameObject* go = pOtherBoss->FindNearestGameObject(180635, 200.0f))
+                instance->HandleGameObject(go->GetGUID(), true);
+
             float dPercent = ((float)damage) / ((float)me->GetMaxHealth());
             int odmg = (int)(dPercent * ((float)pOtherBoss->GetMaxHealth()));
             int ohealth = pOtherBoss->GetHealth()-odmg;

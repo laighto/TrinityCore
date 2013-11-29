@@ -115,7 +115,8 @@ class boss_skeram : public CreatureScript
 
             void JustDied(Unit* /*killer*/) OVERRIDE
             {
-                instance->HandleGameObject(180636, true);
+                if(GameObject* go = me->FindNearestGameObject(180636, 200.0f))
+                    instance->HandleGameObject(go->GetGUID(), true);
 
                 if (!me->IsSummon())
                     Talk(SAY_DEATH);
