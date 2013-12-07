@@ -76,7 +76,6 @@ class npc_prince_liam : public CreatureScript
             {
                 me->SetVisible(true);
                 me->Relocate(eventPositionsTeamA[0].GetPositionX(), eventPositionsTeamA[0].GetPositionY(), eventPositionsTeamA[0].GetPositionZ(), eventPositionsTeamA[0].GetOrientation());
-                event_active = false;
                 intro = false;
                 event_intro = false;
                 stage2 = false;
@@ -105,7 +104,6 @@ class npc_prince_liam : public CreatureScript
                 ignoredamage = true;
                 stage4 = false;
                 boss2 = false;
-                bfgcdone = false;
                 prepared = false;
             }
 
@@ -1029,6 +1027,8 @@ class npc_king_genn_greymane : public CreatureScript
             {
                 me->AI()->EnterEvadeMode();
                 events.Reset();
+                event_active = false;
+                bfgcdone = false;
             }
 
             void DamageTaken(Unit* attacker, uint32& damage) OVERRIDE
@@ -1140,20 +1140,32 @@ class npc_lady_sylvanas : public CreatureScript
         {
             npc_lady_sylvanasAI(Creature* creature) : ScriptedAI(creature) {}
  
-            void JustDied(Unit* /*killer*/) OVERRIDE
+            bool hided;
+
+            void Reset() OVERRIDE
             {
-                me->CastSpell(me, SPELL_BFGC_CONPLETE, false);
-                bfgcdone = true;
+                hided = false;
+                me->SetVisible(true);
             }
 
             void UpdateAI(uint32 /*uiDiff*/) OVERRIDE
             {
-                if (me->GetHealthPct() < 21)
+                if (event_active && !bfgcdone && hided)
+                {
+                    me->SetVisible(true);
+                    hided = false;
+                }
+
+                if (me->GetHealthPct() < 21 && !bfgcdone)
                 {
                     Talk(0);
                     me->CastSpell(me, SPELL_BFGC_CONPLETE, false);
                     bfgcdone = true;
-                    me->DespawnOrUnsummon(3000);
+                    event_active = false;
+                    me->CombatStop(true);
+                    me->SetVisible(false);
+                    hided = true;
+                    me->SetHealth(me->GetMaxHealth());
                 }
 
                 DoMeleeAttackIfReady();
