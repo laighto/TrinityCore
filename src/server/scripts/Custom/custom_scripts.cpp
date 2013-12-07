@@ -266,6 +266,52 @@ class channel_factions : public PlayerScript
      }
 };
 
+enum eBanner
+{
+  NPC_STONEHEART_DEFENDER = 43138,
+  SPELL_BUFF_OF_THE_STONEFATHER = 80668,
+  SPELL_BANNER_HITS_GROUND = 80669,
+};
+
+class npc_stonefathers_banner : public CreatureScript
+{
+    public:
+        npc_stonefathers_banner() : CreatureScript("npc_stonefathers_banner") { }
+
+    CreatureAI* GetAI(Creature* creature) const OVERRIDE
+    {
+        return new npc_stonefathers_bannerAI (creature);
+    }
+
+    struct npc_stonefathers_bannerAI : public ScriptedAI
+    {
+        npc_stonefathers_bannerAI(Creature* creature) : ScriptedAI(creature) {}
+
+        void Reset() OVERRIDE
+        {
+          me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_DISABLE_MOVE  | UNIT_FLAG_NOT_SELECTABLE);
+        }
+
+        void IsSummonedBy(Unit* summoner) OVERRIDE
+        {
+          DoCastAOE(SPELL_BANNER_HITS_GROUND, true);
+
+          std::list<Creature*> creatures;
+          GetCreatureListWithEntryInGrid(creatures, me, NPC_STONEHEART_DEFENDER, 10.0f /*Range is official*/);
+
+          if (creatures.empty())
+            return;
+
+          for (std::list<Creature*>::iterator iter = creatures.begin(); iter != creatures.end(); ++iter)
+            if(!(*iter)->HasAura(SPELL_BUFF_OF_THE_STONEFATHER))
+            {
+              (*iter)->CastSpell((*iter),SPELL_BUFF_OF_THE_STONEFATHER, true);
+              summoner->ToPlayer()->KilledMonsterCredit(NPC_STONEHEART_DEFENDER, 0);
+            }
+        }
+    };
+};
+
 void AddSC_custom_script()
 {
     new mob_ressurect();
@@ -273,4 +319,5 @@ void AddSC_custom_script()
     new Boss_Announcer();
     new go_abandoned_outhouse();
     new channel_factions();
+    new npc_stonefathers_banner();
 }
