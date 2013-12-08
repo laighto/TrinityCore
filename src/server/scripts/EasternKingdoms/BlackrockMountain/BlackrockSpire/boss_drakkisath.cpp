@@ -62,6 +62,11 @@ public:
         void JustDied(Unit* /*killer*/) OVERRIDE
         {
             _JustDied();
+
+            if(GameObject* go = me->FindNearestGameObject(175946, 200.0f))
+                instance->HandleGameObject(go->GetGUID(), true);
+            if(GameObject* go = me->FindNearestGameObject(175947, 200.0f))
+                instance->HandleGameObject(go->GetGUID(), true);
         }
 
         void UpdateAI(uint32 diff) OVERRIDE

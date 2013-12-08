@@ -103,7 +103,11 @@ public:
         void DoAction(int32 action) OVERRIDE
         {
             if (action == ACTION_PHASE_TWO)
+            {
                 DoChangePhase();
+                if(GameObject* go = me->FindNearestGameObject(176965, 200.0f))
+                    instance->HandleGameObject(go->GetGUID(), true);
+            }
         }
 
         void DamageTaken(Unit* /*who*/, uint32& damage) OVERRIDE

@@ -70,6 +70,12 @@ public:
             events.ScheduleEvent(EVENT_CHECK, 1000);
         }
 
+        void JustDied(Unit* /*killer*/) OVERRIDE
+        {
+            if(GameObject* go = me->FindNearestGameObject(175365, 200.0f))
+                instance->HandleGameObject(go->GetGUID(), true);
+        }
+
         void UpdateAI(uint32 diff) OVERRIDE
         {
             if (!UpdateVictim())

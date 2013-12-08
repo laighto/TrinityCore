@@ -85,6 +85,12 @@ public:
             HasYelled = false;
         }
 
+        void JustDied(Unit* /*killer*/) OVERRIDE
+        {
+            if(GameObject* go = me->FindNearestGameObject(175364, 200.0f))
+                instance->HandleGameObject(go->GetGUID(), true);
+        }
+
         void EnterCombat(Unit* /*who*/) OVERRIDE
         {
             _EnterCombat();
