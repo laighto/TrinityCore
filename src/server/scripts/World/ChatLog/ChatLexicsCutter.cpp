@@ -30,9 +30,9 @@ LexicsCutter::LexicsCutter(const std::string& analogsFileName, const std::string
     std::string innormativeWordsFile = innormativeWordsFileName;
 
     if (!_ReadLetterAnalogs(analogsFileName))
-        sLog->outError("chat.system", "CHAT LOG: Unable to open file with letter analogs '%s'", analogsFile.c_str());
+        TC_LOG_ERROR("chat.system", "CHAT LOG: Unable to open file with letter analogs '%s'", analogsFile.c_str());
     if (!_ReadInnormativeWords(innormativeWordsFileName))
-        sLog->outError("chat.system", "CHAT LOG: Unable to open file with innormative words '%s'", innormativeWordsFile.c_str());
+        TC_LOG_ERROR("chat.system", "CHAT LOG: Unable to open file with innormative words '%s'", innormativeWordsFile.c_str());
     _MapInnormativeWords();
 }
 
