@@ -163,7 +163,8 @@ public:
 ## npc_brunnhildar_prisoner
 ######*/
 
-enum BrunnhildarPrisoner {
+enum BrunnhildarPrisoner
+{
     SPELL_ICE_PRISON           = 54894,
     SPELL_ICE_LANCE            = 55046,
     SPELL_FREE_PRISONER        = 55048,
@@ -452,14 +453,14 @@ enum BrannBronzebeard
     EVENT_SCRIPT_13       = 13
 };
 
-class npc_brann_bronzebeard : public CreatureScript
+class npc_brann_bronzebeard_keystone : public CreatureScript
 {
 public:
-    npc_brann_bronzebeard() : CreatureScript("npc_brann_bronzebeard") { }
+    npc_brann_bronzebeard_keystone() : CreatureScript("npc_brann_bronzebeard_keystone") { }
 
-    struct npc_brann_bronzebeardAI : public ScriptedAI
+    struct npc_brann_bronzebeard_keystoneAI : public ScriptedAI
     {
-        npc_brann_bronzebeardAI(Creature* creature) : ScriptedAI(creature) { }
+        npc_brann_bronzebeard_keystoneAI(Creature* creature) : ScriptedAI(creature) { }
 
         void Reset() OVERRIDE
         {
@@ -583,7 +584,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new npc_brann_bronzebeardAI(creature);
+        return new npc_brann_bronzebeard_keystoneAI(creature);
     }
 };
 
@@ -635,13 +636,16 @@ class spell_close_rift : public SpellScriptLoader
 };
 
 /*#####
-# spell_jokkum_scriptcast
+# Krolmir, Hammer of Storms
 #####*/
 
 enum JokkumScriptcast
 {
     SPELL_JOKKUM_KILL_CREDIT    = 56545,
     SPELL_JOKKUM_SUMMON         = 56541,
+    NPC_KINGJOKKUM              = 30331,
+    SAY_HOLD_ON                 = 0,
+    PATH_JOKKUM                 = 2072200
 };
 
 class spell_jokkum_scriptcast : public SpellScriptLoader
@@ -654,18 +658,15 @@ class spell_jokkum_scriptcast : public SpellScriptLoader
 
             bool Validate(SpellInfo const* /*spellInfo*/) OVERRIDE
             {
-                if (!sSpellMgr->GetSpellInfo(SPELL_JOKKUM_KILL_CREDIT) || !sSpellMgr->GetSpellInfo(SPELL_JOKKUM_SUMMON))
+                if (!sSpellMgr->GetSpellInfo(SPELL_JOKKUM_SUMMON))
                     return false;
                 return true;
             }
 
             void OnApply(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
             {
-                if (Player* player = GetTarget()->ToPlayer())
-                {
-                    player->CastSpell(player, SPELL_JOKKUM_KILL_CREDIT, true);
-                    player->CastSpell(player, SPELL_JOKKUM_SUMMON, true);
-                }
+                Unit* target = GetTarget();
+                target->CastSpell(target, SPELL_JOKKUM_SUMMON, true);
             }
 
             void Register() OVERRIDE
@@ -680,6 +681,45 @@ class spell_jokkum_scriptcast : public SpellScriptLoader
         }
 };
 
+class npc_king_jokkum_vehicle : public CreatureScript
+{
+    public:
+        npc_king_jokkum_vehicle() : CreatureScript("npc_king_jokkum_vehicle") { }
+
+        struct npc_king_jokkum_vehicleAI : public VehicleAI
+        {
+            npc_king_jokkum_vehicleAI(Creature* creature) : VehicleAI(creature) { }
+
+            void OnCharmed(bool /*apply*/) OVERRIDE { }
+
+            void PassengerBoarded(Unit* who, int8 /*seat*/, bool apply) OVERRIDE
+            {
+                if (apply)
+                {
+                    Talk(SAY_HOLD_ON, who->GetGUID());
+                    me->CastSpell(who, SPELL_JOKKUM_KILL_CREDIT, true);
+                    me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_NPC);
+                    me->GetMotionMaster()->MovePath(PATH_JOKKUM, false);
+                }
+            }
+
+            void MovementInform(uint32 type, uint32 id) OVERRIDE
+            {
+                if (type != WAYPOINT_MOTION_TYPE)
+                    return;
+
+                // PointId in WaypointMovementGenerator doesn't match with PointId in DB
+                if (id == 19)
+                    me->GetVehicleKit()->RemoveAllPassengers();
+            }
+        };
+
+        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        {
+            return new npc_king_jokkum_vehicleAI(creature);
+        }
+};
+
 void AddSC_storm_peaks()
 {
     new npc_injured_goblin();
@@ -688,7 +728,8 @@ void AddSC_storm_peaks()
     new npc_freed_protodrake();
     new npc_icefang();
     new npc_hyldsmeet_protodrake();
-    new npc_brann_bronzebeard();
+    new npc_brann_bronzebeard_keystone();
     new spell_close_rift();
     new spell_jokkum_scriptcast();
+    new npc_king_jokkum_vehicle();
 }

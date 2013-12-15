@@ -685,6 +685,7 @@ Player::Player(WorldSession* session): Unit(true), phaseMgr(this)
     m_session = session;
 
     m_divider = 0;
+    m_ingametime = 0;
 
     m_ExtraFlags = 0;
 
@@ -710,6 +711,7 @@ Player::Player(WorldSession* session): Unit(true), phaseMgr(this)
     m_zoneUpdateTimer = 0;
 
     m_areaUpdateId = 0;
+    m_team = 0;
 
     m_nextSave = sWorld->getIntConfig(CONFIG_INTERVAL_SAVE);
 
@@ -771,6 +773,8 @@ Player::Player(WorldSession* session): Unit(true), phaseMgr(this)
 
     m_logintime = time(NULL);
     m_Last_tick = m_logintime;
+    m_Played_time[PLAYED_TIME_TOTAL] = 0;
+    m_Played_time[PLAYED_TIME_LEVEL] = 0;
     m_WeaponProficiency = 0;
     m_ArmorProficiency = 0;
     m_canParry = false;
@@ -813,6 +817,7 @@ Player::Player(WorldSession* session): Unit(true), phaseMgr(this)
     m_InstanceValid = true;
     m_dungeonDifficulty = DUNGEON_DIFFICULTY_NORMAL;
     m_raidDifficulty = RAID_DIFFICULTY_10MAN_NORMAL;
+    m_raidMapDifficulty = RAID_DIFFICULTY_10MAN_NORMAL;
 
     m_lastPotionId = 0;
     _talentMgr = new PlayerTalentInfo();
@@ -847,6 +852,18 @@ Player::Player(WorldSession* session): Unit(true), phaseMgr(this)
     m_movedPlayer = this;
     m_seer = this;
 
+    m_recallMap = 0;
+    m_recallX = 0;
+    m_recallY = 0;
+    m_recallZ = 0;
+    m_recallO = 0;
+
+    m_homebindMapId = 0;
+    m_homebindAreaId = 0;
+    m_homebindX = 0;
+    m_homebindY = 0;
+    m_homebindZ = 0;
+
     m_contestedPvPTimer = 0;
 
     m_declinedname = NULL;
@@ -866,7 +883,11 @@ Player::Player(WorldSession* session): Unit(true), phaseMgr(this)
 
     m_ChampioningFaction = 0;
 
-    for (uint8 i = 0; i < MAX_POWERS_PER_CLASS; ++i)
+    m_timeSyncTimer = 0;
+    m_timeSyncClient = 0;
+    m_timeSyncServer = 0;
+
+    for (uint8 i = 0; i < MAX_POWERS; ++i)
         m_powerFraction[i] = 0;
 
     isDebugAreaTriggers = false;
@@ -5230,7 +5251,7 @@ void Player::ResurrectPlayer(float restore_percent, bool applySickness)
 void Player::KillPlayer()
 {
     if (IsFlying() && !GetTransport())
-        i_motionMaster.MoveFall();
+        GetMotionMaster()->MoveFall();
 
     SetRooted(true);
 
@@ -14806,9 +14827,7 @@ void Player::SendPreparedQuest(uint64 guid)
 
                 if (quest->IsAutoAccept() && CanAddQuest(quest, true) && CanTakeQuest(quest, true))
                 {
-                    AddQuest(quest, object);
-                    if (CanCompleteQuest(questId))
-                        CompleteQuest(questId);
+                    AddQuestAndCheckCompletion(quest, object);
 
                     switch (object->GetTypeId())
                      {
@@ -15130,6 +15149,53 @@ bool Player::CanRewardQuest(Quest const* quest, bool msg)
         return false;
 
     return true;
+}
+
+void Player::AddQuestAndCheckCompletion(Quest const* quest, Object* questGiver)
+{
+    AddQuest(quest, questGiver);
+
+    if (CanCompleteQuest(quest->GetQuestId()))
+        CompleteQuest(quest->GetQuestId());
+
+    if (!questGiver)
+        return;
+
+    switch (questGiver->GetTypeId())
+    {
+        case TYPEID_UNIT:
+            sScriptMgr->OnQuestAccept(this, (questGiver->ToCreature()), quest);
+            questGiver->ToCreature()->AI()->sQuestAccept(this, quest);
+            break;
+        case TYPEID_ITEM:
+        case TYPEID_CONTAINER:
+        {
+            Item* item = (Item*)questGiver;
+            sScriptMgr->OnQuestAccept(this, item, quest);
+
+            // destroy not required for quest finish quest starting item
+            bool destroyItem = true;
+            for (int i = 0; i < QUEST_ITEM_OBJECTIVES_COUNT; ++i)
+            {
+                if (quest->RequiredItemId[i] == item->GetEntry() && item->GetTemplate()->MaxCount > 0)
+                {
+                    destroyItem = false;
+                    break;
+                }
+            }
+
+            if (destroyItem)
+                DestroyItem(item->GetBagSlot(), item->GetSlot(), true);
+
+            break;
+        }
+        case TYPEID_GAMEOBJECT:
+            sScriptMgr->OnQuestAccept(this, questGiver->ToGameObject(), quest);
+            questGiver->ToGameObject()->AI()->QuestAccept(this, quest);
+            break;
+        default:
+            break;
+    }
 }
 
 bool Player::CanRewardQuest(Quest const* quest, uint32 reward, bool msg)
@@ -15455,7 +15521,7 @@ void Player::RewardQuest(Quest const* quest, uint32 reward, Object* questGiver, 
     if (quest->GetRewSpellCast() > 0)
     {
         SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(quest->GetRewSpellCast());
-        if (questGiver->isType(TYPEMASK_UNIT) && !spellInfo->HasEffect(SPELL_EFFECT_LEARN_SPELL))
+        if (questGiver->isType(TYPEMASK_UNIT) && (!spellInfo->HasEffect(SPELL_EFFECT_LEARN_SPELL) || !spellInfo->HasEffect(SPELL_EFFECT_CREATE_ITEM)))
         {
             if (Creature* creature = GetMap()->GetCreature(questGiver->GetGUID()))
                 creature->CastSpell(this, quest->GetRewSpellCast(), true);
@@ -15466,7 +15532,7 @@ void Player::RewardQuest(Quest const* quest, uint32 reward, Object* questGiver, 
     else if (quest->GetRewSpell() > 0)
     {
         SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(quest->GetRewSpell());
-        if (questGiver->isType(TYPEMASK_UNIT) && !spellInfo->HasEffect(SPELL_EFFECT_LEARN_SPELL))
+        if (questGiver->isType(TYPEMASK_UNIT) && (!spellInfo->HasEffect(SPELL_EFFECT_LEARN_SPELL) || !spellInfo->HasEffect(SPELL_EFFECT_CREATE_ITEM)))
         {
             if (Creature* creature = GetMap()->GetCreature(questGiver->GetGUID()))
                 creature->CastSpell(this, quest->GetRewSpell(), true);
