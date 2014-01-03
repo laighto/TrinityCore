@@ -768,7 +768,7 @@ void GameObject::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     stmt->setUInt8(index++, uint8(GetGoState()));
     trans->Append(stmt);
 
-    WorldDatabase.CommitTransaction(trans);
+    //WorldDatabase.CommitTransaction(trans);
 }
 
 bool GameObject::LoadGameObjectFromDB(uint32 guid, Map* map, bool addToMap)
@@ -857,7 +857,7 @@ void GameObject::DeleteFromDB()
 
     stmt->setUInt32(0, m_DBTableGuid);
 
-    WorldDatabase.Execute(stmt);
+    //WorldDatabase.Execute(stmt);
 }
 
 GameObject* GameObject::GetGameObject(WorldObject& object, uint64 guid)

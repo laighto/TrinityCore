@@ -1033,7 +1033,7 @@ void Creature::SaveToDB(uint32 mapid, uint8 spawnMask, uint32 phaseMask)
     stmt->setUInt32(index++, dynamicflags);
     trans->Append(stmt);
 
-    WorldDatabase.CommitTransaction(trans);
+    //WorldDatabase.CommitTransaction(trans);
 }
 
 void Creature::SelectLevel(const CreatureTemplate* cinfo)
@@ -1324,9 +1324,9 @@ void Creature::DeleteFromDB()
     stmt->setUInt32(0, m_DBTableGuid);
     trans->Append(stmt);
 
-    stmt = WorldDatabase.GetPreparedStatement(WORLD_DEL_CREATURE_ADDON);
-    stmt->setUInt32(0, m_DBTableGuid);
-    trans->Append(stmt);
+    //stmt = WorldDatabase.GetPreparedStatement(WORLD_DEL_CREATURE_ADDON);
+    //stmt->setUInt32(0, m_DBTableGuid);
+   // trans->Append(stmt);
 
     stmt = WorldDatabase.GetPreparedStatement(WORLD_DEL_GAME_EVENT_CREATURE);
     stmt->setUInt32(0, m_DBTableGuid);

@@ -202,14 +202,14 @@ public:
             stmt->setUInt32(1, pathid);
         }
 
-        WorldDatabase.Execute(stmt);
+        //WorldDatabase.Execute(stmt);
 
         stmt = WorldDatabase.GetPreparedStatement(WORLD_UPD_CREATURE_MOVEMENT_TYPE);
 
         stmt->setUInt8(0, uint8(WAYPOINT_MOTION_TYPE));
         stmt->setUInt32(1, guidLow);
 
-        WorldDatabase.Execute(stmt);
+        //WorldDatabase.Execute(stmt);
 
         target->LoadPath(pathid);
         target->SetDefaultMovementType(WAYPOINT_MOTION_TYPE);
@@ -263,7 +263,7 @@ public:
 
         stmt->setUInt32(0, guidLow);
 
-        WorldDatabase.Execute(stmt);
+       // WorldDatabase.Execute(stmt);
 
         target->UpdateWaypointID(0);
 
@@ -272,7 +272,7 @@ public:
         stmt->setUInt8(0, uint8(IDLE_MOTION_TYPE));
         stmt->setUInt32(1, guidLow);
 
-        WorldDatabase.Execute(stmt);
+        //WorldDatabase.Execute(stmt);
 
         target->LoadPath(0);
         target->SetDefaultMovementType(IDLE_MOTION_TYPE);

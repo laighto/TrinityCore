@@ -391,7 +391,7 @@ public:
         stmt->setUInt8(0, uint8(WAYPOINT_MOTION_TYPE));
         stmt->setUInt32(1, lowGuid);
 
-        WorldDatabase.Execute(stmt);
+        //WorldDatabase.Execute(stmt);
 
         if (creature && creature->GetWaypointPath())
         {
@@ -609,7 +609,7 @@ public:
         stmt->setUInt16(1, uint16(factionId));
         stmt->setUInt32(2, creature->GetEntry());
 
-        WorldDatabase.Execute(stmt);
+        //WorldDatabase.Execute(stmt);
 
         return true;
     }
