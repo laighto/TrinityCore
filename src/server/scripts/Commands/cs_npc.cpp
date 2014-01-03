@@ -603,13 +603,13 @@ public:
         }
 
         // ..and DB
-        PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_UPD_CREATURE_FACTION);
+       /* PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_UPD_CREATURE_FACTION);
 
         stmt->setUInt16(0, uint16(factionId));
         stmt->setUInt16(1, uint16(factionId));
         stmt->setUInt32(2, creature->GetEntry());
 
-        //WorldDatabase.Execute(stmt);
+        WorldDatabase.Execute(stmt);*/
 
         return true;
     }
@@ -633,12 +633,12 @@ public:
 
         creature->SetUInt32Value(UNIT_NPC_FLAGS, npcFlags);
 
-        PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_UPD_CREATURE_NPCFLAG);
+       /* PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_UPD_CREATURE_NPCFLAG);
 
         stmt->setUInt32(0, npcFlags);
         stmt->setUInt32(1, creature->GetEntry());
 
-        WorldDatabase.Execute(stmt);
+        WorldDatabase.Execute(stmt);*/
 
         handler->SendSysMessage(LANG_VALUE_SAVED_REJOIN);
 
@@ -875,7 +875,7 @@ public:
             }
         }
 
-        PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_UPD_CREATURE_POSITION);
+        /*PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_UPD_CREATURE_POSITION);
 
         stmt->setFloat(0, x);
         stmt->setFloat(1, y);
@@ -883,7 +883,7 @@ public:
         stmt->setFloat(3, o);
         stmt->setUInt32(4, lowguid);
 
-        WorldDatabase.Execute(stmt);
+        WorldDatabase.Execute(stmt);*/
 
         handler->PSendSysMessage(LANG_COMMAND_CREATUREMOVED);
         return true;
@@ -1143,13 +1143,13 @@ public:
             creature->Respawn();
         }
 
-        PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_UPD_CREATURE_SPAWN_DISTANCE);
+        /*PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_UPD_CREATURE_SPAWN_DISTANCE);
 
         stmt->setFloat(0, option);
         stmt->setUInt8(1, uint8(mtype));
         stmt->setUInt32(2, guidLow);
 
-        WorldDatabase.Execute(stmt);
+        WorldDatabase.Execute(stmt);*/
 
         handler->PSendSysMessage(LANG_COMMAND_SPAWNDIST, option);
         return true;
@@ -1183,12 +1183,12 @@ public:
         else
             return false;
 
-        PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_UPD_CREATURE_SPAWN_TIME_SECS);
+        /*PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_UPD_CREATURE_SPAWN_TIME_SECS);
 
         stmt->setUInt32(0, uint32(spawnTime));
         stmt->setUInt32(1, guidLow);
 
-        WorldDatabase.Execute(stmt);
+        WorldDatabase.Execute(stmt);*/
 
         creature->SetRespawnDelay((uint32)spawnTime);
         handler->PSendSysMessage(LANG_COMMAND_SPAWNTIME, spawnTime);
@@ -1452,7 +1452,7 @@ public:
         sFormationMgr->CreatureGroupMap[lowguid] = group_member;
         creature->SearchFormation();
 
-        PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_INS_CREATURE_FORMATION);
+        /*PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_INS_CREATURE_FORMATION);
 
         stmt->setUInt32(0, leaderGUID);
         stmt->setUInt32(1, lowguid);
@@ -1460,7 +1460,7 @@ public:
         stmt->setFloat(3, group_member->follow_angle);
         stmt->setUInt32(4, uint32(group_member->groupAI));
 
-        WorldDatabase.Execute(stmt);
+        WorldDatabase.Execute(stmt);*/
 
         handler->PSendSysMessage("Creature %u added to formation with leader %u", lowguid, leaderGUID);
 

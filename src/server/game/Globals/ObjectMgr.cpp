@@ -1432,8 +1432,8 @@ bool ObjectMgr::SetCreatureLinkedRespawn(uint32 guidLow, uint32 linkedGuidLow)
     {
         _linkedRespawnStore.erase(guid);
         PreparedStatement *stmt = WorldDatabase.GetPreparedStatement(WORLD_DEL_CRELINKED_RESPAWN);
-        stmt->setUInt32(0, guidLow);
-        //WorldDatabase.Execute(stmt);
+        stmt->setUInt32(0, 0);
+        WorldDatabase.Execute(stmt);
         return true;
     }
 
@@ -8277,7 +8277,7 @@ void ObjectMgr::AddVendorItem(uint32 entry, uint32 item, int32 maxcount, uint32 
 
     if (persist)
     {
-        PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_INS_NPC_VENDOR);
+        /*PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_INS_NPC_VENDOR);
 
         stmt->setUInt32(0, entry);
         stmt->setUInt32(1, item);
@@ -8286,7 +8286,7 @@ void ObjectMgr::AddVendorItem(uint32 entry, uint32 item, int32 maxcount, uint32 
         stmt->setUInt32(4, extendedCost);
         stmt->setUInt8(5, type);
 
-        //WorldDatabase.Execute(stmt);
+        WorldDatabase.Execute(stmt);*/
     }
 }
 
@@ -8301,13 +8301,13 @@ bool ObjectMgr::RemoveVendorItem(uint32 entry, uint32 item, uint8 type, bool per
 
     if (persist)
     {
-        PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_DEL_NPC_VENDOR);
+       /* PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_DEL_NPC_VENDOR);
 
         stmt->setUInt32(0, entry);
         stmt->setUInt32(1, item);
         stmt->setUInt8(2, type);
 
-        //WorldDatabase.Execute(stmt);
+        WorldDatabase.Execute(stmt);*/
     }
 
     return true;

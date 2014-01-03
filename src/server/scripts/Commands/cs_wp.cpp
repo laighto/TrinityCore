@@ -124,7 +124,7 @@ public:
         Player* player = handler->GetSession()->GetPlayer();
         //Map* map = player->GetMap();
 
-        stmt = WorldDatabase.GetPreparedStatement(WORLD_INS_WAYPOINT_DATA);
+       /* stmt = WorldDatabase.GetPreparedStatement(WORLD_INS_WAYPOINT_DATA);
 
         stmt->setUInt32(0, pathid);
         stmt->setUInt32(1, point + 1);
@@ -132,7 +132,7 @@ public:
         stmt->setFloat(3, player->GetPositionY());
         stmt->setFloat(4, player->GetPositionZ());
 
-        WorldDatabase.Execute(stmt);
+        WorldDatabase.Execute(stmt);*/
 
         handler->PSendSysMessage("%s%s%u%s%u%s|r", "|cff00ff00", "PathID: |r|cff00ffff", pathid, "|r|cff00ff00: Waypoint |r|cff00ffff", point+1, "|r|cff00ff00 created. ");
         return true;
@@ -202,14 +202,14 @@ public:
             stmt->setUInt32(1, pathid);
         }
 
-        //WorldDatabase.Execute(stmt);
+       /WorldDatabase.Execute(stmt);
 
         stmt = WorldDatabase.GetPreparedStatement(WORLD_UPD_CREATURE_MOVEMENT_TYPE);
 
         stmt->setUInt8(0, uint8(WAYPOINT_MOTION_TYPE));
         stmt->setUInt32(1, guidLow);
 
-        //WorldDatabase.Execute(stmt);
+        WorldDatabase.Execute(stmt);
 
         target->LoadPath(pathid);
         target->SetDefaultMovementType(WAYPOINT_MOTION_TYPE);
@@ -656,7 +656,7 @@ public:
                     wpCreature->AddObjectToRemoveList();
                 }
 
-            PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_DEL_WAYPOINT_DATA);
+           /* PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_DEL_WAYPOINT_DATA);
 
             stmt->setUInt32(0, pathid);
             stmt->setUInt32(1, point);
@@ -668,7 +668,7 @@ public:
             stmt->setUInt32(0, pathid);
             stmt->setUInt32(1, point);
 
-            WorldDatabase.Execute(stmt);
+            WorldDatabase.Execute(stmt);*/
 
             handler->PSendSysMessage(LANG_WAYPOINT_REMOVED);
             return true;
@@ -879,11 +879,11 @@ public:
                         handler->PSendSysMessage(LANG_WAYPOINT_NOTREMOVED, wpguid);
                         hasError = true;
 
-                        PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_DEL_CREATURE);
+                       /* PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_DEL_CREATURE);
 
                         stmt->setUInt32(0, wpguid);
 
-                        WorldDatabase.Execute(stmt);
+                        WorldDatabase.Execute(stmt);*/
                     }
                     else
                     {
@@ -1080,7 +1080,7 @@ public:
 
                     PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_DEL_CREATURE);
 
-                    stmt->setUInt32(0, guid);
+                    stmt->setUInt32(0, 0);
 
                     WorldDatabase.Execute(stmt);
                 }
