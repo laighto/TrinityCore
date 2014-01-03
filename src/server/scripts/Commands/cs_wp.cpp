@@ -202,7 +202,7 @@ public:
             stmt->setUInt32(1, pathid);
         }
 
-       /WorldDatabase.Execute(stmt);
+       WorldDatabase.Execute(stmt);
 
         stmt = WorldDatabase.GetPreparedStatement(WORLD_UPD_CREATURE_MOVEMENT_TYPE);
 
