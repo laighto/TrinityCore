@@ -830,8 +830,8 @@ public:
         if (newlevel < 1)
             newlevel = 1;
 
-        if (newlevel > STRONG_MAX_LEVEL)                         // hardcoded maximum level
-            newlevel = STRONG_MAX_LEVEL;
+        if (newlevel > MAX_LEVEL)                         // hardcoded maximum level
+            newlevel = MAX_LEVEL;
 
         HandleCharacterLevel(target, targetGuid, oldlevel, newlevel, handler);
 
