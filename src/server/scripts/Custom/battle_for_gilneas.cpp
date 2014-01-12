@@ -138,7 +138,7 @@ class npc_prince_liam : public CreatureScript
                 events.ScheduleEvent(RESET_ALL, 900000, 0, 0);
             }
 
-            void SearchTarget() OVERRIDE
+            void SearchTarget()
             {
                 if((!military_quoter || s3pos) && !ignoredamage)
                 {
@@ -473,7 +473,7 @@ class npc_gilnean_millitia : public CreatureScript
                 }
             }
 
-            void SearchTargets(Unit* attacker) OVERRIDE
+            void SearchTargets(Unit* attacker)
             {
                 if((!military_quoter || s3posb) && !ignoredamage)
                 {

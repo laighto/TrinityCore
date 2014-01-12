@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -112,11 +112,7 @@ class instance_zulgurub : public InstanceMapScript
             {
                 switch (go->GetEntry())
                 {
-                    case GO_VENOXIS_COIL:
-                    case GO_ARENA_DOOR_1:
                     case GO_FORCEFIELD:
-                    case GO_ZANZIL_DOOR:
-                    case GO_THE_CACHE_OF_MADNESS_DOOR:
                         AddDoor(go, false);
                         break;
                     default:
@@ -140,8 +136,6 @@ class instance_zulgurub : public InstanceMapScript
                     case DATA_RENATAKI:
                     case DATA_WUSHOOLAY:
                     case DATA_GRILEK:
-                        break;
-                    default:
                         break;
                 }
 

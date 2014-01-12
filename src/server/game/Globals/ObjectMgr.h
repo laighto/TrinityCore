@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -1408,7 +1408,9 @@ class ObjectMgr
             GO_TO_GO,
             GO_TO_CREATURE          // GO is dependant on creature
         };
+
         HotfixData _hotfixData;
+        std::set<uint32> _transportMaps; // Helper container storing map ids that are for transports only, loaded from gameobject_template
 };
 
 #define sObjectMgr ACE_Singleton<ObjectMgr, ACE_Null_Mutex>::instance()
