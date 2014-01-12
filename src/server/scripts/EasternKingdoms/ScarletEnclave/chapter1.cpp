@@ -1133,7 +1133,7 @@ class npc_eye_of_acherus : public CreatureScript
             ((Player*)(me->GetCharmer()))->SetClientControl(me, 1);
         }
 
-        void Update(uint32 diff) OVERRIDE
+        void Update(uint32 diff)
         {
             if (me->IsCharmed())
             {
