@@ -594,6 +594,9 @@ void WorldSession::HandleAddonMessagechatOpcode(WorldPacket& recvData)
             break;
     }
 
+    if (prefix.empty() || prefix.length() > 16)
+        return;
+
     // Logging enabled?
     if (sWorld->getBoolConfig(CONFIG_CHATLOG_ADDON))
     {
@@ -617,7 +620,7 @@ void WorldSession::HandleAddonMessagechatOpcode(WorldPacket& recvData)
                 return;
 
             WorldPacket data;
-            ChatHandler::BuildChatPacket(data, type, LANG_ADDON, sender, NULL, message, 0U, "", DEFAULT_LOCALE, prefix.c_str());
+            ChatHandler::BuildChatPacket(data, type, LANG_ADDON, sender, NULL, message, 0U, "", DEFAULT_LOCALE, prefix);
             group->BroadcastAddonMessagePacket(&data, prefix, false);
             break;
         }
@@ -633,7 +636,7 @@ void WorldSession::HandleAddonMessagechatOpcode(WorldPacket& recvData)
         {
             if (!normalizePlayerName(targetName))
                 break;
-            Player* receiver = sObjectAccessor->FindPlayerByName(targetName.c_str());
+            Player* receiver = sObjectAccessor->FindPlayerByName(targetName);
             if (!receiver)
                 break;
 
@@ -650,7 +653,7 @@ void WorldSession::HandleAddonMessagechatOpcode(WorldPacket& recvData)
                 break;
 
             WorldPacket data;
-            ChatHandler::BuildChatPacket(data, type, LANG_ADDON, sender, NULL, message, 0U, "", DEFAULT_LOCALE, prefix.c_str());
+            ChatHandler::BuildChatPacket(data, type, LANG_ADDON, sender, NULL, message, 0U, "", DEFAULT_LOCALE, prefix);
             group->BroadcastAddonMessagePacket(&data, prefix, true, -1, group->GetMemberGroup(sender->GetGUID()));
             break;
         }
