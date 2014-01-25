@@ -1223,13 +1223,24 @@ enum TrinityStrings
     LANG_AUTO_BROADCAST                 = 11000,
     LANG_INVALID_REALMID                = 11001,
 
+    // Show Kick in world
+    LANG_COMMAND_KICKMESSAGE_WORLD = 11002,
+
+    // Show Mute in world
+    LANG_COMMAND_MUTEMESSAGE_WORLD = 11003,
+
+    // Show Ban in world
+    LANG_BAN_CHARACTER_YOUBANNEDMESSAGE_WORLD     = 11004,
+    LANG_BAN_CHARACTER_YOUPERMBANNEDMESSAGE_WORLD = 11005,
+    LANG_BAN_ACCOUNT_YOUBANNEDMESSAGE_WORLD       = 11006,
+    LANG_BAN_ACCOUNT_YOUPERMBANNEDMESSAGE_WORLD   = 11007,
+
     LANG_PLAYER_CAN_NOT_SET_RECRUITER   = 788,
     LANG_PLAYER_SET_RECRUITER_SUCCESS   = 789,
     RECRUIT_ONLINE                      = 790,
     RECRUITER_ONLINE                    = 791,
     LANG_PLAYER_DELETE_RECRUITER        = 792,
-    LANG_BOSS_ANNOUNCER                 = 11002,
-
+    LANG_BOSS_ANNOUNCER                 = 12000,
     // NOT RESERVED IDS                   12000-1999999999
     // `db_script_string` table index     2000000000-2000009999 (MIN_DB_SCRIPT_STRING_ID-MAX_DB_SCRIPT_STRING_ID)
     // For other tables maybe             2000010000-2147483647 (max index)
