@@ -3671,6 +3671,9 @@ void SpellMgr::LoadSpellInfoCorrections()
             case 93599:
                 spellInfo->RangeEntry = sSpellRangeStore.LookupEntry(EFFECT_RADIUS_2_YARDS);
                 break;
+            case 80962:
+                spellInfo->Effects[EFFECT_0].TargetA = SpellImplicitTargetInfo(TARGET_UNIT_TARGET_ANY);
+                break;
             default:
                 break;
         }
