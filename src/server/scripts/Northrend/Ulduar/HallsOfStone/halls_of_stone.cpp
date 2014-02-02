@@ -534,6 +534,7 @@ public:
                     case 22:
                         if (Creature* temp = Unit::GetCreature(*me, instance->GetData64(DATA_ABEDNEUM)))
                             temp->AI()->Talk(SAY_EVENT_D_2_ABED);
+                        instance->SetBossState(DATA_BRANN_EVENT, DONE);
                         SpawnDwarf(1);
                         JumpToNextStep(5000);
                         break;
@@ -678,6 +679,7 @@ public:
                     }
                     case 50:
                         SetEscortPaused(false);
+                        JumpToNextStep(0);
                         break;
                 }
             } else uiPhaseTimer -= uiDiff;
