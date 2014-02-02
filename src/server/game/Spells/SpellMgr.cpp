@@ -3672,7 +3672,9 @@ void SpellMgr::LoadSpellInfoCorrections()
                 spellInfo->RangeEntry = sSpellRangeStore.LookupEntry(EFFECT_RADIUS_2_YARDS);
                 break;
             case 80962:
+                spellInfo->RangeEntry = sSpellRangeStore.LookupEntry(EFFECT_RADIUS_10_YARDS);
                 spellInfo->Effects[EFFECT_0].TargetA = SpellImplicitTargetInfo(TARGET_UNIT_TARGET_ANY);
+                spellInfo->Effects[EFFECT_0].TargetB = SpellImplicitTargetInfo(0);
                 break;
             default:
                 break;
