@@ -69,3 +69,8 @@ INSERT INTO `locales_creature_text`  (`entry`, `groupid`, `id`,`text_loc1`, `tex
 (46963, '1', '0', NULL,  NULL, NULL, NULL, NULL, NULL, NULL, 'Детские игры закончились!'),
 (46963, '2', '0', NULL,  NULL, NULL, NULL, NULL, NULL, NULL, 'Ты больше не будешь мне надоедать!'),
 (46963, '3', '0', NULL,  NULL, NULL, NULL, NULL, NULL, NULL, 'Моя новая жизнь только начиналась...!');
+
+UPDATE creature_template SET ScriptName = 'boss_lord_godfrey' WHERE entry = 46964;
+UPDATE creature_template SET ScriptName = 'boss_commander_springvale' WHERE entry = 4278;
+UPDATE creature_template SET ScriptName = 'boss_baron_silverlaine' WHERE entry = 3887;
+UPDATE creature_template SET ScriptName = 'boss_baron_ashbury' WHERE entry = 46962;

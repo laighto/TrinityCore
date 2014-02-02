@@ -176,6 +176,10 @@ set(scripts_STAT_SRCS
   EasternKingdoms/ShadowfangKeep/boss_lord_walden_c.cpp
   EasternKingdoms/ShadowfangKeep/shadowfang_keep.cpp
   EasternKingdoms/ShadowfangKeep/instance_shadowfang_keep.cpp
+  EasternKingdoms/ShadowfangKeep/boss_baron_ashbury_c.cpp
+  EasternKingdoms/ShadowfangKeep/boss_baron_silverlaine_c.cpp
+  EasternKingdoms/ShadowfangKeep/boss_commander_springvale_c.cpp
+  EasternKingdoms/ShadowfangKeep/boss_lord_godfrey_c.cpp
   EasternKingdoms/ShadowfangKeep/shadowfang_keep.h
   EasternKingdoms/zone_burning_steppes.cpp
   EasternKingdoms/zone_blasted_lands.cpp
