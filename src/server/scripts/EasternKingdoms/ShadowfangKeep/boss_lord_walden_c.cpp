@@ -154,7 +154,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature *pCreature) const
+    CreatureAI* GetAI(Creature *pCreature) const OVERRIDE
     {
         return new npc_mystery_toxinAI (pCreature);
     }
