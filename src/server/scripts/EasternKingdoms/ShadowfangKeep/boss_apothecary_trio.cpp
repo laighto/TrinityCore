@@ -182,7 +182,7 @@ class npc_apothecary_hummel : public CreatureScript
                 }
 
                 if (GameObject* door = _instance->instance->GetGameObject(_instance->GetData64(DATA_DOOR)))
-                    _instance->HandleGameObject(NULL, true, door);
+                    _instance->HandleGameObject(0, true, door);
             }
 
             void DoAction(int32 action) OVERRIDE
