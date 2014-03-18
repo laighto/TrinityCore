@@ -530,7 +530,7 @@ public:
 /*######
 ## npc_a_special_surprise
 ######*/
-//used by 29032, 29061, 29065, 29067, 29068, 29070, 29074, 29072, 29073, 29071 but signed for 29032
+//used by 29032, 29061, 29065, 29067, 29068, 29070, 29074, 29072, 29073, 29071, 49355, 49356 but signed for 29032
 enum SpecialSurprise
 {
     SAY_EXEC_START_1            = 0,                 // speech for all
@@ -662,6 +662,14 @@ public:
                     if (player->GetQuestStatus(12746) == QUEST_STATUS_INCOMPLETE)
                         return true;
                     break;
+                case 49356:                                     // Gally Lumpstain
+                    if (player->GetQuestStatus(28650) == QUEST_STATUS_INCOMPLETE)
+                        return true;
+                    break;
+                case 49355:                                     // Gally Lumpstain
+                    if (player->GetQuestStatus(28649) == QUEST_STATUS_INCOMPLETE)
+                        return true;
+                    break;
             }
 
             return false;
@@ -696,6 +704,7 @@ public:
                     switch (player->getRace())
                     {
                         case RACE_HUMAN:
+                        case RACE_WORGEN:
                             switch (ExecuteSpeech_Counter)
                             {
                                 case 0: Talk(SAY_EXEC_START_1, player); break;
@@ -906,6 +915,7 @@ public:
                             }
                             break;
                         case RACE_TROLL:
+                        case RACE_GOBLIN:
                             switch (ExecuteSpeech_Counter)
                             {
                                 case 0: Talk(SAY_EXEC_START_3, player); break;

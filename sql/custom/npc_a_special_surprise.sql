@@ -1,0 +1,1 @@
+UPDATE `creature_template` set `AIName`='', `ScriptName`='npc_a_special_surprise' WHERE `entry` IN (49355, 49356);
