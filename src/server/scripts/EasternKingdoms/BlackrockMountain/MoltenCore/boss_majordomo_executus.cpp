@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -96,7 +96,7 @@ class boss_majordomo : public CreatureScript
 
             void UpdateAI(uint32 diff) OVERRIDE
             {
-                if (instance && instance->GetBossState(BOSS_MAJORDOMO_EXECUTUS) != DONE)
+                if (instance->GetBossState(BOSS_MAJORDOMO_EXECUTUS) != DONE)
                 {
                     if (!UpdateVictim())
                         return;
@@ -107,7 +107,7 @@ class boss_majordomo : public CreatureScript
                     {
                         instance->UpdateEncounterState(ENCOUNTER_CREDIT_KILL_CREATURE, me->GetEntry(), me);
                         me->setFaction(35);
-                        me->AI()->EnterEvadeMode();
+                        EnterEvadeMode();
                         Talk(SAY_DEFEAT);
                         _JustDied();
                         events.ScheduleEvent(EVENT_OUTRO_1, 32000);
@@ -161,8 +161,7 @@ class boss_majordomo : public CreatureScript
                                 me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
                                 break;
                             case EVENT_OUTRO_2:
-                                if (instance)
-                                    instance->instance->SummonCreature(NPC_RAGNAROS, RagnarosSummonPos);
+                                instance->instance->SummonCreature(NPC_RAGNAROS, RagnarosSummonPos);
                                 break;
                             case EVENT_OUTRO_3:
                                 Talk(SAY_ARRIVAL2_MAJ);
@@ -207,7 +206,7 @@ class boss_majordomo : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const OVERRIDE
         {
-            return new boss_majordomoAI(creature);
+            return GetInstanceAI<boss_majordomoAI>(creature);
         }
 };
 

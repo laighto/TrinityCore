@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -288,7 +288,7 @@ enum MovementPoints
 class FrostwingVrykulSearcher
 {
     public:
-        FrostwingVrykulSearcher(Creature const* source, float range) : _source(source), _range(range) {}
+        FrostwingVrykulSearcher(Creature const* source, float range) : _source(source), _range(range) { }
 
         bool operator()(Unit* unit)
         {
@@ -408,7 +408,7 @@ class npc_highlord_tirion_fordring_lh : public CreatureScript
                         {
                             if (Creature* bolvarFordragon = me->FindNearestCreature(NPC_HIGHLORD_BOLVAR_FORDRAGON_LH, 150.0f))
                             {
-                                if (Creature* factionNPC = me->FindNearestCreature(_instance->GetData(DATA_TEAM_IN_INSTANCE) == HORDE ? NPC_SE_HIGH_OVERLORD_SAURFANG : NPC_SE_MURADIN_BRONZEBEARD, 200.0f))
+                                if (Creature* factionNPC = me->FindNearestCreature(_instance->GetData(DATA_TEAM_IN_INSTANCE) == HORDE ? NPC_SE_HIGH_OVERLORD_SAURFANG : NPC_SE_MURADIN_BRONZEBEARD, 50.0f))
                                 {
                                     me->setActive(true);
                                     _theLichKing = theLichKing->GetGUID();
@@ -609,7 +609,6 @@ class npc_rotting_frost_giant : public CreatureScript
             void JustDied(Unit* /*killer*/) OVERRIDE
             {
                 _events.Reset();
-
             }
 
             void UpdateAI(uint32 diff) OVERRIDE
@@ -629,7 +628,7 @@ class npc_rotting_frost_giant : public CreatureScript
                         case EVENT_DEATH_PLAGUE:
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, 0.0f, true))
                             {
-                                Talk(EMOTE_DEATH_PLAGUE_WARNING, target->GetGUID());
+                                Talk(EMOTE_DEATH_PLAGUE_WARNING, target);
                                 DoCast(target, SPELL_DEATH_PLAGUE);
                             }
                             _events.ScheduleEvent(EVENT_DEATH_PLAGUE, 15000);
@@ -842,7 +841,7 @@ class boss_sister_svalna : public CreatureScript
                 if (spell->Id == SPELL_HURL_SPEAR && me->HasAura(SPELL_AETHER_SHIELD))
                 {
                     me->RemoveAurasDueToSpell(SPELL_AETHER_SHIELD);
-                    Talk(EMOTE_SVALNA_BROKEN_SHIELD, caster->GetGUID());
+                    Talk(EMOTE_SVALNA_BROKEN_SHIELD, caster);
                 }
             }
 
@@ -868,7 +867,7 @@ class boss_sister_svalna : public CreatureScript
                     case SPELL_IMPALING_SPEAR:
                         if (TempSummon* summon = target->SummonCreature(NPC_IMPALING_SPEAR, *target))
                         {
-                            Talk(EMOTE_SVALNA_IMPALE, target->GetGUID());
+                            Talk(EMOTE_SVALNA_IMPALE, target);
                             summon->CastCustomSpell(VEHICLE_SPELL_RIDE_HARDCODED, SPELLVALUE_BASE_POINT0, 1, target, false);
                             summon->SetFlag(UNIT_FIELD_FLAGS_2, UNIT_FLAG2_UNK1 | UNIT_FLAG2_ALLOW_ENEMY_INTERACT);
                         }
@@ -1626,13 +1625,6 @@ class npc_frostwing_vrykul : public CreatureScript
             {
             }
 
-            //Block spells in YTDB creature addon
-            void Reset() OVERRIDE
-            {
-                me->RemoveAura(65985);
-                me->RemoveAura(29266);
-            }
-
             bool CanAIAttack(Unit const* target) const OVERRIDE
             {
                 // do not see targets inside Frostwing Halls when we are not there
@@ -1841,7 +1833,7 @@ class spell_icc_sprit_alarm : public SpellScriptLoader
 class DeathPlagueTargetSelector
 {
     public:
-        explicit DeathPlagueTargetSelector(Unit* caster) : _caster(caster) {}
+        explicit DeathPlagueTargetSelector(Unit* caster) : _caster(caster) { }
 
         bool operator()(WorldObject* object) const
         {
@@ -2042,6 +2034,7 @@ class spell_svalna_remove_spear : public SpellScriptLoader
         }
 };
 
+// 72585 - Soul Missile
 class spell_icc_soul_missile : public SpellScriptLoader
 {
     public:
@@ -2051,15 +2044,15 @@ class spell_icc_soul_missile : public SpellScriptLoader
         {
             PrepareSpellScript(spell_icc_soul_missile_SpellScript);
 
-            void RelocateDest()
+            void RelocateDest(SpellDestination& dest)
             {
-                static Position const offset = {0.0f, 0.0f, 200.0f, 0.0f};
-                const_cast<WorldLocation*>(GetExplTargetDest())->RelocateOffset(offset);
+                static Position const offset = { 0.0f, 0.0f, 200.0f, 0.0f };
+                dest.RelocateOffset(offset);
             }
 
             void Register() OVERRIDE
             {
-                OnCast += SpellCastFn(spell_icc_soul_missile_SpellScript::RelocateDest);
+                OnDestinationTargetSelect += SpellDestinationTargetSelectFn(spell_icc_soul_missile_SpellScript::RelocateDest, EFFECT_0, TARGET_DEST_CASTER);
             }
         };
 
@@ -2140,214 +2133,6 @@ class at_icc_start_frostwing_gauntlet : public AreaTriggerScript
             if (InstanceScript* instance = player->GetInstanceScript())
                 if (Creature* crok = ObjectAccessor::GetCreature(*player, instance->GetData64(DATA_CROK_SCOURGEBANE)))
                     crok->AI()->DoAction(ACTION_START_GAUNTLET);
-            return true;
-        }
-};
-
-class npc_sindragosas_ward : public CreatureScript
-{
-    public:
-        npc_sindragosas_ward() : CreatureScript("npc_sindragosas_ward") { }
-
-        struct npc_sindragosas_wardAI : public BossAI
-        {
-            npc_sindragosas_wardAI(Creature* creature) : BossAI(creature, DATA_SINDRAGOSA_GAUNTLET)
-            {
-            }
-
-            void Reset()
-            {
-                _Reset();
-                _isEventInProgressOrDone = false;
-                _spawnCountToBeSummonedInWave = 0;
-                _waveNumber = 0;
-            }
-
-            void DoAction(int32 action)
-            {
-                if (action == ACTION_START_GAUNTLET)
-                    if (!_isEventInProgressOrDone)
-                        if (!IsAnyPlayerOutOfRange())
-                            DoZoneInCombat(me, 150.0f);
-            }
-
-            void EnterCombat(Unit* /*attacker*/)
-            {
-                _EnterCombat();
-                _isEventInProgressOrDone = true;
-                _spawnCountToBeSummonedInWave = 32;
-                _waveNumber = 1;
-                DoSummonWave(_waveNumber);
-                events.ScheduleEvent(EVENT_SUB_WAVE_1, 10000);
-                events.ScheduleEvent(EVENT_SUB_WAVE_2, 25000);
-                events.ScheduleEvent(EVENT_UPDATE_CHECK, 5000);
-            }
-
-            void DoSummonWave(uint8 number)
-            {
-                switch (number)
-                {
-                    case 1:
-                    case 3:
-                        me->SummonCreature(NPC_NERUBAR_WEBWEAVER, SindragosaGauntletSpawn[1], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                        me->SummonCreature(NPC_NERUBAR_WEBWEAVER, SindragosaGauntletSpawn[4], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                        me->SummonCreature(NPC_NERUBAR_WEBWEAVER, SindragosaGauntletSpawn[7], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                        me->SummonCreature(NPC_NERUBAR_WEBWEAVER, SindragosaGauntletSpawn[10], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                        me->SummonCreature(NPC_NERUBAR_CHAMPION, SindragosaGauntletSpawn[2], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                        me->SummonCreature(NPC_NERUBAR_CHAMPION, SindragosaGauntletSpawn[5], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                        me->SummonCreature(NPC_NERUBAR_CHAMPION, SindragosaGauntletSpawn[8], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                        me->SummonCreature(NPC_NERUBAR_CHAMPION, SindragosaGauntletSpawn[11], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                        break;
-                    case 2:
-                        me->SummonCreature(NPC_FROSTWARDEN_SORCERESS, SindragosaGauntletSpawn[3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                        me->SummonCreature(NPC_FROSTWARDEN_SORCERESS, SindragosaGauntletSpawn[9], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                        me->SummonCreature(NPC_FROSTWARDEN_WARRIOR, SindragosaGauntletSpawn[3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                        me->SummonCreature(NPC_FROSTWARDEN_WARRIOR, SindragosaGauntletSpawn[9], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                        me->SummonCreature(NPC_FROSTWARDEN_WARRIOR, SindragosaGauntletSpawn[3], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                        me->SummonCreature(NPC_FROSTWARDEN_WARRIOR, SindragosaGauntletSpawn[9], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                        break;
-                    case EVENT_SUB_WAVE_1:
-                    case EVENT_SUB_WAVE_2:
-                        for (uint8 i = 0; i < 12; i++)
-                            me->SummonCreature(NPC_NERUBAR_BROODLING, SindragosaGauntletSpawn[i], TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 120000);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            bool IsAnyPlayerOutOfRange()
-            {
-                if (!me->GetMap())
-                    return true;
-
-                Map::PlayerList const& playerList = me->GetMap()->GetPlayers();
-
-                if (playerList.isEmpty())
-                    return true;
-
-                for (Map::PlayerList::const_iterator itr = playerList.begin(); itr != playerList.end(); ++itr)
-                {
-                    if (Player* player = itr->GetSource())
-                    {
-                        if (player->IsGameMaster())
-                            continue;
-
-                        if (player->IsAlive() && me->GetDistance(player) > 125.0f)
-                            return true;
-                    }
-                }
-
-                return false;
-            }
-
-            void JustSummoned(Creature* summon)
-            {
-                summons.Summon(summon);
-               DoZoneInCombat(summon, 150.0f);
-            }
-
-            void SummonedCreatureDies(Creature* summon, Unit* /*who*/)
-            {
-                _spawnCountToBeSummonedInWave--;
-                summon->DespawnOrUnsummon(30000);
-            }
-
-            void SummonedCreatureDespawn(Creature* summon)
-            {
-                // This one should never happen, if summoned creature despawns alive, reset!
-                if (summon->IsAlive())
-                {
-                    EnterEvadeMode();
-                    return;
-                }
-
-                summons.Despawn(summon);
-            }
-
-            void UpdateAI(uint32 diff)
-            {
-                if (!UpdateVictim() || !_isEventInProgressOrDone)
-                    return;
-
-               events.Update(diff);
-
-                while (uint32 eventId = events.ExecuteEvent())
-                {
-                    switch (eventId)
-                    {
-                        case EVENT_SUB_WAVE_1:
-                            DoSummonWave(EVENT_SUB_WAVE_1);
-                            break;
-                        case EVENT_SUB_WAVE_2:
-                            DoSummonWave(EVENT_SUB_WAVE_2);
-                            break;
-                        case EVENT_UPDATE_CHECK:
-                        {
-                            if (_spawnCountToBeSummonedInWave <= 5)
-                            {
-                                if (summons.size() < _spawnCountToBeSummonedInWave)
-                                    _spawnCountToBeSummonedInWave = summons.size();
-
-                                if (!_spawnCountToBeSummonedInWave)
-                                {
-                                    switch (_waveNumber)
-                                    {
-                                        case 1:
-                                            _spawnCountToBeSummonedInWave += 30;
-                                            break;
-                                        case 2:
-                                            _spawnCountToBeSummonedInWave += 32;
-                                            break;
-                                        case 3:
-                                            me->Kill(me);
-                                            return;
-                                    }
-
-                                    _waveNumber++;
-                                    DoSummonWave(_waveNumber);
-                                    events.ScheduleEvent(EVENT_SUB_WAVE_1, 10000);
-                                    events.ScheduleEvent(EVENT_SUB_WAVE_2, 25000);
-                                }
-                            }
-
-                            if (IsAnyPlayerOutOfRange())
-                            {
-                                EnterEvadeMode();
-                                return;
-                            }
-
-                            events.ScheduleEvent(EVENT_UPDATE_CHECK, 5000);
-                            break;
-                        }
-                        default:
-                            break;
-                    }
-                }
-            }
-
-        private:
-            bool _isEventInProgressOrDone;
-            uint32 _spawnCountToBeSummonedInWave;
-            uint8 _waveNumber;
-        };
-
-        CreatureAI* GetAI(Creature* creature) const
-        {
-            return GetIcecrownCitadelAI<npc_sindragosas_wardAI>(creature);
-        }
-};
-
-class at_icc_start_sindragosa_gauntlet : public AreaTriggerScript
-{
-    public:
-        at_icc_start_sindragosa_gauntlet() : AreaTriggerScript("at_icc_start_sindragosa_gauntlet") { }
-
-        bool OnTrigger(Player* player, AreaTriggerEntry const* /*areaTrigger*/)
-        {
-            if (InstanceScript* instance = player->GetInstanceScript())
-                if (Creature* ward = ObjectAccessor::GetCreature(*player, instance->GetData64(DATA_SINDRAGOSA_GAUNTLET)))
-                    ward->AI()->DoAction(ACTION_START_GAUNTLET);
             return true;
         }
 };

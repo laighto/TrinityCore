@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -664,7 +664,6 @@ class npc_jaina_or_sylvanas_hor : public CreatureScript
                     _events.ScheduleEvent(EVENT_INTRO_END, 5000);
                     break;
                 case EVENT_INTRO_END:
-                    if (_instance)
                         _instance->SetData(DATA_INTRO_EVENT, DONE);
                     // Loralen or Koreln disappearAndDie()
                     if (Creature* lichking = ObjectAccessor::GetCreature(*me, _lichkingGUID))
@@ -892,7 +891,7 @@ class npc_jaina_or_sylvanas_escape_hor : public CreatureScript
                         if (Creature* lichking = ObjectAccessor::GetCreature(*me, _lichkingGUID))
                         {
                             lichking->AI()->Talk(SAY_LK_ESCAPE_3);
-                            lichking->AI()->DoCast(me, SPELL_RAISE_DEAD);
+                            lichking->CastSpell(me, SPELL_RAISE_DEAD);
                             lichking->Attack(me, true);
                         }
                         _events.ScheduleEvent(EVENT_ESCAPE_13, 4000);
@@ -900,15 +899,15 @@ class npc_jaina_or_sylvanas_escape_hor : public CreatureScript
                     case EVENT_ESCAPE_13:
                         if (Creature* lichking = ObjectAccessor::GetCreature(*me, _lichkingGUID))
                         {
-                            lichking->AI()->DoCast(lichking, SPELL_REMORSELESS_WINTER, true);
-                            lichking->AI()->DoCast(lichking, SPELL_SUMMON_RISE_WITCH_DOCTOR);
+                            lichking->CastSpell(lichking, SPELL_REMORSELESS_WINTER, true);
+                            lichking->CastSpell(lichking, SPELL_SUMMON_RISE_WITCH_DOCTOR);
                             lichking->GetMotionMaster()->MoveIdle();
                             lichking->GetMotionMaster()->MoveChase(me);
                         }
                         if (Creature* walltarget = me->SummonCreature(NPC_ICE_WALL, IceWalls[0], TEMPSUMMON_MANUAL_DESPAWN, 720000))
                         {
                             _walltargetGUID = walltarget->GetGUID();
-                            walltarget->AI()->DoCast(walltarget, SPELL_SUMMON_ICE_WALL);
+                            walltarget->CastSpell(walltarget, SPELL_SUMMON_ICE_WALL);
                             walltarget->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
                             me->Attack(walltarget, false);
                         }
@@ -949,7 +948,7 @@ class npc_jaina_or_sylvanas_escape_hor : public CreatureScript
                         {
                             lichking->StopMoving();
                             lichking->AI()->Talk(SAY_LK_ESCAPE_3);
-                            lichking->AI()->DoCast(me, SPELL_RAISE_DEAD);
+                            lichking->CastSpell(me, SPELL_RAISE_DEAD);
                         }
 
                         DestroyIceWall();
@@ -970,7 +969,7 @@ class npc_jaina_or_sylvanas_escape_hor : public CreatureScript
                         if (Creature* lichking = ObjectAccessor::GetCreature(*me, _lichkingGUID))
                         {
                             if (_icewall && _icewall < 4)
-                                lichking->AI()->DoCast(lichking, SPELL_SUMMON_RISE_WITCH_DOCTOR);
+                                lichking->CastSpell(lichking, SPELL_SUMMON_RISE_WITCH_DOCTOR);
                             lichking->GetMotionMaster()->MoveIdle();
                             lichking->GetMotionMaster()->MoveChase(me);
                             lichking->SetReactState(REACT_PASSIVE);
@@ -981,7 +980,7 @@ class npc_jaina_or_sylvanas_escape_hor : public CreatureScript
                             if (Creature* walltarget = me->SummonCreature(NPC_ICE_WALL, IceWalls[_icewall], TEMPSUMMON_MANUAL_DESPAWN, 720000))
                         {
                             _walltargetGUID = walltarget->GetGUID();
-                            walltarget->AI()->DoCast(walltarget, SPELL_SUMMON_ICE_WALL);
+                                walltarget->CastSpell(walltarget, SPELL_SUMMON_ICE_WALL);
                             walltarget->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
                                 me->Attack(walltarget, false);
                         }
@@ -1019,9 +1018,9 @@ class npc_jaina_or_sylvanas_escape_hor : public CreatureScript
                         if (Creature* lichking = ObjectAccessor::GetCreature(*me, _lichkingGUID))
                         {
                             if (_icewall && _icewall < 3)
-                                lichking->AI()->DoCast(lichking, SPELL_SUMMON_RISE_WITCH_DOCTOR);
+                                lichking->CastSpell(lichking, SPELL_SUMMON_RISE_WITCH_DOCTOR);
                             else
-                                lichking->AI()->DoCast(lichking, SPELL_SUMMON_LUMBERING_ABOMINATION);
+                                lichking->CastSpell(lichking, SPELL_SUMMON_LUMBERING_ABOMINATION);
                         }
                         if (_icewall == 3)
                             _events.ScheduleEvent(EVENT_ESCAPE_21, 16000); // last wall, really far
@@ -1037,10 +1036,10 @@ class npc_jaina_or_sylvanas_escape_hor : public CreatureScript
                         if (Creature* lichking = ObjectAccessor::GetCreature(*me, _lichkingGUID))
                         {
                             if (_icewall == 1)
-                                lichking->AI()->DoCast(lichking, SPELL_SUMMON_LUMBERING_ABOMINATION);
+                                lichking->CastSpell(lichking, SPELL_SUMMON_LUMBERING_ABOMINATION);
                             else if (_icewall > 1 && _icewall < 4)
                             {
-                                lichking->AI()->DoCast(lichking, SPELL_SUMMON_RISE_WITCH_DOCTOR);
+                                lichking->CastSpell(lichking, SPELL_SUMMON_RISE_WITCH_DOCTOR);
                                 _events.ScheduleEvent(EVENT_ESCAPE_22, 1000);
                         }
                         }
@@ -1049,7 +1048,7 @@ class npc_jaina_or_sylvanas_escape_hor : public CreatureScript
                         if (Creature* lichking = ObjectAccessor::GetCreature(*me, _lichkingGUID))
                         {
                             if (_icewall >= 2 && _icewall < 4)
-                                lichking->AI()->DoCast(lichking, SPELL_SUMMON_LUMBERING_ABOMINATION);
+                                lichking->CastSpell(lichking, SPELL_SUMMON_LUMBERING_ABOMINATION);
                         }
                         break;
                     case EVENT_ESCAPE_23: // FINAL PART
@@ -1089,9 +1088,9 @@ class npc_jaina_or_sylvanas_escape_hor : public CreatureScript
                         break;
                     case EVENT_ESCAPE_27:
                         if (_instance->GetData(DATA_TEAM_IN_INSTANCE) == ALLIANCE)
-                            me->SummonGameObject(GO_CAPTAIN_CHEST_1, ChestPos.GetPositionX(), ChestPos.GetPositionY(), ChestPos.GetPositionZ(), ChestPos.GetOrientation(), 0, 0, 0, 0, 720000);
+                            me->SummonGameObject(IsHeroic() ? GO_CAPTAIN_CHEST_ALLIANCE_HEROIC : GO_CAPTAIN_CHEST_ALLIANCE_NORMAL, ChestPos.GetPositionX(), ChestPos.GetPositionY(), ChestPos.GetPositionZ(), ChestPos.GetOrientation(), 0, 0, 0, 0, 720000);
                         else
-                            me->SummonGameObject(GO_CAPTAIN_CHEST_3, ChestPos.GetPositionX(), ChestPos.GetPositionY(), ChestPos.GetPositionZ(), ChestPos.GetOrientation(), 0, 0, 0, 0, 720000);
+                            me->SummonGameObject(IsHeroic() ? GO_CAPTAIN_CHEST_HORDE_HEROIC : GO_CAPTAIN_CHEST_HORDE_NORMAL, ChestPos.GetPositionX(), ChestPos.GetPositionY(), ChestPos.GetPositionZ(), ChestPos.GetOrientation(), 0, 0, 0, 0, 720000);
                         me->SummonGameObject(GO_PORTAL, FinalPortalPos.GetPositionX(), FinalPortalPos.GetPositionY(), FinalPortalPos.GetPositionZ(), FinalPortalPos.GetOrientation(), 0, 0, 0, 0, 720000);
                         if (Creature* lichking = ObjectAccessor::GetCreature(*me, _lichkingGUID))
                             lichking->DespawnOrUnsummon(1);
@@ -1121,6 +1120,7 @@ enum TrashSpells
     SPELL_FROSTBOLT                               = 72166,
     SPELL_CHAINS_OF_ICE                           = 72121,
     SPELL_HALLUCINATION                           = 72342,
+    AURA_HALLUCINATION                            = 72343,
 
     // Phantom Hallucination (same as phantom mage + HALLUCINATION_2 when dies)
     SPELL_HALLUCINATION_2                         = 72344,
@@ -1180,13 +1180,14 @@ enum TrashEvents
 
 struct npc_gauntlet_trash : public ScriptedAI
 {
-    npc_gauntlet_trash(Creature* creature) : ScriptedAI(creature),
-        _instance(creature->GetInstanceScript())
+    npc_gauntlet_trash(Creature* creature) : ScriptedAI(creature), _instance(creature->GetInstanceScript())
     {
+        InternalWaveId = 0;
     }
 
     void Reset() OVERRIDE
     {
+        InternalWaveId = 0;
         me->CastSpell(me, SPELL_WELL_OF_SOULS, true);
         _events.Reset();
     }
@@ -1226,9 +1227,7 @@ public:
 
     struct npc_ghostly_priestAI : public npc_gauntlet_trash
     {
-        npc_ghostly_priestAI(Creature* creature) : npc_gauntlet_trash(creature)
-        {
-        }
+        npc_ghostly_priestAI(Creature* creature) : npc_gauntlet_trash(creature) { }
 
         void EnterCombat(Unit* /*who*/) OVERRIDE
         {
@@ -1286,7 +1285,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new npc_ghostly_priestAI(creature);
+        return GetInstanceAI<npc_ghostly_priestAI>(creature);
     }
 };
 
@@ -1297,8 +1296,12 @@ public:
 
     struct npc_phantom_mageAI : public npc_gauntlet_trash
     {
-        npc_phantom_mageAI(Creature* creature) : npc_gauntlet_trash(creature)
+        npc_phantom_mageAI(Creature* creature) : npc_gauntlet_trash(creature) { }
+
+        void EnterEvadeMode() OVERRIDE
         {
+            if (!me->HasAura(AURA_HALLUCINATION))
+                npc_gauntlet_trash::EnterEvadeMode();
         }
 
         void EnterCombat(Unit* /*who*/) OVERRIDE
@@ -1342,6 +1345,8 @@ public:
                     _events.ScheduleEvent(EVENT_CHAINS_OF_ICE, 15000);
                     break;
                 case EVENT_HALLUCINATION:
+                    // removing any dots on mage or else the invisibility spell will break duration
+                    me->RemoveAllAuras();
                     DoCast(SPELL_HALLUCINATION);
                     break;
             }
@@ -1352,7 +1357,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new npc_phantom_mageAI(creature);
+        return GetInstanceAI<npc_phantom_mageAI>(creature);
     }
 };
 
@@ -1363,7 +1368,20 @@ public:
 
     struct npc_phantom_hallucinationAI : public npc_phantom_mage::npc_phantom_mageAI
     {
-        npc_phantom_hallucinationAI(Creature* creature) : npc_phantom_mage::npc_phantom_mageAI(creature) {}
+        npc_phantom_hallucinationAI(Creature* creature) : npc_phantom_mage::npc_phantom_mageAI(creature) { }
+
+        void Reset() OVERRIDE
+        {
+            if (Unit* unit = me->SelectNearestTarget())
+                AttackStart(unit);
+            DoZoneInCombat();
+        }
+
+        void EnterEvadeMode() OVERRIDE
+        {
+            if (me->GetOwner() && !me->GetOwner()->HasAura(AURA_HALLUCINATION))
+                npc_phantom_mage::npc_phantom_mageAI::EnterEvadeMode();
+        }
 
         void JustDied(Unit* /*killer*/) OVERRIDE
         {
@@ -1384,9 +1402,7 @@ public:
 
     struct npc_shadowy_mercenaryAI : public npc_gauntlet_trash
     {
-        npc_shadowy_mercenaryAI(Creature* creature) : npc_gauntlet_trash(creature)
-        {
-        }
+        npc_shadowy_mercenaryAI(Creature* creature) : npc_gauntlet_trash(creature) { }
 
         void EnterCombat(Unit* /*who*/) OVERRIDE
         {
@@ -1433,7 +1449,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new npc_shadowy_mercenaryAI(creature);
+        return GetInstanceAI<npc_shadowy_mercenaryAI>(creature);
     }
 };
 
@@ -1444,9 +1460,7 @@ public:
 
     struct npc_spectral_footmanAI : public npc_gauntlet_trash
     {
-        npc_spectral_footmanAI(Creature* creature) : npc_gauntlet_trash(creature)
-        {
-        }
+        npc_spectral_footmanAI(Creature* creature) : npc_gauntlet_trash(creature) { }
 
         void EnterCombat(Unit* /*who*/) OVERRIDE
         {
@@ -1487,7 +1501,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new npc_spectral_footmanAI(creature);
+        return GetInstanceAI<npc_spectral_footmanAI>(creature);
     }
 };
 
@@ -1498,9 +1512,7 @@ public:
 
     struct npc_tortured_riflemanAI : public npc_gauntlet_trash
     {
-        npc_tortured_riflemanAI(Creature* creature) : npc_gauntlet_trash(creature)
-        {
-        }
+        npc_tortured_riflemanAI(Creature* creature) : npc_gauntlet_trash(creature) { }
 
         void EnterCombat(Unit* /*who*/) OVERRIDE
         {
@@ -1548,7 +1560,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new npc_tortured_riflemanAI(creature);
+        return GetInstanceAI<npc_tortured_riflemanAI>(creature);
     }
 };
 
@@ -1664,7 +1676,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new npc_frostworn_generalAI(creature);
+        return GetInstanceAI<npc_frostworn_generalAI>(creature);
     }
 };
 
@@ -1728,7 +1740,7 @@ public:
 class at_hor_intro_start : public AreaTriggerScript
 {
 public:
-    at_hor_intro_start() : AreaTriggerScript("at_hor_intro_start") {}
+    at_hor_intro_start() : AreaTriggerScript("at_hor_intro_start") { }
 
     bool OnTrigger(Player* player, AreaTriggerEntry const* /*trigger*/) OVERRIDE
     {
@@ -1747,7 +1759,7 @@ public:
 class at_hor_waves_restarter : public AreaTriggerScript
 {
 public:
-    at_hor_waves_restarter() : AreaTriggerScript("at_hor_waves_restarter") {}
+    at_hor_waves_restarter() : AreaTriggerScript("at_hor_waves_restarter") { }
 
     bool OnTrigger(Player* player, AreaTriggerEntry const* /*trigger*/) OVERRIDE
     {
@@ -1820,7 +1832,7 @@ public:
             _emergeTimer = 4000;
             _doEmerge = false;
             _doJump = false;
-            if (_instance && _instance->GetData(DATA_ESCAPE_EVENT) == IN_PROGRESS)
+            if (_instance->GetData(DATA_ESCAPE_EVENT) == IN_PROGRESS)
                 _instance->SetData(DATA_SUMMONS, 1);
 
         }
@@ -1828,12 +1840,10 @@ public:
         void IsSummonedBy(Unit*) OVERRIDE
         {
             DoCast(me, SPELL_EMERGE_VISUAL);
-            DoZoneInCombat(me, 100.00f);
         }
 
         void JustDied(Unit* /*killer*/) OVERRIDE
         {
-             if (_instance)
                  _instance->SetData(DATA_SUMMONS, 0);
         }
 
@@ -1891,7 +1901,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new npc_raging_ghoulAI(creature);
+        return GetInstanceAI<npc_raging_ghoulAI>(creature);
     }
 };
 
@@ -1922,7 +1932,6 @@ public:
             _boltVolleyTimer = 15000;
             _curseTimer = 7000;
             _doEmerge = false;
-            if (_instance)
                 if (_instance->GetData(DATA_ESCAPE_EVENT) == IN_PROGRESS)
                     _instance->SetData(DATA_SUMMONS, 1);
         }
@@ -1935,9 +1944,7 @@ public:
 
         void JustDied(Unit* /*killer*/) OVERRIDE
         {
-            if (_instance)
                 _instance->SetData(DATA_SUMMONS, 0);
-
         }
 
         void AttackStart(Unit* who) OVERRIDE
@@ -2011,7 +2018,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new npc_risen_witch_doctorAI(creature);
+        return GetInstanceAI<npc_risen_witch_doctorAI>(creature);
     }
 };
 
@@ -2039,7 +2046,6 @@ public:
             _doWalk = false;
             _vomitTimer = 15000;
             _strikeTimer = 6000;
-            if (_instance)
                 if (_instance->GetData(DATA_ESCAPE_EVENT) == IN_PROGRESS)
                     _instance->SetData(DATA_SUMMONS, 1);
         }
@@ -2052,9 +2058,6 @@ public:
 
         void UpdateAI(uint32 diff) OVERRIDE
         {
-            if (!_instance)
-                return;
-
             if (_instance->GetData(DATA_ESCAPE_EVENT) == IN_PROGRESS)
             {
                 if (_doWalk != true)
@@ -2093,7 +2096,6 @@ public:
 
         void JustDied(Unit* /*killer*/) OVERRIDE
         {
-            if (_instance)
                 _instance->SetData(DATA_SUMMONS, 0);
         }
 
@@ -2101,7 +2103,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new npc_lumbering_abominationAI(creature);
+        return GetInstanceAI<npc_lumbering_abominationAI>(creature);
     }
 };
 

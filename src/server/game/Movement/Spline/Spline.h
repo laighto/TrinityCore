@@ -56,7 +56,7 @@ protected:
         // client's value is 20, blizzs use 2-3 steps to compute length
         STEPS_PER_SEGMENT = 3
     };
-    static_assert(STEPS_PER_SEGMENT > 0, "shouldn't be lesser than 1");
+    static_assert(STEPS_PER_SEGMENT > 0, "STEPS_PER_SEGMENT shouldn't be lesser than 1");
 
 protected:
     void EvaluateLinear(index_type, float, Vector3&) const;
@@ -86,7 +86,7 @@ protected:
 
 public:
 
-    explicit SplineBase() : index_lo(0), index_hi(0), m_mode(UninitializedMode), cyclic(false) {}
+    explicit SplineBase() : index_lo(0), index_hi(0), m_mode(UninitializedMode), cyclic(false) { }
 
     /** Caclulates the position for given segment Idx, and percent of segment length t
         @param t - percent of segment length, assumes that t in range [0, 1]
@@ -118,7 +118,7 @@ public:
 
     /** As i can see there are a lot of ways how spline can be initialized
         would be no harm to have some custom initializers. */
-    template<class Init> inline void init_spline(Init& initializer)
+    template<class Init> inline void init_spline_custom(Init& initializer)
     {
         initializer(m_mode, cyclic, points, index_lo, index_hi);
     }
@@ -144,7 +144,7 @@ protected:
     index_type computeIndexInBounds(length_type length) const;
 public:
 
-    explicit Spline(){}
+    explicit Spline(){ }
 
     /** Calculates the position for given t
         @param t - percent of spline's length, assumes that t in range [0, 1]. */

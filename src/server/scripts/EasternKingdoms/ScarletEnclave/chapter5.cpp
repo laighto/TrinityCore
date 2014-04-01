@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -1678,10 +1678,10 @@ public:
     struct npc_the_lich_king_tirion_dawnAI : public ScriptedAI
     {
         npc_the_lich_king_tirion_dawnAI(Creature* creature) : ScriptedAI(creature) { Reset(); }
-        void Reset() OVERRIDE {}
-        void AttackStart(Unit* /*who*/) {} // very sample, just don't make them aggreesive OVERRIDE
-        void UpdateAI(uint32 /*diff*/) OVERRIDE {}
-        void JustDied(Unit* /*killer*/) OVERRIDE {}
+        void Reset() OVERRIDE { }
+        void AttackStart(Unit* /*who*/) { } // very sample, just don't make them aggreesive OVERRIDE
+        void UpdateAI(uint32 /*diff*/) OVERRIDE { }
+        void JustDied(Unit* /*killer*/) OVERRIDE { }
     };
 
 };

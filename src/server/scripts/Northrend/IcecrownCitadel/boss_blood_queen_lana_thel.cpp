@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -148,7 +148,7 @@ class boss_blood_queen_lana_thel : public CreatureScript
             void Reset() OVERRIDE
             {
                 _Reset();
-                events.ScheduleEvent(EVENT_BERSERK, 480000);
+                events.ScheduleEvent(EVENT_BERSERK, 330000);
                 events.ScheduleEvent(EVENT_VAMPIRIC_BITE, 15000);
                 events.ScheduleEvent(EVENT_BLOOD_MIRROR, 2500, EVENT_GROUP_CANCELLABLE);
                 events.ScheduleEvent(EVENT_DELIRIOUS_SLASH, urand(20000, 24000), EVENT_GROUP_NORMAL);
@@ -165,12 +165,12 @@ class boss_blood_queen_lana_thel : public CreatureScript
 
             void EnterCombat(Unit* who) OVERRIDE
             {
-               /* if (!instance->CheckRequiredBosses(DATA_BLOOD_QUEEN_LANA_THEL, who->ToPlayer()))
+                if (!instance->CheckRequiredBosses(DATA_BLOOD_QUEEN_LANA_THEL, who->ToPlayer()))
                 {
                     EnterEvadeMode();
                     instance->DoCastSpellOnPlayers(LIGHT_S_HAMMER_TELEPORT);
                     return;
-                }*/
+                }
 
                 me->setActive(true);
                 DoZoneInCombat();
@@ -205,21 +205,6 @@ class boss_blood_queen_lana_thel : public CreatureScript
                         minchar->SetCanFly(false);
                         minchar->RemoveAllAuras();
                         minchar->GetMotionMaster()->MoveCharge(4629.3711f, 2782.6089f, 401.5301f, SPEED_CHARGE/3.0f);
-                    }
-                }
-
-                if (Is25ManRaid())
-                {
-                    if (urand(0, 4) == 0)
-                    {
-                        Map* pMap = me->GetMap();
-                        InstanceMap::PlayerList const &PlayerList = pMap->GetPlayers();
-                        for (InstanceMap::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                        {
-                            if (i->GetSource()->GetQuestStatus(24756) == QUEST_STATUS_INCOMPLETE)
-                                i->GetSource()->CompleteQuest(24756);
-                        }
-                        //instance->DoCastSpellOnPlayers(72154); instance->DoCastSpellOnPlayers(72934);
                     }
                 }
             }
@@ -427,7 +412,7 @@ class boss_blood_queen_lana_thel : public CreatureScript
                         case EVENT_SWARMING_SHADOWS:
                             if (Player* target = SelectRandomTarget(false))
                             {
-                                Talk(EMOTE_SWARMING_SHADOWS, target->GetGUID());
+                                Talk(EMOTE_SWARMING_SHADOWS, target);
                                 Talk(SAY_SWARMING_SHADOWS);
                                 DoCast(target, SPELL_SWARMING_SHADOWS);
                             }
@@ -616,7 +601,7 @@ class spell_blood_queen_frenzied_bloodthirst : public SpellScriptLoader
             {
                 if (InstanceScript* instance = GetTarget()->GetInstanceScript())
                     if (Creature* bloodQueen = ObjectAccessor::GetCreature(*GetTarget(), instance->GetData64(DATA_BLOOD_QUEEN_LANA_THEL)))
-                        bloodQueen->AI()->Talk(EMOTE_BLOODTHIRST, GetTarget()->GetGUID());
+                        bloodQueen->AI()->Talk(EMOTE_BLOODTHIRST, GetTarget());
             }
 
             void OnRemove(AuraEffect const* /*aurEff*/, AuraEffectHandleModes /*mode*/)
@@ -651,7 +636,7 @@ class spell_blood_queen_frenzied_bloodthirst : public SpellScriptLoader
 class BloodboltHitCheck
 {
     public:
-        explicit BloodboltHitCheck(LanaThelAI* ai) : _ai(ai) {}
+        explicit BloodboltHitCheck(LanaThelAI* ai) : _ai(ai) { }
 
         bool operator()(WorldObject* object) const
         {
@@ -815,7 +800,7 @@ class spell_blood_queen_pact_of_the_darkfallen_dmg : public SpellScriptLoader
             // this is an additional effect to be executed
             void PeriodicTick(AuraEffect const* aurEff)
             {
-                SpellInfo const* damageSpell = sSpellMgr->GetSpellInfo(SPELL_PACT_OF_THE_DARKFALLEN_DAMAGE);
+                SpellInfo const* damageSpell = sSpellMgr->EnsureSpellInfo(SPELL_PACT_OF_THE_DARKFALLEN_DAMAGE);
                 int32 damage = damageSpell->Effects[EFFECT_0].CalcValue();
                 float multiplier = 0.3375f + 0.1f * uint32(aurEff->GetTickNumber()/10); // do not convert to 0.01f - we need tick number/10 as INT (damage increases every 10 ticks)
                 damage = int32(damage * multiplier);

@@ -538,7 +538,7 @@ class npc_apothecary_frye : public CreatureScript
                 }
             }
 
-            void SummonBunny(Unit* target, bool perfume) OVERRIDE
+            void SummonBunny(Unit* target, bool perfume)
             {
                 if (!target)
                     return;

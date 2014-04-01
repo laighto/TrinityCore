@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -491,7 +491,7 @@ class boss_twilight_halion : public CreatureScript
             }
 
             // Never evade
-            void EnterEvadeMode() OVERRIDE {}
+            void EnterEvadeMode() OVERRIDE { }
 
             void KilledUnit(Unit* victim) OVERRIDE
             {
@@ -852,9 +852,9 @@ class npc_halion_controller : public CreatureScript
                         halion->CastSpell(halion, GetSpell(_materialCorporealityValue, itr == DATA_TWILIGHT_HALION), true);
 
                         if (itr == DATA_TWILIGHT_HALION)
-                            halion->AI()->Talk(oldValue < _materialCorporealityValue ? EMOTE_CORPOREALITY_TOT : EMOTE_CORPOREALITY_TIT, halion->GetGUID());
+                            halion->AI()->Talk(oldValue < _materialCorporealityValue ? EMOTE_CORPOREALITY_TOT : EMOTE_CORPOREALITY_TIT, halion);
                         else // if (itr == DATA_HALION)
-                            halion->AI()->Talk(oldValue > _materialCorporealityValue ? EMOTE_CORPOREALITY_POT : EMOTE_CORPOREALITY_PIP, halion->GetGUID());
+                            halion->AI()->Talk(oldValue > _materialCorporealityValue ? EMOTE_CORPOREALITY_POT : EMOTE_CORPOREALITY_PIP, halion);
                     }
                 }
             }
@@ -1025,8 +1025,8 @@ class npc_meteor_strike_initial : public CreatureScript
                 }
             }
 
-            void UpdateAI(uint32 /*diff*/) OVERRIDE {}
-            void EnterEvadeMode() OVERRIDE {}
+            void UpdateAI(uint32 /*diff*/) OVERRIDE { }
+            void EnterEvadeMode() OVERRIDE { }
         private:
             InstanceScript* _instance;
             std::list<Creature*> _meteorList;
@@ -1166,7 +1166,7 @@ class npc_combustion_consumption : public CreatureScript
                 summoner->CastCustomSpell(_explosionSpell, SPELLVALUE_BASE_POINT0, damage, summoner);
             }
 
-            void UpdateAI(uint32 /*diff*/) OVERRIDE {}
+            void UpdateAI(uint32 /*diff*/) OVERRIDE { }
 
         private:
             InstanceScript* _instance;
@@ -1620,7 +1620,7 @@ class spell_halion_clear_debuffs : public SpellScriptLoader
 class TwilightCutterSelector
 {
     public:
-        TwilightCutterSelector(Unit* caster, Unit* target) : _caster(caster), _channelTarget(target) {}
+        TwilightCutterSelector(Unit* caster, Unit* target) : _caster(caster), _channelTarget(target) { }
 
         bool operator()(WorldObject* unit)
         {
@@ -1697,6 +1697,7 @@ class spell_halion_twilight_phasing : public SpellScriptLoader
         }
 };
 
+// 74805 - Summon Exit Portals
 class spell_halion_summon_exit_portals : public SpellScriptLoader
 {
     public:
@@ -1706,23 +1707,22 @@ class spell_halion_summon_exit_portals : public SpellScriptLoader
         {
             PrepareSpellScript(spell_halion_summon_exit_portals_SpellScript);
 
-            void OnSummon(SpellEffIndex effIndex)
+            void SetDest0(SpellDestination& dest)
             {
-                WorldLocation summonPos = *GetExplTargetDest();
-                Position offset = {0.0f, 20.0f, 0.0f, 0.0f};
-                if (effIndex == EFFECT_1)
-                    offset.m_positionY = -20.0f;
+                Position const offset = { 0.0f, 20.0f, 0.0f, 0.0f };
+                dest.RelocateOffset(offset);
+            }
 
-                summonPos.RelocateOffset(offset);
-
-                SetExplTargetDest(summonPos);
-                GetHitDest()->RelocateOffset(offset);
+            void SetDest1(SpellDestination& dest)
+            {
+                Position const offset = { 0.0f, -20.0f, 0.0f, 0.0f };
+                dest.RelocateOffset(offset);
             }
 
             void Register() OVERRIDE
             {
-                OnEffectLaunch += SpellEffectFn(spell_halion_summon_exit_portals_SpellScript::OnSummon, EFFECT_0, SPELL_EFFECT_SUMMON_OBJECT_WILD);
-                OnEffectLaunch += SpellEffectFn(spell_halion_summon_exit_portals_SpellScript::OnSummon, EFFECT_1, SPELL_EFFECT_SUMMON_OBJECT_WILD);
+                OnDestinationTargetSelect += SpellDestinationTargetSelectFn(spell_halion_summon_exit_portals_SpellScript::SetDest0, EFFECT_0, TARGET_DEST_CASTER);
+                OnDestinationTargetSelect += SpellDestinationTargetSelectFn(spell_halion_summon_exit_portals_SpellScript::SetDest1, EFFECT_1, TARGET_DEST_CASTER);
             }
         };
 

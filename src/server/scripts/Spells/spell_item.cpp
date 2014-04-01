@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -346,6 +346,40 @@ class spell_item_deviate_fish : public SpellScriptLoader
         SpellScript* GetSpellScript() const OVERRIDE
         {
             return new spell_item_deviate_fish_SpellScript();
+        }
+};
+
+// 71610, 71641 - Echoes of Light (Althor's Abacus)
+class spell_item_echoes_of_light : public SpellScriptLoader
+{
+    public:
+        spell_item_echoes_of_light() : SpellScriptLoader("spell_item_echoes_of_light") { }
+
+        class spell_item_echoes_of_light_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_item_echoes_of_light_SpellScript);
+
+            void FilterTargets(std::list<WorldObject*>& targets)
+            {
+                if (targets.size() < 2)
+                    return;
+
+                targets.sort(Trinity::HealthPctOrderPred());
+
+                WorldObject* target = targets.front();
+                targets.clear();
+                targets.push_back(target);
+            }
+
+            void Register() OVERRIDE
+            {
+                OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_item_echoes_of_light_SpellScript::FilterTargets, EFFECT_0, TARGET_UNIT_DEST_AREA_ALLY);
+            }
+        };
+
+        SpellScript* GetSpellScript() const OVERRIDE
+        {
+            return new spell_item_echoes_of_light_SpellScript();
         }
 };
 
@@ -1350,7 +1384,7 @@ class spell_item_create_heart_candy : public SpellScriptLoader
 class spell_item_book_of_glyph_mastery : public SpellScriptLoader
 {
     public:
-        spell_item_book_of_glyph_mastery() : SpellScriptLoader("spell_item_book_of_glyph_mastery") {}
+        spell_item_book_of_glyph_mastery() : SpellScriptLoader("spell_item_book_of_glyph_mastery") { }
 
         class spell_item_book_of_glyph_mastery_SpellScript : public SpellScript
         {
@@ -1404,7 +1438,7 @@ enum GiftOfTheHarvester
 class spell_item_gift_of_the_harvester : public SpellScriptLoader
 {
     public:
-        spell_item_gift_of_the_harvester() : SpellScriptLoader("spell_item_gift_of_the_harvester") {}
+        spell_item_gift_of_the_harvester() : SpellScriptLoader("spell_item_gift_of_the_harvester") { }
 
         class spell_item_gift_of_the_harvester_SpellScript : public SpellScript
         {
@@ -1445,7 +1479,7 @@ enum Sinkholes
 class spell_item_map_of_the_geyser_fields : public SpellScriptLoader
 {
     public:
-        spell_item_map_of_the_geyser_fields() : SpellScriptLoader("spell_item_map_of_the_geyser_fields") {}
+        spell_item_map_of_the_geyser_fields() : SpellScriptLoader("spell_item_map_of_the_geyser_fields") { }
 
         class spell_item_map_of_the_geyser_fields_SpellScript : public SpellScript
         {
@@ -1536,7 +1570,7 @@ enum AshbringerSounds
 class spell_item_ashbringer : public SpellScriptLoader
 {
     public:
-        spell_item_ashbringer() : SpellScriptLoader("spell_item_ashbringer") {}
+        spell_item_ashbringer() : SpellScriptLoader("spell_item_ashbringer") { }
 
         class spell_item_ashbringer_SpellScript : public SpellScript
         {
@@ -1585,7 +1619,7 @@ enum MagicEater
 class spell_magic_eater_food : public SpellScriptLoader
 {
     public:
-        spell_magic_eater_food() : SpellScriptLoader("spell_magic_eater_food") {}
+        spell_magic_eater_food() : SpellScriptLoader("spell_magic_eater_food") { }
 
         class spell_magic_eater_food_AuraScript : public AuraScript
         {
@@ -2613,6 +2647,7 @@ void AddSC_item_spell_scripts()
     new spell_item_defibrillate("spell_item_gnomish_army_knife", 33);
     new spell_item_desperate_defense();
     new spell_item_deviate_fish();
+    new spell_item_echoes_of_light();
     new spell_item_flask_of_the_north();
     new spell_item_gnomish_death_ray();
     new spell_item_make_a_wish();

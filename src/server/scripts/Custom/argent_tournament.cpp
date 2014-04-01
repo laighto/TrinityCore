@@ -513,8 +513,8 @@ public:
     }
 };
 
-void ADSC_argent_tournamet_custom()
+void AddSC_argent_tournamet_custom()
 {
 	new the_grand_melee();
     new among_the_champions();
-};
+}

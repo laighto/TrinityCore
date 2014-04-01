@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -46,7 +46,7 @@ public:
 
     struct boss_lord_valthalakAI : public BossAI
     {
-        boss_lord_valthalakAI(Creature* creature) : BossAI(creature, DATA_LORD_VALTHALAK) {}
+        boss_lord_valthalakAI(Creature* creature) : BossAI(creature, DATA_LORD_VALTHALAK) { }
 
         void Reset() OVERRIDE
         {
@@ -64,8 +64,7 @@ public:
 
         void JustDied(Unit* /*killer*/) OVERRIDE
         {
-            if (instance)
-                instance->SetData(DATA_LORD_VALTHALAK, DONE);
+            instance->SetData(DATA_LORD_VALTHALAK, DONE);
         }
 
         void UpdateAI(uint32 diff) OVERRIDE
@@ -128,7 +127,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new boss_lord_valthalakAI(creature);
+        return GetInstanceAI<boss_lord_valthalakAI>(creature);
     }
 };
 

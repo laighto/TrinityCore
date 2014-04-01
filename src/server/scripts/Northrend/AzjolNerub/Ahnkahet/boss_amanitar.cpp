@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -165,7 +165,7 @@ public:
 
     struct npc_amanitar_mushroomsAI : public ScriptedAI
     {
-        npc_amanitar_mushroomsAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_amanitar_mushroomsAI(Creature* creature) : ScriptedAI(creature) { }
 
         EventMap events;
 
@@ -189,8 +189,8 @@ public:
                 DoCast(me, SPELL_HEALTHY_MUSHROOM_POTENT_FUNGUS, true);
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE {}
-        void AttackStart(Unit* /*victim*/) OVERRIDE {}
+        void EnterCombat(Unit* /*who*/) OVERRIDE { }
+        void AttackStart(Unit* /*victim*/) OVERRIDE { }
 
         void UpdateAI(uint32 diff) OVERRIDE
         {

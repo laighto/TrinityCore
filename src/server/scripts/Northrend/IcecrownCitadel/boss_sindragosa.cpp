@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -254,30 +254,16 @@ class boss_sindragosa : public CreatureScript
                 if (Is25ManRaid() && me->HasAura(SPELL_SHADOWS_FATE))
                     DoCastAOE(SPELL_FROST_INFUSION_CREDIT, true);
 
-                if (Is25ManRaid())
-                {
-                    if (urand(0, 4) == 0)
-                    {
-                        Map* pMap = me->GetMap();
-                        InstanceMap::PlayerList const &PlayerList = pMap->GetPlayers();
-                        for (InstanceMap::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                        {
-                            if (i->GetSource()->GetQuestStatus(24757) == QUEST_STATUS_INCOMPLETE)
-                                i->GetSource()->CompleteQuest(24757);
-                        }
-	                    //instance->DoCastSpellOnPlayers(72290); instance->DoCastSpellOnPlayers(72289);
-                    }
-                }
             }
 
             void EnterCombat(Unit* victim) OVERRIDE
             {
-                /*if (!instance->CheckRequiredBosses(DATA_SINDRAGOSA, victim->ToPlayer()))
+                if (!instance->CheckRequiredBosses(DATA_SINDRAGOSA, victim->ToPlayer()))
                 {
                     EnterEvadeMode();
                     instance->DoCastSpellOnPlayers(LIGHT_S_HAMMER_TELEPORT);
                     return;
-                }*/
+                }
 
                 BossAI::EnterCombat(victim);
                 DoCast(me, SPELL_FROST_AURA);
@@ -498,7 +484,7 @@ class boss_sindragosa : public CreatureScript
                         case EVENT_ICE_TOMB:
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 1, FrostBeaconSelector(me)))
                             {
-                                Talk(EMOTE_WARN_FROZEN_ORB, target->GetGUID());
+                                Talk(EMOTE_WARN_FROZEN_ORB, target);
                                 DoCast(target, SPELL_ICE_TOMB_DUMMY, true);
                             }
                             events.ScheduleEvent(EVENT_ICE_TOMB, urand(16000, 23000));

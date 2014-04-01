@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -50,7 +50,12 @@ public:
 
     struct npc_water_elementalAI : public ScriptedAI
     {
-        npc_water_elementalAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_water_elementalAI(Creature* creature) : ScriptedAI(creature)
+        {
+            waterBoltTimer = 3 * IN_MILLISECONDS;
+            resetTimer = 5 * IN_MILLISECONDS;
+            balindaGUID = 0;
+        }
 
         uint32 waterBoltTimer;
         uint64 balindaGUID;
@@ -60,6 +65,7 @@ public:
         {
             waterBoltTimer            = 3 * IN_MILLISECONDS;
             resetTimer                = 5 * IN_MILLISECONDS;
+            balindaGUID = 0;
         }
 
         void UpdateAI(uint32 diff) OVERRIDE
@@ -99,7 +105,7 @@ public:
 
     struct boss_balindaAI : public ScriptedAI
     {
-        boss_balindaAI(Creature* creature) : ScriptedAI(creature), summons(me) {}
+        boss_balindaAI(Creature* creature) : ScriptedAI(creature), summons(me) { }
 
         uint32 arcaneExplosionTimer;
         uint32 coneOfColdTimer;

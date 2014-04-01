@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -27,7 +27,7 @@
 class npc_four_car_garage : public CreatureScript
 {
     public:
-        npc_four_car_garage() : CreatureScript("npc_four_car_garage") {}
+        npc_four_car_garage() : CreatureScript("npc_four_car_garage") { }
 
         struct npc_four_car_garageAI : public NullCreatureAI
         {

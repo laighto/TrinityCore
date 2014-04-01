@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -25,6 +25,7 @@
 #include "MoveSplineInit.h"
 #include "MoveSpline.h"
 #include "Player.h"
+#include "VehicleDefines.h"
 
 template<class T, typename D>
 void TargetedMovementGeneratorMedium<T, D>::_setTargetLocation(T* owner, bool updateDestination)
@@ -154,6 +155,9 @@ bool TargetedMovementGeneratorMedium<T, D>::DoUpdate(T* owner, uint32 time_diff)
         //More distance let have better performance, less distance let have more sensitive reaction at target move.
         float allowed_dist = owner->GetCombatReach() + sWorld->getRate(RATE_TARGET_POS_RECALCULATION_RANGE);
         G3D::Vector3 dest = owner->movespline->FinalDestination();
+        if (owner->movespline->onTransport)
+            if (TransportBase* transport = owner->GetDirectTransport())
+                transport->CalculatePassengerPosition(dest.x, dest.y, dest.z);
 
         if (owner->GetTypeId() == TYPEID_UNIT && owner->ToCreature()->CanFly())
             targetMoved = !i_target->IsWithinDist3d(dest.x, dest.y, dest.z, allowed_dist);
@@ -216,9 +220,7 @@ void ChaseMovementGenerator<T>::DoReset(T* owner)
 }
 
 template<class T>
-void ChaseMovementGenerator<T>::MovementInform(T* /*unit*/)
-{
-}
+void ChaseMovementGenerator<T>::MovementInform(T* /*unit*/) { }
 
 template<>
 void ChaseMovementGenerator<Creature>::MovementInform(Creature* unit)
@@ -290,9 +292,7 @@ void FollowMovementGenerator<T>::DoReset(T* owner)
 }
 
 template<class T>
-void FollowMovementGenerator<T>::MovementInform(T* /*unit*/)
-{
-}
+void FollowMovementGenerator<T>::MovementInform(T* /*unit*/) { }
 
 template<>
 void FollowMovementGenerator<Creature>::MovementInform(Creature* unit)

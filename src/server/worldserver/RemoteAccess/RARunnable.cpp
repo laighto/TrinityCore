@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -67,11 +67,11 @@ void RARunnable::run()
 
     if (acceptor.open(listenAddress, m_Reactor) == -1)
     {
-        TC_LOG_ERROR(LOG_FILTER_WORLDSERVER, "Trinity RA can not bind to port %d on %s", raPort, stringIp.c_str());
+        TC_LOG_ERROR("server.worldserver", "Trinity RA can not bind to port %d on %s", raPort, stringIp.c_str());
         return;
     }
 
-    TC_LOG_INFO(LOG_FILTER_WORLDSERVER, "Starting Trinity RA on port %d on %s", raPort, stringIp.c_str());
+    TC_LOG_INFO("server.worldserver", "Starting Trinity RA on port %d on %s", raPort, stringIp.c_str());
 
     while (!World::IsStopped())
     {
@@ -80,5 +80,5 @@ void RARunnable::run()
             break;
     }
 
-    TC_LOG_DEBUG(LOG_FILTER_WORLDSERVER, "Trinity RA thread exiting");
+    TC_LOG_DEBUG("server.worldserver", "Trinity RA thread exiting");
 }

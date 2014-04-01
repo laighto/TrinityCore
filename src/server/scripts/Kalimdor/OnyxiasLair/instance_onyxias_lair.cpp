@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -43,7 +43,7 @@ public:
 
     struct instance_onyxias_lair_InstanceMapScript : public InstanceScript
     {
-        instance_onyxias_lair_InstanceMapScript(Map* map) : InstanceScript(map) {}
+        instance_onyxias_lair_InstanceMapScript(Map* map) : InstanceScript(map) { }
 
         //Eruption is a BFS graph problem
         //One map to remember all floor, one map to keep floor that still need to erupt and one queue to know what needs to be removed
@@ -212,13 +212,24 @@ public:
             {
                 if (eruptTimer <= diff)
                 {
-                    uint32 treeHeight = 0;
-                    do
+                    uint64 frontGuid = FloorEruptionGUIDQueue.front();
+                    std::map<uint64, uint32>::iterator itr = FloorEruptionGUID[1].find(frontGuid);
+                    if (itr != FloorEruptionGUID[1].end())
                     {
-                        treeHeight = (*FloorEruptionGUID[1].find(FloorEruptionGUIDQueue.front())).second;
-                        FloorEruption(FloorEruptionGUIDQueue.front());
-                        FloorEruptionGUIDQueue.pop();
-                    } while (!FloorEruptionGUIDQueue.empty() && (*FloorEruptionGUID[1].find(FloorEruptionGUIDQueue.front())).second == treeHeight);
+                        uint32 treeHeight = itr->second;
+
+                        do
+                        {
+                            FloorEruption(frontGuid);
+                            FloorEruptionGUIDQueue.pop();
+                            if (FloorEruptionGUIDQueue.empty())
+                                break;
+
+                            frontGuid = FloorEruptionGUIDQueue.front();
+                            itr = FloorEruptionGUID[1].find(frontGuid);
+                        } while (itr != FloorEruptionGUID[1].end() && itr->second == treeHeight);
+                    }
+
                     eruptTimer = 1000;
                 }
                 else

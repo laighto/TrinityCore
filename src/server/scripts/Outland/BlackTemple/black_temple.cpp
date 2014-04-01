@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -63,7 +63,7 @@ public:
 
     struct npc_spirit_of_olumAI : public ScriptedAI
     {
-        npc_spirit_of_olumAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_spirit_of_olumAI(Creature* creature) : ScriptedAI(creature) { }
 
         void sGossipSelect(Player* player, uint32 /*sender*/, uint32 action) OVERRIDE
         {
@@ -156,11 +156,11 @@ public:
                         {
                             for (std::list<uint64>::const_iterator itr = bloodmage.begin(); itr != bloodmage.end(); ++itr)
                                 if (Creature* bloodmage = (Unit::GetCreature(*me, *itr)))
-                                    bloodmage->AI()->DoCast(SPELL_SUMMON_CHANNEL);
+                                    bloodmage->CastSpell((Unit*)NULL, SPELL_SUMMON_CHANNEL);
 
                             for (std::list<uint64>::const_iterator itr = deathshaper.begin(); itr != deathshaper.end(); ++itr)
                                 if (Creature* deathshaper = (Unit::GetCreature(*me, *itr)))
-                                    deathshaper->AI()->DoCast(SPELL_SUMMON_CHANNEL);
+                                    deathshaper->CastSpell((Unit*)NULL, SPELL_SUMMON_CHANNEL);
 
                             events.ScheduleEvent(EVENT_SET_CHANNELERS, 12000);
 
@@ -207,7 +207,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new npc_wrathbone_flayerAI(creature);
+        return GetInstanceAI<npc_wrathbone_flayerAI>(creature);
     }
 };
 

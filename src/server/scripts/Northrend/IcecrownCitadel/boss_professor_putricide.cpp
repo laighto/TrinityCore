@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -57,6 +57,7 @@ enum Spells
     SPELL_GASEOUS_BLIGHT_SMALL              = 69164,
     SPELL_MALLEABLE_GOO_H                   = 72296,
     SPELL_MALLEABLE_GOO_SUMMON              = 72299,
+
     // Professor Putricide
     SPELL_SLIME_PUDDLE_TRIGGER              = 70341,
     SPELL_MALLEABLE_GOO                     = 70852,
@@ -248,16 +249,16 @@ class boss_professor_putricide : public CreatureScript
                 if (events.IsInPhase(PHASE_ROTFACE) || events.IsInPhase(PHASE_FESTERGUT))
                     return;
 
-                /*if (!instance->CheckRequiredBosses(DATA_PROFESSOR_PUTRICIDE, who->ToPlayer()))
+                if (!instance->CheckRequiredBosses(DATA_PROFESSOR_PUTRICIDE, who->ToPlayer()))
                 {
                     EnterEvadeMode();
                     instance->DoCastSpellOnPlayers(LIGHT_S_HAMMER_TELEPORT);
                     return;
-                }*/
+                }
 
                 me->setActive(true);
                 events.Reset();
-                events.ScheduleEvent(EVENT_BERSERK, 660000);
+                events.ScheduleEvent(EVENT_BERSERK, 600000);
                 events.ScheduleEvent(EVENT_SLIME_PUDDLE, 10000);
                 events.ScheduleEvent(EVENT_UNSTABLE_EXPERIMENT, urand(30000, 35000));
                 if (IsHeroic())
@@ -294,21 +295,6 @@ class boss_professor_putricide : public CreatureScript
                     DoCastAOE(SPELL_UNHOLY_INFUSION_CREDIT, true);
 
                 DoCast(SPELL_MUTATED_PLAGUE_CLEAR);
-
-                if (Is25ManRaid())
-                {
-                    if (urand(0, 4) == 0)
-                    {
-                        Map* pMap = me->GetMap();
-                        InstanceMap::PlayerList const &PlayerList = pMap->GetPlayers();
-                        for (InstanceMap::PlayerList::const_iterator i = PlayerList.begin(); i != PlayerList.end(); ++i)
-                        {
-                            if (i->GetSource()->GetQuestStatus(24749) == QUEST_STATUS_INCOMPLETE)
-                                i->GetSource()->CompleteQuest(24749);
-                        }
-                        //instance->DoCastSpellOnPlayers(71516); instance->DoCastSpellOnPlayers(71518);
-                    }
-                }
             }
 
             void JustSummoned(Creature* summon) OVERRIDE
@@ -753,7 +739,7 @@ class npc_putricide_oozeAI : public ScriptedAI
             if (!UpdateVictim() && !_newTargetSelectTimer)
                 return;
 
-            if (!_newTargetSelectTimer && !me->IsNonMeleeSpellCasted(false, false, true, false, true))
+            if (!_newTargetSelectTimer && !me->IsNonMeleeSpellCast(false, false, true, false, true))
                 _newTargetSelectTimer = 1000;
 
             DoMeleeAttackIfReady();
@@ -938,7 +924,7 @@ class spell_putricide_ooze_channel : public SpellScriptLoader
 class ExactDistanceCheck
 {
     public:
-        ExactDistanceCheck(Unit* source, float dist) : _source(source), _dist(dist) {}
+        ExactDistanceCheck(Unit* source, float dist) : _source(source), _dist(dist) { }
 
         bool operator()(WorldObject* unit) const
         {

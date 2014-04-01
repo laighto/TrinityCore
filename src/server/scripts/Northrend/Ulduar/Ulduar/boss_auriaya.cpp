@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -315,7 +315,7 @@ class npc_auriaya_seeping_trigger : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const OVERRIDE
         {
-            return new npc_auriaya_seeping_triggerAI(creature);
+            return GetInstanceAI<npc_auriaya_seeping_triggerAI>(creature);
         }
 };
 
@@ -364,7 +364,7 @@ class npc_sanctum_sentry : public CreatureScript
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 0.0f, true))
                             {
                                 me->AddThreat(target, 100.0f);
-                                me->AI()->AttackStart(target);
+                                AttackStart(target);
                                 DoCast(target, SPELL_SAVAGE_POUNCE);
                             }
                             events.ScheduleEvent(EVENT_POUNCE, urand(12000, 17000));
@@ -390,7 +390,7 @@ class npc_sanctum_sentry : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const OVERRIDE
         {
-            return new npc_sanctum_sentryAI(creature);
+            return GetInstanceAI<npc_sanctum_sentryAI>(creature);
         }
 };
 
@@ -430,7 +430,7 @@ class npc_feral_defender : public CreatureScript
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 0.0f, true))
                             {
                                 me->AddThreat(target, 100.0f);
-                                me->AI()->AttackStart(target);
+                                AttackStart(target);
                                 DoCast(target, SPELL_FERAL_POUNCE);
                             }
                             events.ScheduleEvent(EVENT_FERAL_POUNCE, urand(10000, 12000));
@@ -439,7 +439,7 @@ class npc_feral_defender : public CreatureScript
                             if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 0.0f, true))
                             {
                                 me->AddThreat(target, 100.0f);
-                                me->AI()->AttackStart(target);
+                                AttackStart(target);
                                 DoCast(target, SPELL_FERAL_RUSH);
                             }
                             events.ScheduleEvent(EVENT_RUSH, urand(10000, 12000));
@@ -466,7 +466,7 @@ class npc_feral_defender : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const OVERRIDE
         {
-            return new npc_feral_defenderAI(creature);
+            return GetInstanceAI<npc_feral_defenderAI>(creature);
         }
 };
 

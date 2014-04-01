@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -170,11 +170,12 @@ public:
 
         void Reset() OVERRIDE
         {
+            SpawnedAdds = 0;
+
             if (me->GetMapId() == 469)
             {
                 if (!me->FindNearestCreature(NPC_NEFARIAN, 1000.0f, true))
                     _Reset();
-                SpawnedAdds = 0;
 
                 me->SetVisible(true);
                 me->SetPhaseMask(1, true);
@@ -218,20 +219,18 @@ public:
             }
         }
 
-        void JustSummoned(Creature* /*summon*/) OVERRIDE {}
+        void JustSummoned(Creature* /*summon*/) OVERRIDE { }
 
         void SetData(uint32 type, uint32 data) OVERRIDE
         {
-            if (instance && type == 1 && data == 1)
+            if ( type == 1 && data == 1)
             {
                 me->StopMoving();
                 events.ScheduleEvent(EVENT_PATH_2, 9000);
             }
 
-            if (instance && type == 1 && data == 2)
-            {
+            if (type == 1 && data == 2)
                 events.ScheduleEvent(EVENT_SUCCESS_1, 5000);
-            }
         }
 
         void UpdateAI(uint32 diff) OVERRIDE
@@ -264,7 +263,6 @@ public:
                             if (Unit* player = me->SelectNearestPlayer(60.0f))
                             {
                                 me->SetInFront(player);
-                                me->SendMovementFlagUpdate();
                                 Talk(SAY_SUCCESS);
                                 if (GameObject* portcullis1 = me->FindNearestGameObject(GO_PORTCULLIS_ACTIVE, 65.0f))
                                     portcullis1->SetGoState(GO_STATE_ACTIVE);
@@ -344,7 +342,7 @@ public:
                                         nefarian->setActive(true);
                                         nefarian->SetCanFly(true);
                                         nefarian->SetDisableGravity(true);
-                                        nefarian->AI()->DoCastAOE(SPELL_SHADOWFLAME_INITIAL);
+                                        nefarian->CastSpell((Unit*)NULL, SPELL_SHADOWFLAME_INITIAL);
                                         nefarian->GetMotionMaster()->MovePoint(1, NefarianLoc[1]);
                                     }
                                     events.CancelEvent(EVENT_MIND_CONTROL);
@@ -377,7 +375,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new boss_victor_nefariusAI(creature);
+        return GetInstanceAI<boss_victor_nefariusAI>(creature);
     }
 };
 
@@ -424,7 +422,7 @@ public:
             if (rand()%5)
                 return;
 
-            Talk(SAY_SLAY, victim->GetGUID());
+            Talk(SAY_SLAY, victim);
         }
 
         void MovementInform(uint32 type, uint32 id) OVERRIDE
@@ -444,8 +442,7 @@ public:
         {
             if (canDespawn && DespawnTimer <= diff)
             {
-                if (instance)
-                    instance->SetBossState(BOSS_NEFARIAN, FAIL);
+                instance->SetBossState(BOSS_NEFARIAN, FAIL);
 
                 std::list<Creature*> constructList;
                 me->GetCreatureListWithEntryInGrid(constructList, NPC_BONE_CONSTRUCT, 500.0f);
@@ -573,7 +570,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new boss_nefarianAI(creature);
+        return GetInstanceAI<boss_nefarianAI>(creature);
     }
 };
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -117,7 +117,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new npc_grimstoneAI(creature);
+        return GetInstanceAI<npc_grimstoneAI>(creature);
     }
 
     struct npc_grimstoneAI : public npc_escortAI
@@ -207,12 +207,9 @@ public:
                     Event_Timer = 5000;
                     break;
                 case 5:
-                    if (instance)
-                    {
-                        instance->UpdateEncounterState(ENCOUNTER_CREDIT_KILL_CREATURE, NPC_GRIMSTONE, me);
-                        instance->SetData(TYPE_RING_OF_LAW, DONE);
-                        TC_LOG_DEBUG(LOG_FILTER_TSCR, "npc_grimstone: event reached end and set complete.");
-                    }
+                    instance->UpdateEncounterState(ENCOUNTER_CREDIT_KILL_CREATURE, NPC_GRIMSTONE, me);
+                    instance->SetData(TYPE_RING_OF_LAW, DONE);
+                    TC_LOG_DEBUG("scripts", "npc_grimstone: event reached end and set complete.");
                     break;
             }
         }
@@ -224,9 +221,6 @@ public:
 
         void UpdateAI(uint32 diff) OVERRIDE
         {
-            if (!instance)
-                return;
-
             if (MobDeath_Timer)
             {
                 if (MobDeath_Timer <= diff)
@@ -359,7 +353,7 @@ public:
 
     struct npc_phalanxAI : public ScriptedAI
     {
-        npc_phalanxAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_phalanxAI(Creature* creature) : ScriptedAI(creature) { }
 
         uint32 ThunderClap_Timer;
         uint32 FireballVolley_Timer;
@@ -613,7 +607,7 @@ public:
 
     struct npc_dughal_stormwingAI : public npc_escortAI
     {
-        npc_dughal_stormwingAI(Creature* creature) : npc_escortAI(creature) {}
+        npc_dughal_stormwingAI(Creature* creature) : npc_escortAI(creature) { }
 
         void WaypointReached(uint32 waypointId) OVERRIDE
         {
@@ -634,8 +628,8 @@ public:
             }
         }
 
-        void EnterCombat(Unit* who) OVERRIDE {}
-        void Reset() OVERRIDE {}
+        void EnterCombat(Unit* who) OVERRIDE { }
+        void Reset() OVERRIDE { }
 
         void JustDied(Unit* killer) OVERRIDE
         {
@@ -804,7 +798,7 @@ public:
             }
         }
 
-        void Reset() OVERRIDE {}
+        void Reset() OVERRIDE { }
 
         void JustDied(Unit* slayer) OVERRIDE
         {
@@ -1019,7 +1013,7 @@ public:
                     break;
             }
         }
-        void Reset() OVERRIDE {}
+        void Reset() OVERRIDE { }
 
         void JustDied(Unit* slayer) OVERRIDE
         {
@@ -1125,10 +1119,10 @@ public:
 
     struct npc_tobias_seecherAI : public npc_escortAI
     {
-        npc_tobias_seecherAI(Creature* creature) : npc_escortAI(creature) {}
+        npc_tobias_seecherAI(Creature* creature) : npc_escortAI(creature) { }
 
-        void EnterCombat(Unit* who) OVERRIDE {}
-        void Reset() OVERRIDE {}
+        void EnterCombat(Unit* who) OVERRIDE { }
+        void Reset() OVERRIDE { }
 
         void JustDied(Unit* killer) OVERRIDE
         {
@@ -1237,7 +1231,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new npc_rocknotAI(creature);
+        return GetInstanceAI<npc_rocknotAI>(creature);
     }
 
     struct npc_rocknotAI : public npc_escortAI
@@ -1269,9 +1263,6 @@ public:
 
         void WaypointReached(uint32 waypointId) OVERRIDE
         {
-            if (!instance)
-                return;
-
             switch (waypointId)
             {
                 case 1:
@@ -1295,9 +1286,6 @@ public:
 
         void UpdateAI(uint32 diff) OVERRIDE
         {
-            if (!instance)
-                return;
-
             if (BreakKeg_Timer)
             {
                 if (BreakKeg_Timer <= diff)

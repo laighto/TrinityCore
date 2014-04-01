@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -117,12 +117,12 @@ class boss_rotface : public CreatureScript
 
             void EnterCombat(Unit* who) OVERRIDE
             {
-               /* if (!instance->CheckRequiredBosses(DATA_ROTFACE, who->ToPlayer()))
+                if (!instance->CheckRequiredBosses(DATA_ROTFACE, who->ToPlayer()))
                 {
                     EnterEvadeMode();
                     instance->DoCastSpellOnPlayers(LIGHT_S_HAMMER_TELEPORT);
                     return;
-                }*/
+                }
 
                 me->setActive(true);
                 Talk(SAY_AGGRO);
@@ -140,7 +140,6 @@ class boss_rotface : public CreatureScript
                 Talk(SAY_DEATH);
                 if (Creature* professor = Unit::GetCreature(*me, instance->GetData64(DATA_PROFESSOR_PUTRICIDE)))
                     professor->AI()->DoAction(ACTION_ROTFACE_DEATH);
-                //summons.DespawnAll();
             }
 
             void JustReachedHome() OVERRIDE
@@ -539,7 +538,7 @@ class spell_rotface_mutated_infection : public SpellScriptLoader
             {
                 if (Creature* caster = GetCaster()->ToCreature())
                     if (Unit* target = GetHitUnit())
-                        caster->AI()->Talk(EMOTE_MUTATED_INFECTION, target->GetGUID());
+                        caster->AI()->Talk(EMOTE_MUTATED_INFECTION, target);
             }
 
             void Register() OVERRIDE

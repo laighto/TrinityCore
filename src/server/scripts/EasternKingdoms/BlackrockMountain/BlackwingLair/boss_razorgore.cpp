@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -75,7 +75,6 @@ public:
             _Reset();
 
             secondPhase = false;
-            if (instance)
                 instance->SetData(DATA_EGG_EVENT, NOT_STARTED);
         }
 
@@ -84,7 +83,6 @@ public:
             _JustDied();
             Talk(SAY_DEATH);
 
-            if (instance)
                 instance->SetData(DATA_EGG_EVENT, NOT_STARTED);
 
             if (GameObject* object = me->FindNearestGameObject(176965, 150.0f)) //open GO Portcullis
@@ -159,7 +157,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new boss_razorgoreAI(creature);
+        return GetInstanceAI<boss_razorgoreAI>(creature);
     }
 };
 

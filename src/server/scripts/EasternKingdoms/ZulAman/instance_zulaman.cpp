@@ -1,5 +1,5 @@
  /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -66,7 +66,7 @@ class instance_zulaman : public InstanceMapScript
 
         struct instance_zulaman_InstanceMapScript : public InstanceScript
         {
-            instance_zulaman_InstanceMapScript(Map* map) : InstanceScript(map) {}
+            instance_zulaman_InstanceMapScript(Map* map) : InstanceScript(map) { }
 
             uint64 HarkorsSatchelGUID;
             uint64 TanzarsTrunkGUID;
@@ -218,17 +218,17 @@ class instance_zulaman : public InstanceMapScript
                     return;
 
                 std::istringstream ss(load);
-                //TC_LOG_ERROR(LOG_FILTER_TSCR, "Zul'aman loaded, %s.", ss.str().c_str());
+                //TC_LOG_ERROR("scripts", "Zul'aman loaded, %s.", ss.str().c_str());
                 char dataHead; // S
                 uint16 data1, data2, data3;
                 ss >> dataHead >> data1 >> data2 >> data3;
-                //TC_LOG_ERROR(LOG_FILTER_TSCR, "Zul'aman loaded, %d %d %d.", data1, data2, data3);
+                //TC_LOG_ERROR("scripts", "Zul'aman loaded, %d %d %d.", data1, data2, data3);
                 if (dataHead == 'S')
                 {
                     BossKilled = data1;
                     ChestLooted = data2;
                     QuestMinute = data3;
-                } else TC_LOG_ERROR(LOG_FILTER_TSCR, "Zul'aman: corrupted save data.");
+                } else TC_LOG_ERROR("scripts", "Zul'aman: corrupted save data.");
             }
 
             void SetData(uint32 type, uint32 data) OVERRIDE

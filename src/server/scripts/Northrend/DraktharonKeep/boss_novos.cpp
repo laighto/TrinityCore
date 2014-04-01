@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -231,7 +231,7 @@ public:
             if (Creature* crystalChannelTarget = crystal->FindNearestCreature(NPC_CRYSTAL_CHANNEL_TARGET, 5.0f))
             {
                 if (active)
-                    crystalChannelTarget->AI()->DoCastAOE(SPELL_BEAM_CHANNEL);
+                    crystalChannelTarget->CastSpell((Unit*)NULL, SPELL_BEAM_CHANNEL);
                 else if (crystalChannelTarget->HasUnitState(UNIT_STATE_CASTING))
                     crystalChannelTarget->CastStop();
             }
@@ -276,11 +276,11 @@ public:
 class npc_crystal_channel_target : public CreatureScript
 {
 public:
-    npc_crystal_channel_target() : CreatureScript("npc_crystal_channel_target") {}
+    npc_crystal_channel_target() : CreatureScript("npc_crystal_channel_target") { }
 
     struct npc_crystal_channel_targetAI : public ScriptedAI
     {
-        npc_crystal_channel_targetAI(Creature* creature) : ScriptedAI(creature) {}
+        npc_crystal_channel_targetAI(Creature* creature) : ScriptedAI(creature) { }
 
         void Reset() OVERRIDE
         {
@@ -339,7 +339,7 @@ public:
 class achievement_oh_novos : public AchievementCriteriaScript
 {
 public:
-    achievement_oh_novos() : AchievementCriteriaScript("achievement_oh_novos") {}
+    achievement_oh_novos() : AchievementCriteriaScript("achievement_oh_novos") { }
 
     bool OnCheck(Player* /*player*/, Unit* target) OVERRIDE
     {

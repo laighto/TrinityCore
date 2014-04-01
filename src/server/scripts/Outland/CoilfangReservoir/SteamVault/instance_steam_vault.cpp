@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -137,7 +137,7 @@ class instance_steam_vault : public InstanceMapScript
                             if (GetBossState(DATA_MEKGINEER_STEAMRIGGER) == SPECIAL)
                                 HandleGameObject(MainChambersDoorGUID, true);
 
-                            TC_LOG_DEBUG(LOG_FILTER_TSCR, "Instance Steamvault: Access panel used.");
+                            TC_LOG_DEBUG("scripts", "Instance Steamvault: Access panel used.");
                         }
                         break;
                     case DATA_MEKGINEER_STEAMRIGGER:
@@ -146,7 +146,7 @@ class instance_steam_vault : public InstanceMapScript
                             if (GetBossState(DATA_HYDROMANCER_THESPIA) == SPECIAL)
                                 HandleGameObject(MainChambersDoorGUID, true);
 
-                            TC_LOG_DEBUG(LOG_FILTER_TSCR, "Instance Steamvault: Access panel used.");
+                            TC_LOG_DEBUG("scripts", "Instance Steamvault: Access panel used.");
                         }
                         break;
                     default:

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -104,7 +104,7 @@ enum TrinityStrings
     LANG_RBAC_PERM_REVOKED              = 78,
     LANG_RBAC_PERM_REVOKED_NOT_IN_LIST  = 79,
     // Free 80 - 95
-    
+
 
     LANG_GUILD_RENAME_ALREADY_EXISTS    = 96,
     LANG_GUILD_RENAME_DONE              = 97,
@@ -1238,6 +1238,18 @@ enum TrinityStrings
     LANG_UTA_GODLIKE                    = 20115,
     LANG_UTA_BEYOND_GODLIKE             = 20116,
     LANG_UTA_INTERRUPTED_SERIES         = 20119,
+
+    // Show Kick in world
+    LANG_COMMAND_KICKMESSAGE_WORLD = 11002,
+
+    // Show Mute in world
+    LANG_COMMAND_MUTEMESSAGE_WORLD = 11003,
+
+    // Show Ban in world
+    LANG_BAN_CHARACTER_YOUBANNEDMESSAGE_WORLD     = 11004,
+    LANG_BAN_CHARACTER_YOUPERMBANNEDMESSAGE_WORLD = 11005,
+    LANG_BAN_ACCOUNT_YOUBANNEDMESSAGE_WORLD       = 11006,
+    LANG_BAN_ACCOUNT_YOUPERMBANNEDMESSAGE_WORLD   = 11007,
 
     // NOT RESERVED IDS                   12000-1999999999
     // `db_script_string` table index     2000000000-2000009999 (MIN_DB_SCRIPT_STRING_ID-MAX_DB_SCRIPT_STRING_ID)

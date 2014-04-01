@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -83,7 +83,7 @@ class boss_nazan : public CreatureScript
                 Turn_Timer = 0;
             }
 
-            void EnterCombat(Unit* /*who*/) OVERRIDE {}
+            void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
             void IsSummonedBy(Unit* summoner) OVERRIDE
             {
@@ -134,7 +134,7 @@ class boss_nazan : public CreatureScript
                         me->SetWalk(true);
                         me->GetMotionMaster()->Clear();
                         if (Unit* victim = SelectTarget(SELECT_TARGET_NEAREST, 0))
-                            me->AI()->AttackStart(victim);
+                            AttackStart(victim);
                         DoStartMovement(me->GetVictim());
                         Talk(EMOTE);
                         return;
@@ -456,14 +456,14 @@ class npc_hellfire_sentry : public CreatureScript
 
         struct npc_hellfire_sentryAI : public ScriptedAI
         {
-            npc_hellfire_sentryAI(Creature* creature) : ScriptedAI(creature) {}
+            npc_hellfire_sentryAI(Creature* creature) : ScriptedAI(creature) { }
 
             void Reset() OVERRIDE
             {
                 KidneyShot_Timer = urand(3000, 7000);
             }
 
-            void EnterCombat(Unit* /*who*/) OVERRIDE {}
+            void EnterCombat(Unit* /*who*/) OVERRIDE { }
 
             void JustDied(Unit* killer) OVERRIDE
             {

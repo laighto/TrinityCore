@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -296,7 +296,7 @@ class boss_valithria_dreamwalker : public CreatureScript
 
             void Reset() OVERRIDE
             {
-                me->SetHealth(me->GetMaxHealth() * 0.50);
+                me->SetHealth(_spawnHealth);
                 me->SetReactState(REACT_PASSIVE);
                 me->LoadCreaturesAddon(true);
                 // immune to percent heals
@@ -399,9 +399,6 @@ class boss_valithria_dreamwalker : public CreatureScript
 
                     if (Creature* trigger = ObjectAccessor::GetCreature(*me, _instance->GetData64(DATA_VALITHRIA_TRIGGER)))
                         me->Kill(trigger);
-
-                    _instance->SetBossState(DATA_VALITHRIA_DREAMWALKER, DONE);
-                    _instance->SaveToDB();
                 }
             }
 
@@ -508,12 +505,12 @@ class npc_green_dragon_combat_trigger : public CreatureScript
 
             void EnterCombat(Unit* target) OVERRIDE
             {
-                /*if (!instance->CheckRequiredBosses(DATA_VALITHRIA_DREAMWALKER, target->ToPlayer()))
+                if (!instance->CheckRequiredBosses(DATA_VALITHRIA_DREAMWALKER, target->ToPlayer()))
                 {
                     EnterEvadeMode();
                     instance->DoCastSpellOnPlayers(LIGHT_S_HAMMER_TELEPORT);
                     return;
-                }*/
+                }
 
                 me->setActive(true);
                 DoZoneInCombat();
@@ -599,10 +596,10 @@ class npc_the_lich_king_controller : public CreatureScript
             void Reset() OVERRIDE
             {
                 _events.Reset();
-                _events.ScheduleEvent(EVENT_GLUTTONOUS_ABOMINATION_SUMMONER, 10000);
-                _events.ScheduleEvent(EVENT_SUPPRESSER_SUMMONER, 15000);
-                _events.ScheduleEvent(EVENT_BLISTERING_ZOMBIE_SUMMONER, 20000);
-                _events.ScheduleEvent(EVENT_RISEN_ARCHMAGE_SUMMONER, 25000);
+                _events.ScheduleEvent(EVENT_GLUTTONOUS_ABOMINATION_SUMMONER, 5000);
+                _events.ScheduleEvent(EVENT_SUPPRESSER_SUMMONER, 10000);
+                _events.ScheduleEvent(EVENT_BLISTERING_ZOMBIE_SUMMONER, 15000);
+                _events.ScheduleEvent(EVENT_RISEN_ARCHMAGE_SUMMONER, 20000);
                 _events.ScheduleEvent(EVENT_BLAZING_SKELETON_SUMMONER, 30000);
                 me->SetReactState(REACT_PASSIVE);
             }
@@ -669,7 +666,7 @@ class npc_the_lich_king_controller : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const OVERRIDE
         {
-            return new npc_the_lich_king_controllerAI(creature);
+            return GetInstanceAI<npc_the_lich_king_controllerAI>(creature);
         }
 };
 

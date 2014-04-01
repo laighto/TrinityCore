@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -112,7 +112,7 @@ public:
 
     struct instance_violet_hold_InstanceMapScript : public InstanceScript
     {
-        instance_violet_hold_InstanceMapScript(Map* map) : InstanceScript(map) {}
+        instance_violet_hold_InstanceMapScript(Map* map) : InstanceScript(map) { }
 
         uint64 uiMoragg;
         uint64 uiErekem;
@@ -160,7 +160,7 @@ public:
 
         bool bActive;
         bool bWiped;
-        bool bIsDoorSpellCasted;
+        bool bIsDoorSpellCast;
         bool bCrystalActivated;
         bool defenseless;
 
@@ -210,7 +210,7 @@ public:
             uiCyanigosaEventTimer = 3*IN_MILLISECONDS;
 
             bActive = false;
-            bIsDoorSpellCasted = false;
+            bIsDoorSpellCast = false;
             bCrystalActivated = false;
             defenseless = true;
             uiMainEventPhase = NOT_STARTED;

@@ -1,4 +1,4 @@
-# Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+# Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -10,11 +10,11 @@
 
 set(scripts_STAT_SRCS
   ${scripts_STAT_SRCS}
+  Custom/argent_tournament.cpp
   Custom/gmisland_protector.cpp
+  Custom/pet_scale.cpp
   Custom/npc_transmogrify.cpp
   Custom/pvp_script.cpp
-  Custom/argent_tournament.cpp
-  Custom/pet_scale.cpp
 )
 
 message("  -> Prepared: Custom")

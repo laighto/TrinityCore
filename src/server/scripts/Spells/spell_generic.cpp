@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -36,6 +36,7 @@
 #include "SkillDiscovery.h"
 #include "SpellScript.h"
 #include "SpellAuraEffects.h"
+#include "Vehicle.h"
 
 class spell_gen_absorb0_hitlimit1 : public SpellScriptLoader
 {
@@ -475,20 +476,20 @@ class spell_gen_bonked : public SpellScriptLoader
             + EFFECT_0: SCRIPT_EFFECT
             + EFFECT_1: NONE
             + EFFECT_2: NONE
-        - Spells casted by players triggered by script:
+        - Spells cast by players triggered by script:
             + EFFECT_0: SCHOOL_DAMAGE
             + EFFECT_1: SCRIPT_EFFECT
             + EFFECT_2: FORCE_CAST
-        - Spells casted by NPCs on players:
+        - Spells cast by NPCs on players:
             + EFFECT_0: SCHOOL_DAMAGE
             + EFFECT_1: SCRIPT_EFFECT
             + EFFECT_2: NONE
 
     In the following script we handle the SCRIPT_EFFECT for effIndex EFFECT_0 and EFFECT_1.
         - When handling EFFECT_0 we're in the "Spells on vehicle bar used by players" case
-          and we'll trigger "Spells casted by players triggered by script"
-        - When handling EFFECT_1 we're in the "Spells casted by players triggered by script"
-          or "Spells casted by NPCs on players" so we'll search for the first defend layer and drop it.
+          and we'll trigger "Spells cast by players triggered by script"
+        - When handling EFFECT_1 we're in the "Spells cast by players triggered by script"
+          or "Spells cast by NPCs on players" so we'll search for the first defend layer and drop it.
 */
 
 enum BreakShieldSpells
@@ -1191,9 +1192,9 @@ class spell_gen_defend : public SpellScriptLoader
 
             void Register() OVERRIDE
             {
-                SpellInfo const* spell = sSpellMgr->GetSpellInfo(m_scriptSpellId);
+                SpellInfo const* spell = sSpellMgr->EnsureSpellInfo(m_scriptSpellId);
 
-                // Defend spells casted by NPCs (add visuals)
+                // Defend spells cast by NPCs (add visuals)
                 if (spell->Effects[EFFECT_0].ApplyAuraName == SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN)
                 {
                     AfterEffectApply += AuraEffectApplyFn(spell_gen_defend_AuraScript::RefreshVisualShields, EFFECT_0, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
@@ -1204,7 +1205,7 @@ class spell_gen_defend : public SpellScriptLoader
                 if (spell->Effects[EFFECT_2].ApplyAuraName == SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN)
                     OnEffectRemove += AuraEffectRemoveFn(spell_gen_defend_AuraScript::RemoveDummyFromDriver, EFFECT_2, SPELL_AURA_MOD_DAMAGE_PERCENT_TAKEN, AURA_EFFECT_HANDLE_REAL);
 
-                // Defend spells casted by players (add/remove visuals)
+                // Defend spells cast by players (add/remove visuals)
                 if (spell->Effects[EFFECT_1].ApplyAuraName == SPELL_AURA_DUMMY)
                 {
                     AfterEffectApply += AuraEffectApplyFn(spell_gen_defend_AuraScript::RefreshVisualShields, EFFECT_1, SPELL_AURA_DUMMY, AURA_EFFECT_HANDLE_REAL_OR_REAPPLY_MASK);
@@ -2039,15 +2040,15 @@ class spell_gen_mount : public SpellScriptLoader
             + EFFECT_0: SCRIPT_EFFECT
             + EFFECT_1: TRIGGER_SPELL
             + EFFECT_2: NONE
-        - Spells casted by player's mounts triggered by script:
+        - Spells cast by player's mounts triggered by script:
             + EFFECT_0: CHARGE
             + EFFECT_1: TRIGGER_SPELL
             + EFFECT_2: APPLY_AURA
-        - Spells casted by players on the target triggered by script:
+        - Spells cast by players on the target triggered by script:
             + EFFECT_0: SCHOOL_DAMAGE
             + EFFECT_1: SCRIPT_EFFECT
             + EFFECT_2: NONE
-        - Spells casted by NPCs on players:
+        - Spells cast by NPCs on players:
             + EFFECT_0: SCHOOL_DAMAGE
             + EFFECT_1: CHARGE
             + EFFECT_2: SCRIPT_EFFECT
@@ -2055,12 +2056,12 @@ class spell_gen_mount : public SpellScriptLoader
     In the following script we handle the SCRIPT_EFFECT and CHARGE
         - When handling SCRIPT_EFFECT:
             + EFFECT_0: Corresponds to "Spells on vehicle bar used by players" and we make player's mount cast
-              the charge effect on the current target ("Spells casted by player's mounts triggered by script").
-            + EFFECT_1 and EFFECT_2: Triggered when "Spells casted by player's mounts triggered by script" hits target,
-              corresponding to "Spells casted by players on the target triggered by script" and "Spells casted by
+              the charge effect on the current target ("Spells cast by player's mounts triggered by script").
+            + EFFECT_1 and EFFECT_2: Triggered when "Spells cast by player's mounts triggered by script" hits target,
+              corresponding to "Spells cast by players on the target triggered by script" and "Spells cast by
               NPCs on players" and we check Defend layers and drop a charge of the first found.
         - When handling CHARGE:
-            + Only launched for "Spells casted by player's mounts triggered by script", makes the player cast the
+            + Only launched for "Spells cast by player's mounts triggered by script", makes the player cast the
               damaging spell on target with a small chance of failing it.
 */
 
@@ -2177,7 +2178,7 @@ class spell_gen_mounted_charge: public SpellScriptLoader
 
             void Register() OVERRIDE
             {
-                SpellInfo const* spell = sSpellMgr->GetSpellInfo(m_scriptSpellId);
+                SpellInfo const* spell = sSpellMgr->EnsureSpellInfo(m_scriptSpellId);
 
                 if (spell->HasEffect(SPELL_EFFECT_SCRIPT_EFFECT))
                     OnEffectHitTarget += SpellEffectFn(spell_gen_mounted_charge_SpellScript::HandleScriptEffect, EFFECT_FIRST_FOUND, SPELL_EFFECT_SCRIPT_EFFECT);
@@ -2963,22 +2964,65 @@ enum Replenishment
     SPELL_INFINITE_REPLENISHMENT    = 61782
 };
 
+class ReplenishmentCheck
+{
+public:
+    bool operator()(WorldObject* obj) const
+    {
+        if (Unit* target = obj->ToUnit())
+            return target->getPowerType() != POWER_MANA;
+
+        return true;
+    }
+};
+
 class spell_gen_replenishment : public SpellScriptLoader
 {
     public:
         spell_gen_replenishment() : SpellScriptLoader("spell_gen_replenishment") { }
 
+        class spell_gen_replenishment_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_replenishment_SpellScript);
+
+            void RemoveInvalidTargets(std::list<WorldObject*>& targets)
+            {
+                // In arenas Replenishment may only affect the caster
+                if (Player* caster = GetCaster()->ToPlayer())
+                {
+                    if (caster->InArena())
+                    {
+                        targets.clear();
+                        targets.push_back(caster);
+                        return;
+                    }
+                }
+
+                targets.remove_if(ReplenishmentCheck());
+
+                uint8 const maxTargets = 10;
+
+                if (targets.size() > maxTargets)
+                {
+                    targets.sort(Trinity::PowerPctOrderPred(POWER_MANA));
+                    targets.resize(maxTargets);
+                }
+            }
+
+            void Register() OVERRIDE
+            {
+                OnObjectAreaTargetSelect += SpellObjectAreaTargetSelectFn(spell_gen_replenishment_SpellScript::RemoveInvalidTargets, EFFECT_ALL, TARGET_UNIT_CASTER_AREA_RAID);
+            }
+        };
+
+        SpellScript* GetSpellScript() const OVERRIDE
+        {
+            return new spell_gen_replenishment_SpellScript();
+        }
+
         class spell_gen_replenishment_AuraScript : public AuraScript
         {
             PrepareAuraScript(spell_gen_replenishment_AuraScript);
-
-            bool Validate(SpellInfo const* /*spellInfo*/) OVERRIDE
-            {
-                if (!sSpellMgr->GetSpellInfo(SPELL_REPLENISHMENT) ||
-                    !sSpellMgr->GetSpellInfo(SPELL_INFINITE_REPLENISHMENT))
-                    return false;
-                return true;
-            }
 
             bool Load() OVERRIDE
             {
@@ -3630,6 +3674,33 @@ class spell_gen_whisper_gulch_yogg_saron_whisper : public SpellScriptLoader
         }
 };
 
+class spell_gen_eject_all_passengers : public SpellScriptLoader
+{
+    public:
+        spell_gen_eject_all_passengers() : SpellScriptLoader("spell_gen_eject_all_passengers") { }
+
+        class spell_gen_eject_all_passengers_SpellScript : public SpellScript
+        {
+            PrepareSpellScript(spell_gen_eject_all_passengers_SpellScript);
+
+            void RemoveVehicleAuras()
+            {
+                if (Vehicle* vehicle = GetHitUnit()->GetVehicleKit())
+                    vehicle->RemoveAllPassengers();
+            }
+
+            void Register() OVERRIDE
+            {
+                AfterHit += SpellHitFn(spell_gen_eject_all_passengers_SpellScript::RemoveVehicleAuras);
+            }
+        };
+
+        SpellScript* GetSpellScript() const OVERRIDE
+        {
+            return new spell_gen_eject_all_passengers_SpellScript();
+        }
+};
+
 void AddSC_generic_spell_scripts()
 {
     new spell_gen_absorb0_hitlimit1();
@@ -3711,4 +3782,5 @@ void AddSC_generic_spell_scripts()
     new spell_gen_vendor_bark_trigger();
     new spell_gen_wg_water();
     new spell_gen_whisper_gulch_yogg_saron_whisper();
+    new spell_gen_eject_all_passengers();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -51,25 +51,23 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new boss_marwynAI(creature);
+        return GetInstanceAI<boss_marwynAI>(creature);
     }
 
     struct boss_marwynAI : public boss_horAI
     {
-        boss_marwynAI(Creature* creature) : boss_horAI(creature) {}
+        boss_marwynAI(Creature* creature) : boss_horAI(creature) { }
 
         void Reset() OVERRIDE
         {
             boss_horAI::Reset();
 
-            if (instance)
                 instance->SetBossState(DATA_MARWYN_EVENT, NOT_STARTED);
         }
 
         void EnterCombat(Unit* /*who*/) OVERRIDE
         {
             Talk(SAY_AGGRO);
-            if (instance)
                 instance->SetBossState(DATA_MARWYN_EVENT, IN_PROGRESS);
 
             events.ScheduleEvent(EVENT_OBLITERATE, 30000);          /// @todo Check timer
@@ -82,7 +80,6 @@ public:
         {
             Talk(SAY_DEATH);
 
-            if (instance)
                 instance->SetBossState(DATA_MARWYN_EVENT, DONE);
         }
 

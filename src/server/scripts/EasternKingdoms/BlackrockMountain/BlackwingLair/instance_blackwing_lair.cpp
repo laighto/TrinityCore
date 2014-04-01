@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -56,6 +56,28 @@ public:
     {
         instance_blackwing_lair_InstanceMapScript(Map* map) : InstanceScript(map)
         {
+            // Razorgore
+            EggCount = 0;
+            EggEvent = 0;
+            RazorgoreTheUntamedGUID = 0;
+            RazorgoreDoorGUID = 0;
+            // Vaelastrasz the Corrupt
+            VaelastraszTheCorruptGUID = 0;
+            VaelastraszDoorGUID = 0;
+            // Broodlord Lashlayer
+            BroodlordLashlayerGUID = 0;
+            BroodlordDoorGUID = 0;
+            // 3 Dragons
+            FiremawGUID = 0;
+            EbonrocGUID = 0;
+            FlamegorGUID = 0;
+            ChrommagusDoorGUID = 0;
+            // Chormaggus
+            ChromaggusGUID = 0;
+            NefarianDoorGUID = 0;
+            // Nefarian
+            LordVictorNefariusGUID = 0;
+            NefarianGUID = 0;
             SetBossNumber(EncounterCount);
         }
 
@@ -63,6 +85,7 @@ public:
         {
             // Razorgore
             EggCount = 0;
+            EggEvent = 0;
             RazorgoreTheUntamedGUID = 0;
             RazorgoreDoorGUID = 0;
             EggList.clear();

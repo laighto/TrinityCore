@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -95,10 +95,10 @@ enum GameObjects
     GO_ORGRIM_HAMMER                              = 201599,
     GO_PORTAL                                     = 202079,
 
-    GO_CAPTAIN_CHEST_1                            = 202212, //3145
-    GO_CAPTAIN_CHEST_2                            = 201710, //30357
-    GO_CAPTAIN_CHEST_3                            = 202337, //3246
-    GO_CAPTAIN_CHEST_4                            = 202336, //3333
+    GO_CAPTAIN_CHEST_HORDE_NORMAL                 = 202212, //3145
+    GO_CAPTAIN_CHEST_ALLIANCE_NORMAL              = 201710, //30357
+    GO_CAPTAIN_CHEST_HORDE_HEROIC                 = 202337, //3246
+    GO_CAPTAIN_CHEST_ALLIANCE_HEROIC              = 202336, //3333
 };
 
 enum HorWorldStates
@@ -147,9 +147,9 @@ struct boss_horAI : ScriptedAI
     {
         events.Reset();
         me->SetVisible(false);
-        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC|UNIT_FLAG_IMMUNE_TO_NPC);
+        me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_IMMUNE_TO_NPC);
         me->SetReactState(REACT_PASSIVE);
-        if (instance && instance->GetData(DATA_WAVE_COUNT) != NOT_STARTED)
+        if (instance->GetData(DATA_WAVE_COUNT) != NOT_STARTED)
             instance->ProcessEvent(0, EVENT_DO_WIPE);
     }
 
@@ -158,7 +158,7 @@ struct boss_horAI : ScriptedAI
         switch (actionID)
         {
             case ACTION_ENTER_COMBAT:  // called by InstanceScript when boss shall enter in combat.
-                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC|UNIT_FLAG_IMMUNE_TO_NPC);
+                me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_IMMUNE_TO_NPC);
                 me->SetReactState(REACT_AGGRESSIVE);
 
                 if (Unit* unit = me->SelectNearestTarget())

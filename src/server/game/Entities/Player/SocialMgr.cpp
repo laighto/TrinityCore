@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -172,7 +172,7 @@ void PlayerSocial::SendSocialList(Player* player)
     }
 
     player->GetSession()->SendPacket(&data);
-    TC_LOG_DEBUG(LOG_FILTER_NETWORKIO, "WORLD: Sent SMSG_CONTACT_LIST");
+    TC_LOG_DEBUG("network", "WORLD: Sent SMSG_CONTACT_LIST");
 }
 
 bool PlayerSocial::HasFriend(uint32 friendGuid)
@@ -191,13 +191,9 @@ bool PlayerSocial::HasIgnore(uint32 ignore_guid)
     return false;
 }
 
-SocialMgr::SocialMgr()
-{
-}
+SocialMgr::SocialMgr() { }
 
-SocialMgr::~SocialMgr()
-{
-}
+SocialMgr::~SocialMgr() { }
 
 void SocialMgr::GetFriendInfo(Player* player, uint32 friendGUID, FriendInfo &friendInfo)
 {

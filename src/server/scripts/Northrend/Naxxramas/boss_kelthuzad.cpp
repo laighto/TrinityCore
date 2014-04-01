@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -248,7 +248,7 @@ const Position PosWeavers[MAX_WEAVERS] =
 // predicate function to select not charmed target
 struct NotCharmedTargetSelector : public std::unary_function<Unit*, bool>
 {
-    NotCharmedTargetSelector() {}
+    NotCharmedTargetSelector() { }
 
     bool operator()(Unit const* target) const
     {
@@ -310,8 +310,7 @@ public:
 
             FindGameObjects();
 
-            if (instance)
-                instance->SetData(DATA_ABOMINATION_KILLED, 0);
+            instance->SetData(DATA_ABOMINATION_KILLED, 0);
 
             if (GameObject* pKTTrigger = me->GetMap()->GetGameObject(KTTriggerGUID))
             {
@@ -375,11 +374,11 @@ public:
 
         void FindGameObjects()
         {
-            PortalsGUID[0] = instance ? instance->GetData64(DATA_KELTHUZAD_PORTAL01) : 0;
-            PortalsGUID[1] = instance ? instance->GetData64(DATA_KELTHUZAD_PORTAL02) : 0;
-            PortalsGUID[2] = instance ? instance->GetData64(DATA_KELTHUZAD_PORTAL03) : 0;
-            PortalsGUID[3] = instance ? instance->GetData64(DATA_KELTHUZAD_PORTAL04) : 0;
-            KTTriggerGUID = instance ? instance->GetData64(DATA_KELTHUZAD_TRIGGER) : 0;
+            PortalsGUID[0] = instance->GetData64(DATA_KELTHUZAD_PORTAL01);
+            PortalsGUID[1] = instance->GetData64(DATA_KELTHUZAD_PORTAL02);
+            PortalsGUID[2] = instance->GetData64(DATA_KELTHUZAD_PORTAL03);
+            PortalsGUID[3] = instance->GetData64(DATA_KELTHUZAD_PORTAL04);
+            KTTriggerGUID = instance->GetData64(DATA_KELTHUZAD_TRIGGER);
         }
 
         void UpdateAI(uint32 diff) OVERRIDE
@@ -649,7 +648,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new boss_kelthuzadAI(creature);
+        return GetInstanceAI<boss_kelthuzadAI>(creature);
     }
 };
 
@@ -758,8 +757,7 @@ class npc_kelthuzad_abomination : public CreatureScript
 
             void JustDied(Unit* /*killer*/) OVERRIDE
             {
-                if (_instance)
-                    _instance->SetData(DATA_ABOMINATION_KILLED, _instance->GetData(DATA_ABOMINATION_KILLED) + 1);
+                _instance->SetData(DATA_ABOMINATION_KILLED, _instance->GetData(DATA_ABOMINATION_KILLED) + 1);
             }
 
         private:
@@ -769,7 +767,7 @@ class npc_kelthuzad_abomination : public CreatureScript
 
         CreatureAI* GetAI(Creature* creature) const OVERRIDE
         {
-            return new npc_kelthuzad_abominationAI(creature);
+            return GetInstanceAI<npc_kelthuzad_abominationAI>(creature);
         }
 };
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -52,12 +52,12 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const OVERRIDE
     {
-        return new boss_falricAI(creature);
+        return GetInstanceAI<boss_falricAI>(creature);
     }
 
     struct boss_falricAI : public boss_horAI
     {
-        boss_falricAI(Creature* creature) : boss_horAI(creature) {}
+        boss_falricAI(Creature* creature) : boss_horAI(creature) { }
 
         uint8 uiHopelessnessCount;
 
@@ -67,14 +67,12 @@ public:
 
             uiHopelessnessCount = 0;
 
-            if (instance)
                 instance->SetBossState(DATA_FALRIC_EVENT, NOT_STARTED);
         }
 
         void EnterCombat(Unit* /*who*/) OVERRIDE
         {
             Talk(SAY_AGGRO);
-            if (instance)
                 instance->SetBossState(DATA_FALRIC_EVENT, IN_PROGRESS);
 
             events.ScheduleEvent(EVENT_QUIVERING_STRIKE, 23000);
@@ -86,7 +84,6 @@ public:
         {
             Talk(SAY_DEATH);
 
-            if (instance)
                 instance->SetBossState(DATA_FALRIC_EVENT, DONE);
         }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2013 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -83,7 +83,7 @@ Channel::Channel(std::string const& name, uint32 channelId, uint32 team):
                         uint64 banned_guid = atol(*i);
                         if (banned_guid)
                         {
-                            TC_LOG_DEBUG(LOG_FILTER_CHATSYS, "Channel(%s) loaded bannedStore guid:" UI64FMTD "", name.c_str(), banned_guid);
+                            TC_LOG_DEBUG("chat.system", "Channel(%s) loaded bannedStore guid:" UI64FMTD "", name.c_str(), banned_guid);
                             bannedStore.insert(banned_guid);
                         }
                     }
@@ -95,7 +95,7 @@ Channel::Channel(std::string const& name, uint32 channelId, uint32 team):
                 stmt->setString(0, name);
                 stmt->setUInt32(1, _Team);
                 CharacterDatabase.Execute(stmt);
-                TC_LOG_DEBUG(LOG_FILTER_CHATSYS, "Channel(%s) saved in database", name.c_str());
+                TC_LOG_DEBUG("chat.system", "Channel(%s) saved in database", name.c_str());
             }
 
             _IsSaved = true;
@@ -123,7 +123,7 @@ void Channel::UpdateChannelInDB() const
         stmt->setUInt32(5, _Team);
         CharacterDatabase.Execute(stmt);
 
-        TC_LOG_DEBUG(LOG_FILTER_CHATSYS, "Channel(%s) updated in database", _name.c_str());
+        TC_LOG_DEBUG("chat.system", "Channel(%s) updated in database", _name.c_str());
     }
 }
 
@@ -143,7 +143,7 @@ void Channel::CleanOldChannelsInDB()
         stmt->setUInt32(0, sWorld->getIntConfig(CONFIG_PRESERVE_CUSTOM_CHANNEL_DURATION) * DAY);
         CharacterDatabase.Execute(stmt);
 
-        TC_LOG_DEBUG(LOG_FILTER_CHATSYS, "Cleaned out unused custom chat channels.");
+        TC_LOG_DEBUG("chat.system", "Cleaned out unused custom chat channels.");
     }
 }
 
@@ -527,7 +527,7 @@ void Channel::List(Player const* player)
         return;
     }
 
-    TC_LOG_DEBUG(LOG_FILTER_CHATSYS, "SMSG_CHANNEL_LIST %s Channel: %s",
+    TC_LOG_DEBUG("chat.system", "SMSG_CHANNEL_LIST %s Channel: %s",
         player->GetSession()->GetPlayerInfo().c_str(), GetName().c_str());
 
     WorldPacket data(SMSG_CHANNEL_LIST, 1+(GetName().size()+1)+1+4+playersStore.size()*(8+1));
@@ -600,10 +600,6 @@ void Channel::Say(uint64 guid, std::string const& what, uint32 lang)
     if (what.empty())
         return;
 
-    uint8 chatTag = 0;
-    if (Player* player = ObjectAccessor::FindPlayer(guid))
-        chatTag = player->GetChatTag();
-
     // TODO: Add proper RBAC check
     if (sWorld->getBoolConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_CHANNEL))
         lang = LANG_UNIVERSAL;
@@ -624,16 +620,11 @@ void Channel::Say(uint64 guid, std::string const& what, uint32 lang)
         return;
     }
 
-    WorldPacket data(SMSG_MESSAGECHAT, 1 + 4 + 8 + 4 + _name.size() + 8 + 4 + what.size() + 1);
-    data << uint8(CHAT_MSG_CHANNEL);
-    data << uint32(lang);
-    data << uint64(guid);
-    data << uint32(0);
-    data << _name;
-    data << uint64(guid);
-    data << uint32(what.size() + 1);
-    data << what;
-    data << uint8(chatTag);
+    WorldPacket data;
+    if (Player* player = ObjectAccessor::FindPlayer(guid))
+        ChatHandler::BuildChatPacket(data, CHAT_MSG_CHANNEL, Language(lang), player, player, what, 0, _name);
+    else
+        ChatHandler::BuildChatPacket(data, CHAT_MSG_CHANNEL, Language(lang), guid, guid, what, 0, "", "", 0, false, _name);
 
     SendToAll(&data, !playersStore[guid].IsModerator() ? guid : false);
 }
