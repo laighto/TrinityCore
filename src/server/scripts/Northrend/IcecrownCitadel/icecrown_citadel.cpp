@@ -255,11 +255,6 @@ enum EventTypes
 
     // Invisible Stalker (Float, Uninteractible, LargeAOI)
     EVENT_SOUL_MISSILE                  = 55,
-
-    // Sindragosas Ward
-    EVENT_SUB_WAVE_1                    = 56,
-    EVENT_SUB_WAVE_2                    = 57,
-    EVENT_UPDATE_CHECK                  = 58,
 };
 
 enum DataTypesICC
@@ -288,24 +283,6 @@ enum EventIds
 enum MovementPoints
 {
     POINT_LAND  = 1,
-};
-
-const Position SvalnaLandPos = {4356.71f, 2484.33f, 358.5f, 1.571f};
-
-const Position SindragosaGauntletSpawn[12] =
-{
-    { 4130.71f, 2484.10f, 211.033f, 0 },
-    { 4137.93f, 2505.52f, 211.033f, 0 },
-    { 4160.64f, 2528.13f, 211.033f, 0 },
-    { 4180.81f, 2533.88f, 211.033f, 0 },
-    { 4200.92f, 2527.18f, 211.033f, 0 },
-    { 4222.23f, 2503.56f, 211.033f, 0 },
-    { 4229.40f, 2484.63f, 211.033f, 0 },
-    { 4222.01f, 2464.93f, 211.033f, 0 },
-    { 4201.55f, 2441.03f, 211.033f, 0 },
-    { 4181.29f, 2433.38f, 211.033f, 0 },
-    { 4161.86f, 2441.94f, 211.033f, 0 },
-    { 4138.78f, 2463.95f, 211.033f, 0 },
 };
 
 class FrostwingVrykulSearcher
@@ -2402,6 +2379,4 @@ void AddSC_icecrown_citadel()
     new at_icc_shutdown_traps();
     new at_icc_start_blood_quickening();
     new at_icc_start_frostwing_gauntlet();
-    new npc_sindragosas_ward();
-    new at_icc_start_sindragosa_gauntlet();
 }
