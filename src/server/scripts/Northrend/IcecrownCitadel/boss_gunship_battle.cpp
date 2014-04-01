@@ -989,9 +989,6 @@ class npc_muradin_gunship : public CreatureScript
                 if (me->HasUnitState(UNIT_STATE_CASTING))
                     return;
                 
-                if (_instance->GetBossState(DATA_GUNSHIP_EVENT) != IN_PROGRESS)
-                {
-
                 if (!HealthAbovePct(75))
                 {
                     me->SetHealth(me->GetMaxHealth() / 100 * 76); // find a better way to avoid the hardcore spell spam ....
@@ -1005,7 +1002,6 @@ class npc_muradin_gunship : public CreatureScript
                         EventScheduled = true; // should temp fix the hardcore casting
                         events.ScheduleEvent(EVENT_RENDING_THROW, 3000);
                     }
-                }
                 }
 
                 events.Update(diff);
