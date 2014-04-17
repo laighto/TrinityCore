@@ -38,7 +38,7 @@ enum Yells
     SAY_SAPP_DIALOG3                                       = 2, //not used
     SAY_SAPP_DIALOG4_LICH                                  = 3, //not used
     SAY_SAPP_DIALOG5                                       = 4, //not used
-    SAY_CAT_DIED                                           = 5, //when cat dies, not used
+    SAY_CAT_DIED                                           = 5, //when cat dies
     //when each of the 4 wing bosses dies
     SAY_TAUNT                                              = 6,
     SAY_AGGRO                                              = 7,
@@ -771,6 +771,35 @@ class npc_kelthuzad_abomination : public CreatureScript
         }
 };
 
+class npc_mr_bigglesworth : public CreatureScript
+{
+public:
+    npc_mr_bigglesworth() : CreatureScript("npc_mr_bigglesworth") { }
+
+    struct npc_mr_bigglesworthAI : public ScriptedAI
+    {
+        npc_mr_bigglesworthAI(Creature* creature) : ScriptedAI(creature)
+        {
+            _instance = creature->GetInstanceScript();
+        }
+
+        void JustDied(Unit* killer) OVERRIDE
+        {
+            if (_instance)
+                if (Creature* kelthuzad = Unit::GetCreature(*killer, _instance->GetData64(DATA_KELTHUZAD)))
+                    kelthuzad->AI()->Talk(SAY_CAT_DIED);
+        }
+
+    private:
+        InstanceScript* _instance;
+    };
+
+    CreatureAI* GetAI(Creature* creature) const OVERRIDE
+    {
+        return GetInstanceAI<npc_mr_bigglesworthAI>(creature);
+    }
+};
+
 class spell_kelthuzad_detonate_mana : public SpellScriptLoader
 {
     public:
@@ -834,6 +863,7 @@ void AddSC_boss_kelthuzad()
     new boss_kelthuzad();
     new at_kelthuzad_center();
     new npc_kelthuzad_abomination();
+    new npc_mr_bigglesworth();
     new spell_kelthuzad_detonate_mana();
     new achievement_just_cant_get_enough();
 }

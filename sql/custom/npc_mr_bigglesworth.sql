@@ -1,0 +1,1 @@
+UPDATE `creature_template` SET `AIName` = '', `ScriptName` = 'npc_mr_bigglesworth' WHERE `entry` = 16998;
