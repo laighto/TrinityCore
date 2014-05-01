@@ -661,19 +661,8 @@ void KillRewarder::Reward()
 
 }
 
-// == Player ====================================================
-
-// we can disable this warning for this since it only
-// causes undefined behavior when passed to the base class constructor
-#ifdef _MSC_VER
-#pragma warning(disable:4355)
-#endif
 Player::Player(WorldSession* session): Unit(true), phaseMgr(this)
 {
-#ifdef _MSC_VER
-#pragma warning(default:4355)
-#endif
-
     m_speakTime = 0;
     m_speakCount = 0;
 
@@ -2228,8 +2217,7 @@ bool Player::TeleportTo(uint32 mapid, float x, float y, float z, float orientati
         // near teleport, triggering send CMSG_MOVE_TELEPORT_ACK from client at landing
         if (!GetSession()->PlayerLogout())
         {
-            Position oldPos;
-            GetPosition(&oldPos);
+            Position oldPos = GetPosition();
             if (HasUnitMovementFlag(MOVEMENTFLAG_HOVER))
                 z += GetFloatValue(UNIT_FIELD_HOVERHEIGHT);
             Relocate(x, y, z, orientation);
@@ -6737,9 +6725,6 @@ bool Player::UpdatePosition(float x, float y, float z, float orientation, bool t
     // group update
     if (GetGroup())
         SetGroupUpdateFlag(GROUP_UPDATE_FLAG_POSITION);
-
-    if (GetTrader() && !IsWithinDistInMap(GetTrader(), INTERACTION_DISTANCE))
-        GetSession()->SendCancelTrade();
 
     CheckAreaExploreAndOutdoor();
 
@@ -14498,17 +14483,35 @@ void Player::PrepareGossipMenu(WorldObject* source, uint32 menuId /*= 0*/, bool 
 
         if (canTalk)
         {
-            std::string strOptionText = itr->second.OptionText;
-            std::string strBoxText = itr->second.BoxText;
+            std::string strOptionText, strBoxText;
+            BroadcastText const* optionBroadcastText = sObjectMgr->GetBroadcastText(itr->second.OptionBroadcastTextId);
+            BroadcastText const* boxBroadcastText = sObjectMgr->GetBroadcastText(itr->second.BoxBroadcastTextId);
+            LocaleConstant locale = GetSession()->GetSessionDbLocaleIndex();
 
-            int32 locale = GetSession()->GetSessionDbLocaleIndex();
-            if (locale >= 0)
+            if (optionBroadcastText)
+                strOptionText = optionBroadcastText->GetText(locale, getGender());
+            else
+                strOptionText = itr->second.OptionText;
+
+            if (boxBroadcastText)
+                strBoxText = optionBroadcastText->GetText(locale, getGender());
+            else
+                strBoxText = itr->second.BoxText;
+
+            if (locale != DEFAULT_LOCALE)
             {
-                uint32 idxEntry = MAKE_PAIR32(menuId, itr->second.OptionIndex);
-                if (GossipMenuItemsLocale const* no = sObjectMgr->GetGossipMenuItemsLocale(idxEntry))
+                if (!optionBroadcastText)
                 {
-                    ObjectMgr::GetLocaleString(no->OptionText, locale, strOptionText);
-                    ObjectMgr::GetLocaleString(no->BoxText, locale, strBoxText);
+                    /// Find localizations from database.
+                    if (GossipMenuItemsLocale const* gossipMenuLocale = sObjectMgr->GetGossipMenuItemsLocale(MAKE_PAIR32(menuId, menuId)))
+                        ObjectMgr::GetLocaleString(gossipMenuLocale->OptionText, locale, strOptionText);
+                }
+
+                if (!boxBroadcastText)
+                {
+                    /// Find localizations from database.
+                    if (GossipMenuItemsLocale const* gossipMenuLocale = sObjectMgr->GetGossipMenuItemsLocale(MAKE_PAIR32(menuId, menuId)))
+                        ObjectMgr::GetLocaleString(gossipMenuLocale->BoxText, locale, strBoxText);
                 }
             }
 
@@ -17347,6 +17350,14 @@ bool Player::LoadFromDB(uint32 guid, SQLQueryHolder *holder)
     bytes0 |= fields[4].GetUInt8() << 8;                    // class
     bytes0 |= gender << 16;                                 // gender
     SetUInt32Value(UNIT_FIELD_BYTES_0, bytes0);
+
+    // check if race/class combination is valid
+    PlayerInfo const* info = sObjectMgr->GetPlayerInfo(getRace(), getClass());
+    if (!info)
+    {
+        TC_LOG_ERROR("entities.player", "Player (GUID: %u) has wrong race/class (%u/%u), can't be loaded.", guid, getRace(), getClass());
+        return false;
+    }
 
     SetUInt32Value(UNIT_FIELD_LEVEL, fields[6].GetUInt8());
     SetUInt32Value(PLAYER_XP, fields[7].GetUInt32());

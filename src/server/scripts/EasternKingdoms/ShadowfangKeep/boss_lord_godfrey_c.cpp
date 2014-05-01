@@ -54,7 +54,7 @@ public:
 
         uint16 GhoulCount;
 
-        void Reset() OVERRIDE
+        void Reset() override
         {
             GhoulCount = 0;
             SummonGhoulsTimer = 30000;
@@ -62,7 +62,7 @@ public:
             MortalWoundTimer = 6000;
         }
 
-        void EnterCombat(Unit* who) OVERRIDE
+        void EnterCombat(Unit* who) override
         {
             if(who->ToPlayer()->GetTeamId() == TEAM_ALLIANCE)
                 Talk(SAY_AGGRO_A);
@@ -70,7 +70,7 @@ public:
                 Talk(SAY_AGGRO_H);
         }
 
-        void KilledUnit(Unit* pCreature) OVERRIDE
+        void KilledUnit(Unit* pCreature) override
         {
             if (pCreature->GetEntry() == NPC_BLOODTHIRSTY_GHOUL)
                 GhoulCount++;
@@ -82,12 +82,12 @@ public:
                 }
         }
 
-        void JustDied(Unit* /*pKiller*/) OVERRIDE
+        void JustDied(Unit* /*pKiller*/) override
         {
             Talk(SAY_DEATH);
         }
 
-        void UpdateAI(uint32 diff) OVERRIDE
+        void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
                 return;
@@ -98,8 +98,7 @@ public:
             if (SummonGhoulsTimer <= diff)
             {
                 DoCast(me,SPELL_SUMMON_GHOULS);
-                Position pos;
-                me->GetPosition(&pos);
+                Position pos = me->GetPosition();
                 for(uint32 i = 0; i<3; i++) // Hack.
                     me->SummonCreature(NPC_BLOODTHIRSTY_GHOUL, pos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 4000);
                 PistolBarrageTimer = 500;

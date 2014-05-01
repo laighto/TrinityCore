@@ -36,7 +36,7 @@ class npc_krennan_aranas : public CreatureScript
     public:
         npc_krennan_aranas() : CreatureScript("npc_krennan_aranas") { }
 
-        bool OnGossipHello(Player* player, Creature* creature) OVERRIDE
+        bool OnGossipHello(Player* player, Creature* creature) override
         {
             if (player->IsActiveQuest(QUEST_BFGC) && !intro)
             {
@@ -50,7 +50,7 @@ class npc_krennan_aranas : public CreatureScript
             return true;
         }
 
-        bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 /*action*/) OVERRIDE
+        bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 /*action*/) override
         {
             player->PlayerTalkClass->SendCloseGossip();
             //creature->AI()->Talk(0);
@@ -72,7 +72,7 @@ class npc_prince_liam : public CreatureScript
             bool ignoredamage;
             bool prepared;
  
-            void Reset() OVERRIDE
+            void Reset() override
             {
                 me->SetVisible(true);
                 me->Relocate(eventPositionsTeamA[0].GetPositionX(), eventPositionsTeamA[0].GetPositionY(), eventPositionsTeamA[0].GetPositionZ(), eventPositionsTeamA[0].GetOrientation());
@@ -114,13 +114,13 @@ class npc_prince_liam : public CreatureScript
                         militia[i] = creature;
             }
 
-            void JustDied(Unit* /*killer*/) OVERRIDE
+            void JustDied(Unit* /*killer*/) override
             {
                 me->Relocate(eventPositionsTeamA[0].GetPositionX(), eventPositionsTeamA[0].GetPositionY(), eventPositionsTeamA[0].GetPositionZ(), eventPositionsTeamA[0].GetOrientation());
                 resetall = true;
             }
 
-            void JustRespawned() OVERRIDE
+            void JustRespawned() override
             {
                 Reset();
             }
@@ -214,7 +214,7 @@ class npc_prince_liam : public CreatureScript
                 }
             }
 
-            void DamageTaken(Unit* attacker, uint32& damage) OVERRIDE
+            void DamageTaken(Unit* attacker, uint32& damage) override
             {
                 if (damage >= me->GetHealth())
                     damage = 1;
@@ -223,7 +223,7 @@ class npc_prince_liam : public CreatureScript
                     me->Attack(attacker, true);
             }
 
-            void UpdateAI(uint32 uiDiff) OVERRIDE
+            void UpdateAI(uint32 uiDiff) override
             {
                 events.Update(uiDiff);
 
@@ -433,7 +433,7 @@ class npc_prince_liam : public CreatureScript
             }
         };
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        CreatureAI* GetAI(Creature* creature) const override
         {
             return new npc_prince_liamAI(creature);
         }
@@ -453,7 +453,7 @@ class npc_gilnean_millitia : public CreatureScript
             bool ignoredamage;
             bool boss2b;
 
-            void Reset() OVERRIDE
+            void Reset() override
             {
                 events.Reset();
                 s3posb = false;
@@ -461,7 +461,7 @@ class npc_gilnean_millitia : public CreatureScript
                 boss2b = false;
             }
 
-            void DamageTaken(Unit* attacker, uint32& damage) OVERRIDE
+            void DamageTaken(Unit* attacker, uint32& damage) override
             {
                 if (damage >= me->GetHealth())
                     damage = 1;
@@ -534,7 +534,7 @@ class npc_gilnean_millitia : public CreatureScript
                 }
             }
 
-           /* void DoMeleeAttackIfReady() OVERRIDE
+           /* void DoMeleeAttackIfReady() override
             {
                 if (me->GetVictim())
                 {
@@ -543,7 +543,7 @@ class npc_gilnean_millitia : public CreatureScript
                 }
             }*/
 
-            void UpdateAI(uint32 uiDiff) OVERRIDE
+            void UpdateAI(uint32 uiDiff) override
             {
                 events.Update(uiDiff);
 
@@ -897,7 +897,7 @@ class npc_gilnean_millitia : public CreatureScript
             }
         };
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        CreatureAI* GetAI(Creature* creature) const override
         {
             return new npc_gilnean_millitiaAI(creature);
         }
@@ -912,13 +912,13 @@ class npc_forsaken_crossbow : public CreatureScript
         {
             npc_forsaken_crossbowAI(Creature* creature) : ScriptedAI(creature) {}
  
-            void JustDied(Unit* /*killer*/) OVERRIDE
+            void JustDied(Unit* /*killer*/) override
             {
                 crossbowman = crossbowman + 1;
                 //sWorld->SendGMText(30000, crossbowman);
             }
 
-            void UpdateAI(uint32 /*uiDiff*/) OVERRIDE
+            void UpdateAI(uint32 /*uiDiff*/) override
             {
                 if(resetall)
                 {
@@ -929,7 +929,7 @@ class npc_forsaken_crossbow : public CreatureScript
             }
         };
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        CreatureAI* GetAI(Creature* creature) const override
         {
             return new npc_forsaken_crossbowAI(creature);
         }
@@ -944,12 +944,12 @@ class npc_vile_abomination : public CreatureScript
         {
             npc_vile_abominationAI(Creature* creature) : ScriptedAI(creature) {}
  
-            void JustDied(Unit* /*killer*/) OVERRIDE
+            void JustDied(Unit* /*killer*/) override
             {
                 abom = abom + 1;
             }
 
-            void UpdateAI(uint32 /*uiDiff*/) OVERRIDE
+            void UpdateAI(uint32 /*uiDiff*/) override
             {
                 if(resetall)
                 {
@@ -960,7 +960,7 @@ class npc_vile_abomination : public CreatureScript
             }
         };
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        CreatureAI* GetAI(Creature* creature) const override
         {
             return new npc_vile_abominationAI(creature);
         }
@@ -977,19 +977,19 @@ class npc_gorrerot : public CreatureScript
  
             EventMap events;
 
-            void Reset() OVERRIDE
+            void Reset() override
             {
                 me->SetVisible(false);
                 me->SetReactState(REACT_PASSIVE);
                 me->AI()->EnterEvadeMode();
             }
 
-            void JustDied(Unit* /*killer*/) OVERRIDE
+            void JustDied(Unit* /*killer*/) override
             {
                 boss_gurerrot_dead = true;
             }
 
-            void UpdateAI(uint32 uiDiff) OVERRIDE
+            void UpdateAI(uint32 uiDiff) override
             {
                 events.Update(uiDiff);
 
@@ -1006,7 +1006,7 @@ class npc_gorrerot : public CreatureScript
             }
         };
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        CreatureAI* GetAI(Creature* creature) const override
         {
             return new npc_gorrerotAI(creature);
         }
@@ -1023,7 +1023,7 @@ class npc_king_genn_greymane : public CreatureScript
  
             EventMap events;
 
-            void Reset() OVERRIDE
+            void Reset() override
             {
                 me->AI()->EnterEvadeMode();
                 events.Reset();
@@ -1031,7 +1031,7 @@ class npc_king_genn_greymane : public CreatureScript
                 bfgcdone = false;
             }
 
-            void DamageTaken(Unit* attacker, uint32& damage) OVERRIDE
+            void DamageTaken(Unit* attacker, uint32& damage) override
             {
                 if (damage >= me->GetHealth())
                     damage = 1;
@@ -1040,7 +1040,7 @@ class npc_king_genn_greymane : public CreatureScript
                 me->Attack(attacker, true);
             }
 
-            void UpdateAI(uint32 uiDiff) OVERRIDE
+            void UpdateAI(uint32 uiDiff) override
             {
                 events.Update(uiDiff);
 
@@ -1086,7 +1086,7 @@ class npc_king_genn_greymane : public CreatureScript
             }
         };
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        CreatureAI* GetAI(Creature* creature) const override
         {
             return new npc_king_genn_greymaneAI(creature);
         }
@@ -1103,12 +1103,12 @@ class npc_emberstone_canon_villager : public CreatureScript
  
             EventMap events;
 
-            void Reset() OVERRIDE
+            void Reset() override
             {
                 me->SetVisible(false);
             }
 
-            void UpdateAI(uint32 uiDiff) OVERRIDE
+            void UpdateAI(uint32 uiDiff) override
             {
                 events.Update(uiDiff);
 
@@ -1125,7 +1125,7 @@ class npc_emberstone_canon_villager : public CreatureScript
             }
         };
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        CreatureAI* GetAI(Creature* creature) const override
         {
             return new npc_emberstone_canon_villagerAI(creature);
         }
@@ -1142,13 +1142,13 @@ class npc_lady_sylvanas : public CreatureScript
  
             bool hided;
 
-            void Reset() OVERRIDE
+            void Reset() override
             {
                 hided = false;
                 me->SetVisible(true);
             }
 
-            void UpdateAI(uint32 /*uiDiff*/) OVERRIDE
+            void UpdateAI(uint32 /*uiDiff*/) override
             {
                 if (event_active && !bfgcdone && hided)
                 {
@@ -1172,7 +1172,7 @@ class npc_lady_sylvanas : public CreatureScript
             }
         };
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        CreatureAI* GetAI(Creature* creature) const override
         {
             return new npc_lady_sylvanasAI(creature);
         }

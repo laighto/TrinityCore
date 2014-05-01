@@ -413,6 +413,12 @@ struct AreaTriggerStruct
 
 struct BroadcastText
 {
+    BroadcastText()
+    {
+        MaleText.resize(DEFAULT_LOCALE + 1);
+        FemaleText.resize(DEFAULT_LOCALE + 1);
+    }
+
     uint32 Id;
     uint32 Language;
     StringVector MaleText;
@@ -427,6 +433,22 @@ struct BroadcastText
     uint32 Unk1;
     uint32 Unk2;
     // uint32 WDBVerified;
+
+    std::string const& GetText(LocaleConstant locale = DEFAULT_LOCALE, uint8 gender = GENDER_MALE, bool forceGender = false) const
+    {
+        if (gender == GENDER_FEMALE && (forceGender || !FemaleText[DEFAULT_LOCALE].empty()))
+        {
+            if (FemaleText.size() > size_t(locale) && !FemaleText[locale].empty())
+                return FemaleText[locale];
+            return FemaleText[DEFAULT_LOCALE];
+        }
+        // else if (gender == GENDER_MALE)
+        {
+            if (MaleText.size() > size_t(locale) && !MaleText[locale].empty())
+                return MaleText[locale];
+            return MaleText[DEFAULT_LOCALE];
+        }
+    }
 };
 
 typedef UNORDERED_MAP<uint32, BroadcastText> BroadcastTextContainer;
@@ -447,8 +469,6 @@ typedef UNORDERED_MAP<uint32/*(mapid, spawnMode) pair*/, CellObjectGuidsMap> Map
 #define MAX_TRINITY_STRING_ID           2000000000
 #define MIN_DB_SCRIPT_STRING_ID        MAX_TRINITY_STRING_ID // 'db_script_string'
 #define MAX_DB_SCRIPT_STRING_ID        2000010000
-#define MIN_CREATURE_AI_TEXT_STRING_ID (-1)                 // 'creature_ai_texts'
-#define MAX_CREATURE_AI_TEXT_STRING_ID (-1000000)
 
 // Trinity Trainer Reference start range
 #define TRINITY_TRAINER_START_REF      200000
@@ -1170,7 +1190,7 @@ class ObjectMgr
         void AddGameobjectToGrid(uint32 guid, GameObjectData const* data);
         void RemoveGameobjectFromGrid(uint32 guid, GameObjectData const* data);
         uint32 AddGOData(uint32 entry, uint32 map, float x, float y, float z, float o, uint32 spawntimedelay = 0, float rotation0 = 0, float rotation1 = 0, float rotation2 = 0, float rotation3 = 0);
-        uint32 AddCreData(uint32 entry, uint32 team, uint32 map, float x, float y, float z, float o, uint32 spawntimedelay = 0);
+        uint32 AddCreData(uint32 entry, uint32 map, float x, float y, float z, float o, uint32 spawntimedelay = 0);
         bool MoveCreData(uint32 guid, uint32 map, const Position& pos);
 
         // reserved names
@@ -1447,8 +1467,5 @@ class ObjectMgr
 };
 
 #define sObjectMgr ACE_Singleton<ObjectMgr, ACE_Null_Mutex>::instance()
-
-// scripting access functions
-bool LoadTrinityStrings(char const* table, int32 start_value = MAX_CREATURE_AI_TEXT_STRING_ID, int32 end_value = std::numeric_limits<int32>::min());
 
 #endif

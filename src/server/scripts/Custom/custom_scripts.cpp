@@ -240,7 +240,7 @@ class go_abandoned_outhouse : public GameObjectScript
     public:
         go_abandoned_outhouse() : GameObjectScript("go_abandoned_outhouse") { }
 
-        bool OnQuestAccept(Player* player, GameObject* /*go*/, Quest const* quest) OVERRIDE
+        bool OnQuestAccept(Player* player, GameObject* /*go*/, Quest const* quest) override
         {
             if (quest->GetQuestId() == QUEST_WAITING_TO_EXSANGUINATE)
             {
@@ -278,7 +278,7 @@ class npc_stonefathers_banner : public CreatureScript
     public:
         npc_stonefathers_banner() : CreatureScript("npc_stonefathers_banner") { }
 
-    CreatureAI* GetAI(Creature* creature) const OVERRIDE
+    CreatureAI* GetAI(Creature* creature) const override
     {
         return new npc_stonefathers_bannerAI (creature);
     }
@@ -287,12 +287,12 @@ class npc_stonefathers_banner : public CreatureScript
     {
         npc_stonefathers_bannerAI(Creature* creature) : ScriptedAI(creature) {}
 
-        void Reset() OVERRIDE
+        void Reset() override
         {
           me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_DISABLE_MOVE  | UNIT_FLAG_NOT_SELECTABLE);
         }
 
-        void IsSummonedBy(Unit* summoner) OVERRIDE
+        void IsSummonedBy(Unit* summoner) override
         {
           DoCastAOE(SPELL_BANNER_HITS_GROUND, true);
 

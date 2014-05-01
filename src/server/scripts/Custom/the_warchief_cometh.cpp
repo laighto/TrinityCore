@@ -29,7 +29,7 @@ class npc_w_mortuus : public CreatureScript
     public:
         npc_w_mortuus() : CreatureScript("npc_w_mortuus") { }
 
-        bool OnQuestAccept(Player* player, Creature* creature, const Quest* quest) OVERRIDE
+        bool OnQuestAccept(Player* player, Creature* creature, const Quest* quest) override
         {
             if (quest->GetQuestId() == QUEST_TWC)
             {
@@ -50,7 +50,7 @@ class npc_w_warchief : public CreatureScript
 
             EventMap events;
             
-            void Reset() OVERRIDE
+            void Reset() override
             {
                 arrivedw = false;
                 events.Reset();
@@ -72,7 +72,7 @@ class npc_w_warchief : public CreatureScript
                 events.ScheduleEvent(RESET, 98000-7000, 0, 0);
             }
 
-            void UpdateAI(uint32 uiDiff) OVERRIDE
+            void UpdateAI(uint32 uiDiff) override
             {
                 events.Update(uiDiff);
 
@@ -139,7 +139,7 @@ class npc_w_warchief : public CreatureScript
             }
         };
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        CreatureAI* GetAI(Creature* creature) const override
         {
             return new npc_w_warchiefAI(creature);
         }
@@ -160,7 +160,7 @@ class npc_w_sylvanas : public CreatureScript
             GameObject* portal2;
             GameObject* portal3;
 
-            void Reset() OVERRIDE
+            void Reset() override
             {
                 start_event = false;
                 sceduleds = false;
@@ -194,7 +194,7 @@ class npc_w_sylvanas : public CreatureScript
                 events.ScheduleEvent(RESET, 100000, 0, 0);
             }
 
-            void UpdateAI(uint32 uiDiff) OVERRIDE
+            void UpdateAI(uint32 uiDiff) override
             {
                 events.Update(uiDiff);
 
@@ -266,7 +266,7 @@ class npc_w_sylvanas : public CreatureScript
             }
         };
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        CreatureAI* GetAI(Creature* creature) const override
         {
             return new npc_w_sylvanasAI(creature);
         }
@@ -284,13 +284,13 @@ class npc_w_cromush : public CreatureScript
             EventMap events;
             bool sceduled;
 
-            void Reset() OVERRIDE
+            void Reset() override
             {
                 sceduled = false;
                 events.Reset();
             }
 
-            void UpdateAI(uint32 uiDiff) OVERRIDE
+            void UpdateAI(uint32 uiDiff) override
             {
                 events.Update(uiDiff);
 
@@ -318,7 +318,7 @@ class npc_w_cromush : public CreatureScript
             }
         };
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        CreatureAI* GetAI(Creature* creature) const override
         {
             return new npc_w_cromushAI(creature);
         }
@@ -333,12 +333,12 @@ class npc_w_elite : public CreatureScript
         {
             npc_w_eliteAI(Creature* creature) : ScriptedAI(creature) {}
  
-            void Reset() OVERRIDE
+            void Reset() override
             {
                 me->SetVisible(false);
             }
 
-            void UpdateAI(uint32 /*uiDiff*/) OVERRIDE
+            void UpdateAI(uint32 /*uiDiff*/) override
             {
                 if (arrivedw)
                     me->SetVisible(true);
@@ -347,7 +347,7 @@ class npc_w_elite : public CreatureScript
             }
         };
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        CreatureAI* GetAI(Creature* creature) const override
         {
             return new npc_w_eliteAI(creature);
         }
@@ -362,12 +362,12 @@ class npc_w_agatha : public CreatureScript
         {
             npc_w_agathaAI(Creature* creature) : ScriptedAI(creature) {}
  
-            void Reset() OVERRIDE
+            void Reset() override
             {
                 allowcast = false;
             }
 
-            void UpdateAI(uint32 /*uiDiff*/) OVERRIDE
+            void UpdateAI(uint32 /*uiDiff*/) override
             {
                 if(allowcast)
                 {
@@ -377,7 +377,7 @@ class npc_w_agatha : public CreatureScript
             }
         };
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        CreatureAI* GetAI(Creature* creature) const override
         {
             return new npc_w_agathaAI(creature);
         }
@@ -395,7 +395,7 @@ class npc_w_fallen_human : public CreatureScript
             EventMap events;
             bool allowmorph;
 
-            void SpellHit(Unit* /*caster*/, const SpellInfo* spell) OVERRIDE
+            void SpellHit(Unit* /*caster*/, const SpellInfo* spell) override
             {
                 if (spell == sSpellMgr->GetSpellInfo(SPELL_REVIVE_UNDEAD) && start_event)
                     events.ScheduleEvent(MORPH, 8000, 0, 0);
@@ -409,7 +409,7 @@ class npc_w_fallen_human : public CreatureScript
                 else me->SetDisplayId(31261);
             }
 
-            void UpdateAI(uint32 uiDiff) OVERRIDE
+            void UpdateAI(uint32 uiDiff) override
             {
                 if(!start_event)
                 {
@@ -435,7 +435,7 @@ class npc_w_fallen_human : public CreatureScript
             }
         };
 
-        CreatureAI* GetAI(Creature* creature) const OVERRIDE
+        CreatureAI* GetAI(Creature* creature) const override
         {
             return new npc_w_fallen_humanAI(creature);
         }

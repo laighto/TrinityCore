@@ -352,7 +352,6 @@ enum WorldIntConfigs
     CONFIG_BG_REWARD_LOSER_HONOR_LAST,
     CONFIG_BG_REWARD_WINNER_CONQUEST_FIRST,
     CONFIG_BG_REWARD_WINNER_CONQUEST_LAST,
-    CONFIG_BIRTHDAY_TIME,
     CONFIG_CHATLOG_LEXIS_ACTION_CUSTOM_MODE,
     CONFIG_CHATLOG_LEXIS_ACTION_CUSTOM_SPELL,
     INT_CONFIG_VALUE_COUNT
@@ -525,8 +524,8 @@ struct CliCommandHolder
     ~CliCommandHolder() { free(m_command); }
 
 private:
-    CliCommandHolder(CliCommandHolder const& right) DELETE_MEMBER;
-    CliCommandHolder& operator=(CliCommandHolder const& right) DELETE_MEMBER;
+    CliCommandHolder(CliCommandHolder const& right) = delete;
+    CliCommandHolder& operator=(CliCommandHolder const& right) = delete;
 };
 
 typedef UNORDERED_MAP<uint32, WorldSession*> SessionMap;

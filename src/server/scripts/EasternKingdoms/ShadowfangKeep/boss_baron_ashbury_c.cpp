@@ -55,7 +55,7 @@ public:
 
         bool Phased, Asphyxiate, Angel, Achievement;
 
-        void Reset() OVERRIDE
+        void Reset() override
         {
             Phased = false;
             Asphyxiate = false;
@@ -78,7 +78,7 @@ public:
                 pInstance->SetData(DATA_BARON_ASHBURY_EVENT, NOT_STARTED);
         }
 
-        void SpellHit(Unit* hitter, SpellInfo const* spell) OVERRIDE
+        void SpellHit(Unit* hitter, SpellInfo const* spell) override
         {
             if (!hitter || !spell)
                 return;
@@ -89,7 +89,7 @@ public:
             Achievement = false;
         }
 
-        void KilledUnit(Unit* /*who*/) OVERRIDE
+        void KilledUnit(Unit* /*who*/) override
         {
             switch(urand(0,1))
             {
@@ -98,7 +98,7 @@ public:
             }
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE
+        void EnterCombat(Unit* /*who*/) override
         {
             Talk(SAY_AGGRO);
 
@@ -106,7 +106,7 @@ public:
                 pInstance->SetData(DATA_BARON_ASHBURY_EVENT, IN_PROGRESS);
         }
 
-        void JustDied(Unit* /*pKiller*/) OVERRIDE
+        void JustDied(Unit* /*pKiller*/) override
         {
             Talk(SAY_DEATH);
 
@@ -114,7 +114,7 @@ public:
                 pInstance->SetData(DATA_BARON_ASHBURY_EVENT, DONE);
         }
 
-        void UpdateAI(uint32 diff) OVERRIDE
+        void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
                 return;
@@ -176,7 +176,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature *pCreature) const OVERRIDE
+    CreatureAI* GetAI(Creature *pCreature) const override
     {
         return new boss_baron_ashburyAI (pCreature);
     }

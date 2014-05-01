@@ -155,11 +155,6 @@ ProcEventInfo::ProcEventInfo(Unit* actor, Unit* actionTarget, Unit* procTarget,
     _damageInfo(damageInfo), _healInfo(healInfo)
 { }
 
-// we can disable this warning for this since it only
-// causes undefined behavior when passed to the base class constructor
-#ifdef _MSC_VER
-#pragma warning(disable:4355)
-#endif
 Unit::Unit(bool isWorldObject) :
     WorldObject(isWorldObject), m_movedPlayer(NULL), m_lastSanctuaryTime(0),
     IsAIEnabled(false), NeedChangeAI(false), LastCharmerGUID(0),
@@ -169,9 +164,6 @@ Unit::Unit(bool isWorldObject) :
     m_vehicle(NULL), m_vehicleKit(NULL), m_unitTypeMask(UNIT_MASK_NONE),
     m_HostileRefManager(this), _lastDamagedTime(0)
 {
-#ifdef _MSC_VER
-#pragma warning(default:4355)
-#endif
     m_objectType |= TYPEMASK_UNIT;
     m_objectTypeId = TYPEID_UNIT;
 
@@ -14263,10 +14255,7 @@ void Unit::RestoreFaction()
         }
 
         if (CreatureTemplate const* cinfo = ToCreature()->GetCreatureTemplate())  // normal creature
-        {
-            FactionTemplateEntry const* faction = GetFactionTemplateEntry();
-            setFaction((faction && faction->friendlyMask & 0x004) ? cinfo->faction_H : cinfo->faction_A);
-        }
+            setFaction(cinfo->faction);
     }
 }
 
@@ -15362,7 +15351,7 @@ void Unit::_ExitVehicle(Position const* exitPosition)
 
     Position pos;
     if (!exitPosition)                          // Exit position not specified
-        vehicle->GetBase()->GetPosition(&pos);  // This should use passenger's current position, leaving it as it is now
+        pos = vehicle->GetBase()->GetPosition();  // This should use passenger's current position, leaving it as it is now
                                                 // because we calculate positions incorrect (sometimes under map)
     else
         pos = *exitPosition;
