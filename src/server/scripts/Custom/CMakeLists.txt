@@ -14,6 +14,7 @@ set(scripts_STAT_SRCS
   Custom/battle_for_gilneas.h
   Custom/custom_scripts.cpp
   Custom/custom_scripts.h
+  Custom/plants_vs_zombies.cpp
   Custom/raider_jhash.cpp
   Custom/the_warchief_cometh.cpp
   Custom/the_warchief_cometh.h
