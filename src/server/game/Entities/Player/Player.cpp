@@ -372,6 +372,12 @@ void TradeData::SetMoney(uint64 money)
     if (m_money == money)
         return;
 
+    if (!m_player->HasEnoughMoney(money))
+    {
+        m_player->GetSession()->SendTradeStatus(TRADE_STATUS_BUSY);
+        return;
+    }
+
     m_money = money;
 
     SetAccepted(false);
@@ -14494,7 +14500,7 @@ void Player::PrepareGossipMenu(WorldObject* source, uint32 menuId /*= 0*/, bool 
                 strOptionText = itr->second.OptionText;
 
             if (boxBroadcastText)
-                strBoxText = optionBroadcastText->GetText(locale, getGender());
+                strBoxText = boxBroadcastText->GetText(locale, getGender());
             else
                 strBoxText = itr->second.BoxText;
 
