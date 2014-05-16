@@ -16,7 +16,7 @@ class npc_raider_jhash : public CreatureScript
     public:
         npc_raider_jhash() : CreatureScript("npc_raider_jhash") { }
 
-        bool OnGossipHello(Player* player, Creature* creature) OVERRIDE
+        bool OnGossipHello(Player* player, Creature* creature) override
         {
             if (player->IsActiveQuest(QUEST_RIDING_ON))
             {
@@ -30,7 +30,7 @@ class npc_raider_jhash : public CreatureScript
             return true;
         }
 
-        bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) OVERRIDE
+        bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) override
         {
             player->PlayerTalkClass->SendCloseGossip();
             

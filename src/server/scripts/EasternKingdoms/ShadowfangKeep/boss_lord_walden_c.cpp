@@ -46,7 +46,7 @@ public:
 
         InstanceScript *pInstance;
 
-        void Reset() OVERRIDE
+        void Reset() override
         {
             ConjureMixtureTimer = 9000;
             IceShardsTimer = 16000;
@@ -58,7 +58,7 @@ public:
                 pInstance->SetData(DATA_LORD_WALDEN_EVENT, NOT_STARTED);
         }
 
-        void KilledUnit(Unit* /*who*/) OVERRIDE
+        void KilledUnit(Unit* /*who*/) override
         {
             switch(urand(0,1))
             {
@@ -67,7 +67,7 @@ public:
             }
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE
+        void EnterCombat(Unit* /*who*/) override
         {
             Talk(SAY_AGGRO);
 
@@ -75,7 +75,7 @@ public:
                 pInstance->SetData(DATA_LORD_WALDEN_EVENT, IN_PROGRESS);
         }
 
-        void JustDied(Unit* /*pKiller*/) OVERRIDE
+        void JustDied(Unit* /*pKiller*/) override
         {
             //me->SummonCreature(BOSS_COMMANDER_ULTHOK, 59.185f, 802.251f, 805.730f, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 8640000);
             Talk(SAY_DEATH);
@@ -84,7 +84,7 @@ public:
                 pInstance->SetData(DATA_LORD_WALDEN_EVENT, DONE);
         }
 
-        void UpdateAI(uint32 diff) OVERRIDE
+        void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
                 return;
@@ -138,7 +138,7 @@ public:
 
         InstanceScript *pInstance;
 
-        void Reset() OVERRIDE
+        void Reset() override
         {
             me->SetObjectScale(1.0f);
             me->SetDisplayId(23767);
@@ -154,7 +154,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature *pCreature) const OVERRIDE
+    CreatureAI* GetAI(Creature *pCreature) const override
     {
         return new npc_mystery_toxinAI (pCreature);
     }

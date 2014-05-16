@@ -58,7 +58,7 @@ public:
         uint32 SummonAddsTimer;
         uint32 PowerCheckTimer;
 
-        void Reset() OVERRIDE
+        void Reset() override
         {
             Achievement = true;
             RemoveSummons();
@@ -72,7 +72,7 @@ public:
                 pInstance->SetData(DATA_COMMANDER_SPRINGVALE_EVENT, NOT_STARTED);
         }
 
-        void KilledUnit(Unit* /*victim*/) OVERRIDE
+        void KilledUnit(Unit* /*victim*/) override
         {
             switch(urand(0,1))
             {
@@ -81,7 +81,7 @@ public:
             }
         }
 
-        void SpellHit(Unit* hitter, SpellInfo const* spell) OVERRIDE
+        void SpellHit(Unit* hitter, SpellInfo const* spell) override
         {
             if (!hitter || !spell)
                 return;
@@ -92,7 +92,7 @@ public:
             Achievement = false;
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE
+        void EnterCombat(Unit* /*who*/) override
         {
             Talk(SAY_AGGRO);
 
@@ -100,7 +100,7 @@ public:
                 pInstance->SetData(DATA_COMMANDER_SPRINGVALE_EVENT, IN_PROGRESS);
         }
 
-        void JustSummoned(Creature* pSummon) OVERRIDE
+        void JustSummoned(Creature* pSummon) override
         {
             if (Unit* pTarget = SelectTarget(SELECT_TARGET_RANDOM,0))
                 pSummon->AI()->AttackStart(pTarget);
@@ -121,7 +121,7 @@ public:
             SummonList.clear();
         }
 
-        void JustDied(Unit* /*pKiller*/) OVERRIDE
+        void JustDied(Unit* /*pKiller*/) override
         {
             //me->SummonCreature(BOSS_COMMANDER_ULTHOK, 59.185f, 802.251f, 805.730f, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 8640000);
             Talk(SAY_DEATH);
@@ -132,7 +132,7 @@ public:
                 pInstance->SetData(DATA_COMMANDER_SPRINGVALE_EVENT, DONE);
         }
 
-        void UpdateAI(uint32 diff) OVERRIDE
+        void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
                 return;
@@ -152,8 +152,7 @@ public:
             if (SummonAddsTimer <= diff)
             {
                 Talk(SAY_SUMMON_ADDS);
-                Position pos;
-                me->GetPosition(&pos);
+                Position pos = me->GetPosition();
                 me->SummonCreature(NPC_TORMENTED_OFFICER, pos, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
                 me->SummonCreature(NPC_WAILING_GUARDSMAN, pos, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 5000);
                 SummonAddsTimer = 40000;
@@ -181,7 +180,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature *pCreature) const OVERRIDE
+    CreatureAI* GetAI(Creature *pCreature) const override
     {
         return new boss_commander_springvaleAI (pCreature);
     }

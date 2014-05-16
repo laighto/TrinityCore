@@ -98,8 +98,18 @@ void WorldSession::HandleGossipSelectOptionOpcode(WorldPacket& recvData)
 
     recvData >> guid >> menuId >> gossipListId;
 
+    if (!_player->PlayerTalkClass->GetGossipMenu().GetItem(gossipListId))
+    {
+        recvData.rfinish();
+        return;
+    }
+
     if (_player->PlayerTalkClass->IsGossipOptionCoded(gossipListId))
         recvData >> code;
+
+    // Prevent cheating on C++ scripted menus
+    if (_player->PlayerTalkClass->GetGossipMenu().GetSenderGUID() != guid)
+        return;
 
     Creature* unit = NULL;
     GameObject* go = NULL;
@@ -152,7 +162,8 @@ void WorldSession::HandleGossipSelectOptionOpcode(WorldPacket& recvData)
         else
         {
             go->AI()->GossipSelectCode(_player, menuId, gossipListId, code.c_str());
-            sScriptMgr->OnGossipSelectCode(_player, go, _player->PlayerTalkClass->GetGossipOptionSender(gossipListId), _player->PlayerTalkClass->GetGossipOptionAction(gossipListId), code.c_str());
+            if (!sScriptMgr->OnGossipSelectCode(_player, go, _player->PlayerTalkClass->GetGossipOptionSender(gossipListId), _player->PlayerTalkClass->GetGossipOptionAction(gossipListId), code.c_str()))
+                _player->OnGossipSelect(go, gossipListId, menuId);
         }
     }
     else
@@ -1202,6 +1213,12 @@ void WorldSession::HandleInspectOpcode(WorldPacket& recvData)
         return;
     }
 
+    if (!GetPlayer()->IsWithinDistInMap(player, INSPECT_DISTANCE, false))
+        return;
+
+    if (GetPlayer()->IsValidAttackTarget(player))
+        return;
+
     uint32 talent_points = 41;
     WorldPacket data(SMSG_INSPECT_TALENT, 8 + 4 + 1 + 1 + talent_points + 8 + 4 + 8 + 4);
     data << player->GetGUID();
@@ -1247,12 +1264,17 @@ void WorldSession::HandleInspectHonorStatsOpcode(WorldPacket& recvData)
     recvData.ReadByteSeq(guid[2]);
     recvData.ReadByteSeq(guid[3]);
     Player* player = ObjectAccessor::FindPlayer(guid);
-
     if (!player)
     {
         TC_LOG_DEBUG("network", "CMSG_INSPECT_HONOR_STATS: No player found from GUID: " UI64FMTD, (uint64)guid);
         return;
     }
+
+    if (!GetPlayer()->IsWithinDistInMap(player, INSPECT_DISTANCE, false))
+        return;
+
+    if (GetPlayer()->IsValidAttackTarget(player))
+        return;
 
     ObjectGuid playerGuid = player->GetGUID();
     WorldPacket data(SMSG_INSPECT_HONOR_STATS, 8+1+4+4);
@@ -1695,6 +1717,12 @@ void WorldSession::HandleQueryInspectAchievements(WorldPacket& recvData)
     TC_LOG_DEBUG("network", "CMSG_QUERY_INSPECT_ACHIEVEMENTS [" UI64FMTD "] Inspected Player [" UI64FMTD "]", _player->GetGUID(), guid);
     Player* player = ObjectAccessor::FindPlayer(guid);
     if (!player)
+        return;
+
+    if (!GetPlayer()->IsWithinDistInMap(player, INSPECT_DISTANCE, false))
+        return;
+
+    if (GetPlayer()->IsValidAttackTarget(player))
         return;
 
     player->SendRespondInspectAchievements(_player);

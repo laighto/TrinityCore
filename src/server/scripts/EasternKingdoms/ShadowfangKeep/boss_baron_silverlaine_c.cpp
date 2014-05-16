@@ -41,7 +41,7 @@ public:
 
         uint32 CurserVeilTimer;
 
-        void Reset() OVERRIDE
+        void Reset() override
         {
             Phase = 0;
 
@@ -51,7 +51,7 @@ public:
                 pInstance->SetData(DATA_BARON_SILVERLAINE_EVENT, NOT_STARTED);
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE
+        void EnterCombat(Unit* /*who*/) override
         {
             Talk(SAY_AGGRO);
 
@@ -59,7 +59,7 @@ public:
                 pInstance->SetData(DATA_BARON_SILVERLAINE_EVENT, IN_PROGRESS);
         }
 
-        void JustDied(Unit* /*pKiller*/) OVERRIDE
+        void JustDied(Unit* /*pKiller*/) override
         {
             //me->SummonCreature(BOSS_COMMANDER_ULTHOK, 59.185f, 802.251f, 805.730f, 0, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 8640000);
             Talk(SAY_DEATH);
@@ -68,7 +68,7 @@ public:
                 pInstance->SetData(DATA_BARON_SILVERLAINE_EVENT, DONE);
         }
 
-        void UpdateAI(uint32 diff) OVERRIDE
+        void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
                 return;
@@ -90,7 +90,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature *pCreature) const OVERRIDE
+    CreatureAI* GetAI(Creature *pCreature) const override
     {
         return new boss_baron_silverlaineAI (pCreature);
     }

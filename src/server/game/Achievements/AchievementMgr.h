@@ -35,8 +35,8 @@ class WorldPacket;
 typedef std::vector<AchievementCriteriaEntry const*> AchievementCriteriaEntryList;
 typedef std::vector<AchievementEntry const*>         AchievementEntryList;
 
-typedef UNORDERED_MAP<uint32, AchievementCriteriaEntryList> AchievementCriteriaListByAchievement;
-typedef UNORDERED_MAP<uint32, AchievementEntryList>         AchievementListByReferencedId;
+typedef std::unordered_map<uint32, AchievementCriteriaEntryList> AchievementCriteriaListByAchievement;
+typedef std::unordered_map<uint32, AchievementEntryList>         AchievementListByReferencedId;
 
 struct CriteriaProgress
 {
@@ -47,15 +47,15 @@ struct CriteriaProgress
 };
 
 enum AchievementCriteriaDataType
-{                                                           // value1         value2        comment
-    ACHIEVEMENT_CRITERIA_DATA_TYPE_NONE                = 0, // 0              0
-    ACHIEVEMENT_CRITERIA_DATA_TYPE_T_CREATURE          = 1, // creature_id    0
-    ACHIEVEMENT_CRITERIA_DATA_TYPE_T_PLAYER_CLASS_RACE = 2, // class_id       race_id
-    ACHIEVEMENT_CRITERIA_DATA_TYPE_T_PLAYER_LESS_HEALTH= 3, // health_percent 0
-    ACHIEVEMENT_CRITERIA_DATA_TYPE_S_AURA              = 5, // spell_id       effect_idx
-    ACHIEVEMENT_CRITERIA_DATA_TYPE_T_AURA              = 7, // spell_id       effect_idx
-    ACHIEVEMENT_CRITERIA_DATA_TYPE_VALUE               = 8, // minvalue                     value provided with achievement update must be not less that limit
-    ACHIEVEMENT_CRITERIA_DATA_TYPE_T_LEVEL             = 9, // minlevel                     minlevel of target
+{                                                            // value1         value2        comment
+    ACHIEVEMENT_CRITERIA_DATA_TYPE_NONE                = 0,  // 0              0
+    ACHIEVEMENT_CRITERIA_DATA_TYPE_T_CREATURE          = 1,  // creature_id    0
+    ACHIEVEMENT_CRITERIA_DATA_TYPE_T_PLAYER_CLASS_RACE = 2,  // class_id       race_id
+    ACHIEVEMENT_CRITERIA_DATA_TYPE_T_PLAYER_LESS_HEALTH= 3,  // health_percent 0
+    ACHIEVEMENT_CRITERIA_DATA_TYPE_S_AURA              = 5,  // spell_id       effect_idx
+    ACHIEVEMENT_CRITERIA_DATA_TYPE_T_AURA              = 7,  // spell_id       effect_idx
+    ACHIEVEMENT_CRITERIA_DATA_TYPE_VALUE               = 8,  // minvalue                     value provided with achievement update must be not less that limit
+    ACHIEVEMENT_CRITERIA_DATA_TYPE_T_LEVEL             = 9,  // minlevel                     minlevel of target
     ACHIEVEMENT_CRITERIA_DATA_TYPE_T_GENDER            = 10, // gender                       0=male; 1=female
     ACHIEVEMENT_CRITERIA_DATA_TYPE_SCRIPT              = 11, // scripted requirement
     // REUSE
@@ -64,12 +64,16 @@ enum AchievementCriteriaDataType
     ACHIEVEMENT_CRITERIA_DATA_TYPE_S_DRUNK             = 15, // drunken_state  0             (enum DrunkenState) of player
     ACHIEVEMENT_CRITERIA_DATA_TYPE_HOLIDAY             = 16, // holiday_id     0             event in holiday time
     ACHIEVEMENT_CRITERIA_DATA_TYPE_BG_LOSS_TEAM_SCORE  = 17, // min_score      max_score     player's team win bg and opposition team have team score in range
-    ACHIEVEMENT_CRITERIA_DATA_INSTANCE_SCRIPT          = 18, // 0              0             maker instance script call for check current criteria requirements fit
+    ACHIEVEMENT_CRITERIA_DATA_TYPE_INSTANCE_SCRIPT     = 18, // 0              0             maker instance script call for check current criteria requirements fit
     ACHIEVEMENT_CRITERIA_DATA_TYPE_S_EQUIPED_ITEM      = 19, // item_level     item_quality  for equipped item in slot to check item level and quality
-    ACHIEVEMENT_CRITERIA_DATA_TYPE_S_PLAYER_CLASS_RACE = 21  // class_id       race_id
-};
+    ACHIEVEMENT_CRITERIA_DATA_TYPE_MAP_ID              = 20, // map_id         0             player must be on map with id in map_id
+    ACHIEVEMENT_CRITERIA_DATA_TYPE_S_PLAYER_CLASS_RACE = 21, // class_id       race_id
+    // REUSE
+    ACHIEVEMENT_CRITERIA_DATA_TYPE_S_KNOWN_TITLE       = 23, // title_id                     known (pvp) title, values from dbc
+    ACHIEVEMENT_CRITERIA_DATA_TYPE_GAME_EVENT          = 24, // game_event_id  0
 
-#define MAX_ACHIEVEMENT_CRITERIA_DATA_TYPE               22 // maximum value in AchievementCriteriaDataType enum
+    MAX_ACHIEVEMENT_CRITERIA_DATA_TYPE
+};
 
 struct AchievementCriteriaData
 {
@@ -144,13 +148,28 @@ struct AchievementCriteriaData
             uint32 min_score;
             uint32 max_score;
         } bg_loss_team_score;
-        // ACHIEVEMENT_CRITERIA_DATA_INSTANCE_SCRIPT        = 18 (no data)
+        // ACHIEVEMENT_CRITERIA_DATA_TYPE_INSTANCE_SCRIPT   = 18 (no data)
         // ACHIEVEMENT_CRITERIA_DATA_TYPE_S_EQUIPED_ITEM    = 19
         struct
         {
             uint32 item_level;
             uint32 item_quality;
         } equipped_item;
+        // ACHIEVEMENT_CRITERIA_DATA_TYPE_MAP_ID            = 20
+        struct
+        {
+            uint32 mapId;
+        } map_id;
+        // ACHIEVEMENT_CRITERIA_DATA_TYPE_KNOWN_TITLE       = 22
+        struct
+        {
+            uint32 title_id;
+        } known_title;
+        // ACHIEVEMENT_CRITERIA_DATA_TYPE_GAME_EVENT           = 24
+        struct
+        {
+            uint32 id;
+        } game_event;
         // raw
         struct
         {
@@ -199,9 +218,10 @@ struct AchievementReward
     uint32 sender;
     std::string subject;
     std::string text;
+    uint32 mailTemplate;
 };
 
-typedef UNORDERED_MAP<uint32, AchievementReward> AchievementRewards;
+typedef std::unordered_map<uint32, AchievementReward> AchievementRewards;
 
 struct AchievementRewardLocale
 {
@@ -209,7 +229,7 @@ struct AchievementRewardLocale
     std::vector<std::string> text;
 };
 
-typedef UNORDERED_MAP<uint32, AchievementRewardLocale> AchievementRewardLocales;
+typedef std::unordered_map<uint32, AchievementRewardLocale> AchievementRewardLocales;
 
 struct CompletedAchievementData
 {
@@ -218,8 +238,8 @@ struct CompletedAchievementData
     bool changed;
 };
 
-typedef UNORDERED_MAP<uint32, CriteriaProgress> CriteriaProgressMap;
-typedef UNORDERED_MAP<uint32, CompletedAchievementData> CompletedAchievementMap;
+typedef std::unordered_map<uint32, CriteriaProgress> CriteriaProgressMap;
+typedef std::unordered_map<uint32, CompletedAchievementData> CompletedAchievementMap;
 
 enum ProgressType
 {

@@ -28,7 +28,7 @@
 typedef std::map<uint32, Battleground*> BattlegroundContainer;
 typedef std::set<uint32> BattlegroundClientIdsContainer;
 
-typedef UNORDERED_MAP<uint32, BattlegroundTypeId> BattleMastersMap;
+typedef std::unordered_map<uint32, BattlegroundTypeId> BattleMastersMap;
 
 #define WS_CURRENCY_RESET_TIME 20001                    // Custom worldstate
 
@@ -124,12 +124,13 @@ class BattlegroundMgr
         uint32 GetMaxRatingDifference() const;
         uint32 GetRatingDiscardTimer()  const;
         void LoadBattleMastersEntry();
+        void CheckBattleMasters();
         BattlegroundTypeId GetBattleMasterBG(uint32 entry) const
         {
             BattleMastersMap::const_iterator itr = mBattleMastersMap.find(entry);
             if (itr != mBattleMastersMap.end())
                 return itr->second;
-            return BATTLEGROUND_WS;
+            return BATTLEGROUND_TYPE_NONE;
         }
 
     private:

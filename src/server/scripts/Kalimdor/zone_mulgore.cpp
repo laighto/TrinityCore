@@ -24,7 +24,6 @@ SDCategory: Mulgore
 EndScriptData */
 
 /* ContentData
-npc_skorn_whitecloud
 npc_kyle_frenzied
 EndContentData */
 
@@ -33,41 +32,6 @@ EndContentData */
 #include "ScriptedGossip.h"
 #include "Player.h"
 #include "SpellInfo.h"
-
-/*######
-# npc_skorn_whitecloud
-######*/
-
-#define GOSSIP_SW "Tell me a story, Skorn."
-
-class npc_skorn_whitecloud : public CreatureScript
-{
-public:
-    npc_skorn_whitecloud() : CreatureScript("npc_skorn_whitecloud") { }
-
-    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
-    {
-        player->PlayerTalkClass->ClearMenus();
-        if (action == GOSSIP_ACTION_INFO_DEF)
-            player->SEND_GOSSIP_MENU(523, creature->GetGUID());
-
-        return true;
-    }
-
-    bool OnGossipHello(Player* player, Creature* creature)
-    {
-        if (creature->IsQuestGiver())
-            player->PrepareQuestMenu(creature->GetGUID());
-
-        if (!player->GetQuestRewardStatus(770))
-            player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, GOSSIP_SW, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF);
-
-        player->SEND_GOSSIP_MENU(522, creature->GetGUID());
-
-        return true;
-    }
-
-};
 
 /*#####
 # npc_kyle_frenzied
@@ -90,7 +54,7 @@ class npc_kyle_frenzied : public CreatureScript
 public:
     npc_kyle_frenzied() : CreatureScript("npc_kyle_frenzied") { }
 
-    CreatureAI* GetAI(Creature* creature) const OVERRIDE
+    CreatureAI* GetAI(Creature* creature) const override
     {
         return new npc_kyle_frenziedAI (creature);
     }
@@ -105,7 +69,7 @@ public:
         uint32 EventTimer;
         uint8 EventPhase;
 
-        void Reset() OVERRIDE
+        void Reset() override
         {
             EventActive = false;
             IsMovingToLunch = false;
@@ -137,7 +101,7 @@ public:
             }
         }
 
-        void MovementInform(uint32 type, uint32 pointId) OVERRIDE
+        void MovementInform(uint32 type, uint32 pointId) override
         {
             if (type != POINT_MOTION_TYPE || !EventActive)
                 return;
@@ -146,7 +110,7 @@ public:
                 IsMovingToLunch = false;
         }
 
-        void UpdateAI(uint32 diff) OVERRIDE
+        void UpdateAI(uint32 diff) override
         {
             if (EventActive)
             {
@@ -202,6 +166,5 @@ public:
 
 void AddSC_mulgore()
 {
-    new npc_skorn_whitecloud();
     new npc_kyle_frenzied();
 }

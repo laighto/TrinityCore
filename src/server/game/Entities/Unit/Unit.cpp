@@ -155,11 +155,6 @@ ProcEventInfo::ProcEventInfo(Unit* actor, Unit* actionTarget, Unit* procTarget,
     _damageInfo(damageInfo), _healInfo(healInfo)
 { }
 
-// we can disable this warning for this since it only
-// causes undefined behavior when passed to the base class constructor
-#ifdef _MSC_VER
-#pragma warning(disable:4355)
-#endif
 Unit::Unit(bool isWorldObject) :
     WorldObject(isWorldObject), m_movedPlayer(NULL), m_lastSanctuaryTime(0),
     IsAIEnabled(false), NeedChangeAI(false), LastCharmerGUID(0),
@@ -169,9 +164,6 @@ Unit::Unit(bool isWorldObject) :
     m_vehicle(NULL), m_vehicleKit(NULL), m_unitTypeMask(UNIT_MASK_NONE),
     m_HostileRefManager(this), _lastDamagedTime(0)
 {
-#ifdef _MSC_VER
-#pragma warning(default:4355)
-#endif
     m_objectType |= TYPEMASK_UNIT;
     m_objectTypeId = TYPEID_UNIT;
 
@@ -4255,10 +4247,13 @@ uint32 Unit::GetDoTsByCaster(uint64 casterGUID) const
 
 int32 Unit::GetTotalAuraModifier(AuraType auratype) const
 {
+    AuraEffectList const& mTotalAuraList = GetAuraEffectsByType(auratype);
+    if (mTotalAuraList.empty())
+        return 0;
+
     std::map<SpellGroup, int32> SameEffectSpellGroup;
     int32 modifier = 0;
 
-    AuraEffectList const& mTotalAuraList = GetAuraEffectsByType(auratype);
     for (AuraEffectList::const_iterator i = mTotalAuraList.begin(); i != mTotalAuraList.end(); ++i)
         if (!sSpellMgr->AddSameEffectStackRuleSpellGroups((*i)->GetSpellInfo(), (*i)->GetAmount(), SameEffectSpellGroup))
             modifier += (*i)->GetAmount();
@@ -7219,6 +7214,9 @@ bool Unit::HandleOverrideClassScriptAuraProc(Unit* victim, uint32 /*damage*/, Au
 
 void Unit::setPowerType(Powers new_powertype)
 {
+    if (getPowerType() == new_powertype)
+        return;
+
     SetByteValue(UNIT_FIELD_BYTES_0, 3, new_powertype);
 
     if (GetTypeId() == TYPEID_PLAYER)
@@ -7292,7 +7290,7 @@ ReputationRank Unit::GetReactionTo(Unit const* target) const
     Player const* targetPlayerOwner = target->GetAffectingPlayer();
 
     // check forced reputation to support SPELL_AURA_FORCE_REACTION
-    if (selfPlayerOwner) 
+    if (selfPlayerOwner)
     {
         if (FactionTemplateEntry const* targetFactionTemplateEntry = target->GetFactionTemplateEntry())
             if (ReputationRank const* repRank = selfPlayerOwner->GetReputationMgr().GetForcedRankIfAny(targetFactionTemplateEntry))
@@ -8864,7 +8862,7 @@ bool Unit::isSpellCrit(Unit* victim, SpellInfo const* spellProto, SpellSchoolMas
                 default:
                     return false;
             }
-            break;
+        // Do not add a break here, case fallthrough is intentional! Adding a break will make above spells unable to crit.
         case SPELL_DAMAGE_CLASS_MAGIC:
         {
             if (schoolMask & SPELL_SCHOOL_MASK_NORMAL)
@@ -11257,6 +11255,8 @@ float Unit::GetSpellMaxRangeForTarget(Unit const* target, SpellInfo const* spell
         return 0;
     if (spellInfo->RangeEntry->maxRangeFriend == spellInfo->RangeEntry->maxRangeHostile)
         return spellInfo->GetMaxRange();
+    if (target == NULL)
+        return spellInfo->GetMaxRange(true);
     return spellInfo->GetMaxRange(!IsHostileTo(target));
 }
 
@@ -11318,9 +11318,35 @@ bool Unit::IsInFeralForm() const
 
 bool Unit::IsInDisallowedMountForm() const
 {
-    ShapeshiftForm form = GetShapeshiftForm();
-    return form != FORM_NONE && form != FORM_BATTLESTANCE && form != FORM_BERSERKERSTANCE && form != FORM_DEFENSIVESTANCE &&
-        form != FORM_SHADOW && form != FORM_STEALTH && form != FORM_UNDEAD;
+    if (ShapeshiftForm form = GetShapeshiftForm())
+    {
+        SpellShapeshiftFormEntry const* shapeshift = sSpellShapeshiftFormStore.LookupEntry(form);
+        if (!shapeshift)
+            return true;
+
+        if (!(shapeshift->flags1 & 0x1))
+            return true;
+    }
+
+    if (GetDisplayId() == GetNativeDisplayId())
+        return false;
+
+    CreatureDisplayInfoEntry const* display = sCreatureDisplayInfoStore.LookupEntry(GetDisplayId());
+    if (!display)
+        return true;
+
+    CreatureDisplayInfoExtraEntry const* displayExtra = sCreatureDisplayInfoExtraStore.LookupEntry(display->ExtraId);
+    if (!displayExtra)
+        return true;
+
+    CreatureModelDataEntry const* model = sCreatureModelDataStore.LookupEntry(display->ModelId);
+    ChrRacesEntry const* race = sChrRacesStore.LookupEntry(displayExtra->Race);
+
+    if (model && !(model->Flags & 0x80))
+        if (race && !(race->Flags & 0x4))
+            return true;
+
+    return false;
 }
 
 /*#######################################
@@ -13284,7 +13310,7 @@ bool Unit::IsTriggeredAtSpellProcEvent(Unit* victim, Aura* aura, SpellInfo const
     }
 
     // Check spellProcEvent data requirements
-    if (!sSpellMgr->IsSpellProcEventCanTriggeredBy(spellProcEvent, EventProcFlag, procSpell, procFlag, procExtra, active))
+    if (!sSpellMgr->IsSpellProcEventCanTriggeredBy(spellProto, spellProcEvent, EventProcFlag, procSpell, procFlag, procExtra, active))
         return false;
     // In most cases req get honor or XP from kill
     if (EventProcFlag & PROC_FLAG_KILL && GetTypeId() == TYPEID_PLAYER)
@@ -13498,8 +13524,10 @@ void Unit::Kill(Unit* victim, bool durabilityLoss)
         data << uint64(victim->GetGUID()); // victim
 
         Player* looter = player;
+        Group* group = player->GetGroup();
+        bool hasLooterGuid = false;
 
-        if (Group* group = player->GetGroup())
+        if (group)
         {
             group->BroadcastPacket(&data, group->GetMemberGroup(player->GetGUID()));
 
@@ -13511,16 +13539,10 @@ void Unit::Kill(Unit* victim, bool durabilityLoss)
                     looter = ObjectAccessor::FindPlayer(group->GetLooterGuid());
                     if (looter)
                     {
+                        hasLooterGuid = true;
                         creature->SetLootRecipient(looter);   // update creature loot recipient to the allowed looter.
-                        group->SendLooter(creature, looter);
                     }
-                    else
-                        group->SendLooter(creature, NULL);
                 }
-                else
-                    group->SendLooter(creature, NULL);
-
-                group->UpdateLooterGuid(creature);
             }
         }
         else
@@ -13537,6 +13559,7 @@ void Unit::Kill(Unit* victim, bool durabilityLoss)
             }
         }
 
+        // Generate loot before updating looter
         if (creature)
         {
             Loot* loot = &creature->loot;
@@ -13548,6 +13571,18 @@ void Unit::Kill(Unit* victim, bool durabilityLoss)
                 loot->FillLoot(lootid, LootTemplates_Creature, looter, false, false, creature->GetLootMode());
 
             loot->generateMoneyLoot(creature->GetCreatureTemplate()->mingold, creature->GetCreatureTemplate()->maxgold);
+
+            if (group)
+            {
+                if (hasLooterGuid)
+                    group->SendLooter(creature, looter);
+                else
+                    group->SendLooter(creature, NULL);
+
+                // Update round robin looter only if the creature had loot
+                if (!creature->loot.empty())
+                    group->UpdateLooterGuid(creature);
+            }
         }
 
         player->RewardPlayerAndGroupAtKill(victim, false);
@@ -13866,7 +13901,7 @@ void Unit::SetStunned(bool apply)
     else
     {
         if (IsAlive() && GetVictim())
-            SetTarget(GetVictim()->GetGUID());
+            SetTarget(EnsureVictim()->GetGUID());
 
         // don't remove UNIT_FLAG_STUNNED for pet when owner is mounted (disabled pet's interface)
         Unit* owner = GetOwner();
@@ -13921,7 +13956,7 @@ void Unit::SetFeared(bool apply)
             if (GetMotionMaster()->GetCurrentMovementGeneratorType() == FLEEING_MOTION_TYPE)
                 GetMotionMaster()->MovementExpired();
             if (GetVictim())
-                SetTarget(GetVictim()->GetGUID());
+                SetTarget(EnsureVictim()->GetGUID());
         }
     }
 
@@ -13943,7 +13978,7 @@ void Unit::SetConfused(bool apply)
             if (GetMotionMaster()->GetCurrentMovementGeneratorType() == CONFUSED_MOTION_TYPE)
                 GetMotionMaster()->MovementExpired();
             if (GetVictim())
-                SetTarget(GetVictim()->GetGUID());
+                SetTarget(EnsureVictim()->GetGUID());
         }
     }
 
@@ -14220,10 +14255,7 @@ void Unit::RestoreFaction()
         }
 
         if (CreatureTemplate const* cinfo = ToCreature()->GetCreatureTemplate())  // normal creature
-        {
-            FactionTemplateEntry const* faction = GetFactionTemplateEntry();
-            setFaction((faction && faction->friendlyMask & 0x004) ? cinfo->faction_H : cinfo->faction_A);
-        }
+            setFaction(cinfo->faction);
     }
 }
 
@@ -15319,7 +15351,7 @@ void Unit::_ExitVehicle(Position const* exitPosition)
 
     Position pos;
     if (!exitPosition)                          // Exit position not specified
-        vehicle->GetBase()->GetPosition(&pos);  // This should use passenger's current position, leaving it as it is now
+        pos = vehicle->GetBase()->GetPosition();  // This should use passenger's current position, leaving it as it is now
                                                 // because we calculate positions incorrect (sometimes under map)
     else
         pos = *exitPosition;
@@ -15950,7 +15982,12 @@ bool CharmInfo::IsCommandFollow()
 void CharmInfo::SaveStayPosition()
 {
     //! At this point a new spline destination is enabled because of Unit::StopMoving()
-    G3D::Vector3 const stayPos = _unit->movespline->FinalDestination();
+    G3D::Vector3 stayPos = _unit->movespline->FinalDestination();
+
+    if (_unit->movespline->onTransport)
+        if (TransportBase* transport = _unit->GetDirectTransport())
+            transport->CalculatePassengerPosition(stayPos.x, stayPos.y, stayPos.z);
+
     _stayX = stayPos.x;
     _stayY = stayPos.y;
     _stayZ = stayPos.z;
@@ -16424,4 +16461,25 @@ void Unit::BuildValuesUpdate(uint8 updateType, ByteBuffer* data, Player* target)
     *data << uint8(updateMask.GetBlockCount());
     updateMask.AppendToPacket(data);
     data->append(fieldBuffer);
+}
+
+void Unit::BuildCooldownPacket(WorldPacket& data, uint8 flags, uint32 spellId, uint32 cooldown)
+{
+    data.Initialize(SMSG_SPELL_COOLDOWN, 8 + 1 + 4 + 4);
+    data << uint64(GetGUID());
+    data << uint8(flags);
+    data << uint32(spellId);
+    data << uint32(cooldown);
+}
+
+void Unit::BuildCooldownPacket(WorldPacket& data, uint8 flags, PacketCooldowns const& cooldowns)
+{
+    data.Initialize(SMSG_SPELL_COOLDOWN, 8 + 1 + (4 + 4) * cooldowns.size());
+    data << uint64(GetGUID());
+    data << uint8(flags);
+    for (std::unordered_map<uint32, uint32>::const_iterator itr = cooldowns.begin(); itr != cooldowns.end(); ++itr)
+    {
+        data << uint32(itr->first);
+        data << uint32(itr->second);
+    }
 }
