@@ -52,7 +52,7 @@ public:
     {
         boss_broodlordAI(Creature* creature) : BossAI(creature, BOSS_BROODLORD) { }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE
+        void EnterCombat(Unit* /*who*/) override
         {
             if (instance->GetBossState(BOSS_VAELASTRAZ) != DONE)
             {
@@ -70,14 +70,13 @@ public:
             events.ScheduleEvent(EVENT_CHECK, 1000);
         }
 
-        void JustDied(Unit* /*killer*/)
+        void JustDied(Unit* /*killer*/) override
         {
-            if (GameObject* object = me->FindNearestGameObject(179365, 50.0)) //open GO Portcullis
-                object->UseDoorOrButton();
+            if (GameObject* go = me->FindNearestGameObject(179365, 50.0)) //open GO Portcullis
+                instance->HandleGameObject(go->GetGUID(), true);
         }
 
-
-        void UpdateAI(uint32 diff) OVERRIDE
+        void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
                 return;
@@ -121,7 +120,7 @@ public:
         }
     };
 
-    CreatureAI* GetAI(Creature* creature) const OVERRIDE
+    CreatureAI* GetAI(Creature* creature) const override
     {
         return GetInstanceAI<boss_broodlordAI>(creature);
     }

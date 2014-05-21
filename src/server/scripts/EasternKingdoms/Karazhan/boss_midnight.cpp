@@ -53,7 +53,7 @@ class boss_attumen : public CreatureScript
 public:
     boss_attumen() : CreatureScript("boss_attumen") { }
 
-    CreatureAI* GetAI(Creature* creature) const OVERRIDE
+    CreatureAI* GetAI(Creature* creature) const override
     {
         return new boss_attumenAI(creature);
     }
@@ -79,33 +79,33 @@ public:
         uint32 ChargeTimer;                                     //only when mounted
         uint32 ResetTimer;
 
-        void Reset() OVERRIDE
+        void Reset() override
         {
             ResetTimer = 0;
             Midnight = 0;
         }
 
-        void EnterEvadeMode() OVERRIDE
+        void EnterEvadeMode() override
         {
             ScriptedAI::EnterEvadeMode();
             ResetTimer = 2000;
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE { }
+        void EnterCombat(Unit* /*who*/) override { }
 
-        void KilledUnit(Unit* /*victim*/) OVERRIDE
+        void KilledUnit(Unit* /*victim*/) override
         {
             Talk(SAY_KILL);
         }
 
-        void JustDied(Unit* /*killer*/) OVERRIDE
+        void JustDied(Unit* /*killer*/) override
         {
             Talk(SAY_DEATH);
             if (Unit* midnight = Unit::GetUnit(*me, Midnight))
                 midnight->Kill(midnight);
         }
 
-        void JustReachedHome() OVERRIDE
+        void JustReachedHome() override
         {
             ResetTimer = 0;
             Unit* pMidnight = Unit::GetUnit(*me, Midnight);
@@ -119,9 +119,9 @@ public:
             me->Kill(me);
         }
 
-        void UpdateAI(uint32 diff) OVERRIDE;
+        void UpdateAI(uint32 diff) override;
 
-        void SpellHit(Unit* /*source*/, const SpellInfo* spell) OVERRIDE
+        void SpellHit(Unit* /*source*/, const SpellInfo* spell) override
         {
             if (spell->Mechanic == MECHANIC_DISARM)
                 Talk(SAY_DISARMED);
@@ -134,7 +134,7 @@ class boss_midnight : public CreatureScript
 public:
     boss_midnight() : CreatureScript("boss_midnight") { }
 
-    CreatureAI* GetAI(Creature* creature) const OVERRIDE
+    CreatureAI* GetAI(Creature* creature) const override
     {
         return new boss_midnightAI(creature);
     }
@@ -147,7 +147,7 @@ public:
         uint8 Phase;
         uint32 Mount_Timer;
 
-        void Reset() OVERRIDE
+        void Reset() override
         {
             Phase = 1;
             Attumen = 0;
@@ -157,9 +157,9 @@ public:
             me->SetVisible(true);
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE { }
+        void EnterCombat(Unit* /*who*/) override { }
 
-        void KilledUnit(Unit* /*victim*/) OVERRIDE
+        void KilledUnit(Unit* /*victim*/) override
         {
             if (Phase == 2)
             {
@@ -168,7 +168,7 @@ public:
             }
         }
 
-        void UpdateAI(uint32 diff) OVERRIDE
+        void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
                 return;
@@ -205,7 +205,7 @@ public:
                             if (pAttumen->GetVictim())
                             {
                                 pAttumen->GetMotionMaster()->MoveChase(pAttumen->GetVictim());
-                                pAttumen->SetTarget(pAttumen->GetVictim()->GetGUID());
+                                pAttumen->SetTarget(pAttumen->EnsureVictim()->GetGUID());
                             }
                             pAttumen->SetObjectScale(1);
                         }

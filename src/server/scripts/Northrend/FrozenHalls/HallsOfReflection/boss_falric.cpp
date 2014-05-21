@@ -25,7 +25,7 @@ enum Texts
     SAY_SLAY                                      = 1,
     SAY_DEATH                                     = 2,
     SAY_IMPENDING_DESPAIR                         = 3,
-    SAY_DEFILING_HORROR                           = 4,
+    SAY_DEFILING_HORROR                           = 4
 };
 
 enum Spells
@@ -33,8 +33,9 @@ enum Spells
     SPELL_QUIVERING_STRIKE                        = 72422,
     SPELL_IMPENDING_DESPAIR                       = 72426,
     SPELL_DEFILING_HORROR                         = 72435,
-    SPELL_HOPELESSNESS                            = 72395,
-    H_SPELL_HOPELESSNESS                          = 72390, /// @todo not in dbc. Add in DB.
+    SPELL_HOPELESSNESS_1                          = 72395,
+    SPELL_HOPELESSNESS_2                          = 72396,
+    SPELL_HOPELESSNESS_3                          = 72397
 };
 
 enum Events
@@ -42,59 +43,65 @@ enum Events
     EVENT_NONE,
     EVENT_QUIVERING_STRIKE,
     EVENT_IMPENDING_DESPAIR,
-    EVENT_DEFILING_HORROR,
+    EVENT_DEFILING_HORROR
 };
+
+uint32 const HopelessnessHelper[3] = { SPELL_HOPELESSNESS_1, SPELL_HOPELESSNESS_2, SPELL_HOPELESSNESS_3 };
 
 class boss_falric : public CreatureScript
 {
-public:
+    public:
     boss_falric() : CreatureScript("boss_falric") { }
-
-    CreatureAI* GetAI(Creature* creature) const OVERRIDE
-    {
-        return GetInstanceAI<boss_falricAI>(creature);
-    }
 
     struct boss_falricAI : public boss_horAI
     {
-        boss_falricAI(Creature* creature) : boss_horAI(creature) { }
+            boss_falricAI(Creature* creature) : boss_horAI(creature, DATA_FALRIC) { }
 
-        uint8 uiHopelessnessCount;
-
-        void Reset() OVERRIDE
+            void Reset() override
         {
             boss_horAI::Reset();
-
-            uiHopelessnessCount = 0;
-
-                instance->SetBossState(DATA_FALRIC_EVENT, NOT_STARTED);
+                _hopelessnessCount = 0;
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE
+            void EnterCombat(Unit* /*who*/) override
         {
             Talk(SAY_AGGRO);
-                instance->SetBossState(DATA_FALRIC_EVENT, IN_PROGRESS);
+                DoZoneInCombat();
+                instance->SetBossState(DATA_FALRIC, IN_PROGRESS);
 
             events.ScheduleEvent(EVENT_QUIVERING_STRIKE, 23000);
             events.ScheduleEvent(EVENT_IMPENDING_DESPAIR, 9000);
-            events.ScheduleEvent(EVENT_DEFILING_HORROR, urand(25000, 45000)); /// @todo adjust timer.
+                events.ScheduleEvent(EVENT_DEFILING_HORROR, urand(21000, 39000));
         }
 
-        void JustDied(Unit* /*killer*/) OVERRIDE
+            void DamageTaken(Unit* /*attacker*/, uint32& damage) override
         {
+                if ((_hopelessnessCount < 1 && me->HealthBelowPctDamaged(66, damage))
+                    || (_hopelessnessCount < 2 && me->HealthBelowPctDamaged(33, damage))
+                    || (_hopelessnessCount < 3 && me->HealthBelowPctDamaged(10, damage)))
+                {
+                    if (_hopelessnessCount)
+                        me->RemoveOwnedAura(sSpellMgr->GetSpellIdForDifficulty(HopelessnessHelper[_hopelessnessCount - 1], me));
+                    DoCast(me, HopelessnessHelper[_hopelessnessCount]);
+                    ++_hopelessnessCount;
+                }
+            }
+
+            void JustDied(Unit* /*killer*/) override
+            {
             Talk(SAY_DEATH);
-
-                instance->SetBossState(DATA_FALRIC_EVENT, DONE);
+                events.Reset();
+                instance->SetBossState(DATA_FALRIC, DONE);
         }
 
-        void KilledUnit(Unit* /*victim*/) OVERRIDE
+            void KilledUnit(Unit* who) override
         {
+                if (who->GetTypeId() == TYPEID_PLAYER)
             Talk(SAY_SLAY);
         }
 
-        void UpdateAI(uint32 diff) OVERRIDE
+            void UpdateAI(uint32 diff) override
         {
-            // Return since we have no target
             if (!UpdateVictim())
                 return;
 
@@ -106,11 +113,11 @@ public:
             switch (events.ExecuteEvent())
             {
                 case EVENT_QUIVERING_STRIKE:
-                    DoCast(SPELL_QUIVERING_STRIKE);
+                        DoCastVictim(SPELL_QUIVERING_STRIKE);
                     events.ScheduleEvent(EVENT_QUIVERING_STRIKE, 10000);
                     break;
                 case EVENT_IMPENDING_DESPAIR:
-                    if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM))
+                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 45.0f, true))
                     {
                         Talk(SAY_IMPENDING_DESPAIR);
                         DoCast(target, SPELL_IMPENDING_DESPAIR);
@@ -118,23 +125,24 @@ public:
                     events.ScheduleEvent(EVENT_IMPENDING_DESPAIR, 13000);
                     break;
                 case EVENT_DEFILING_HORROR:
-                    DoCast(SPELL_DEFILING_HORROR);
-                    events.ScheduleEvent(EVENT_DEFILING_HORROR, urand(25000, 45000)); /// @todo adjust timer.
+                        DoCastAOE(SPELL_DEFILING_HORROR);
+                        events.ScheduleEvent(EVENT_DEFILING_HORROR, urand(21000, 39000));
                     break;
+                    default:
+                        break;
             }
 
-            if ((uiHopelessnessCount < 1 && HealthBelowPct(66))
-                || (uiHopelessnessCount < 2 && HealthBelowPct(33))
-                || (uiHopelessnessCount < 3 && HealthBelowPct(10)))
-            {
-                uiHopelessnessCount++;
-                DoCast(DUNGEON_MODE(SPELL_HOPELESSNESS, H_SPELL_HOPELESSNESS));
+                DoMeleeAttackIfReady();
             }
 
-            DoMeleeAttackIfReady();
-        }
+        private:
+            uint8 _hopelessnessCount;
     };
 
+        CreatureAI* GetAI(Creature* creature) const override
+        {
+            return GetHallsOfReflectionAI<boss_falricAI>(creature);
+        }
 };
 
 void AddSC_boss_falric()

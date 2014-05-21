@@ -173,7 +173,7 @@ public:
             EnterEvadeMode();
         }
 
-        void Reset() OVERRIDE
+        void Reset() override
         {
             _Reset();
 
@@ -181,7 +181,7 @@ public:
             Enraged = false;
         }
 
-        void EnterCombat(Unit* /*who*/) OVERRIDE
+        void EnterCombat(Unit* /*who*/) override
         {
             if (instance->GetBossState(BOSS_FLAMEGOR) != DONE)
             {
@@ -197,13 +197,13 @@ public:
             events.ScheduleEvent(EVENT_FRENZY, 15000);
         }
 
-        void JustDied(Unit* /*killer*/)
+        void JustDied(Unit* /*killer*/) override
         {
-            if (GameObject* object = me->FindNearestGameObject(179117, 100.0f)) //open GO Portcullis
-                object->UseDoorOrButton();
+            if (GameObject* go = me->FindNearestGameObject(179117, 100.0f)) //open GO Portcullis
+                instance->HandleGameObject(go->GetGUID(), true);
         }
 
-        void UpdateAI(uint32 diff) OVERRIDE
+        void UpdateAI(uint32 diff) override
         {
             if (!UpdateVictim())
                 return;
@@ -286,7 +286,7 @@ public:
         bool Enraged;
     };
 
-    CreatureAI* GetAI(Creature* creature) const OVERRIDE
+    CreatureAI* GetAI(Creature* creature) const override
     {
         return GetInstanceAI<boss_chromaggusAI>(creature);
     }
