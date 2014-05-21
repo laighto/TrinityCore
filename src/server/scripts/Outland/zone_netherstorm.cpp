@@ -1050,8 +1050,7 @@ class go_captain_tyralius_prison : public GameObjectScript
             }
             else if (Creature* tyraliusprisson = go->FindNearestCreature(20825, 2.0f))
             {
-                Position pos;
-                tyraliusprisson->GetPosition(&pos);
+                Position pos = tyraliusprisson->GetPosition();
                 tyraliusprisson->SummonCreature(NPC_CAPTAIN_TYRALIUS, pos);
 
                 if (Creature* tyralius = go->FindNearestCreature(NPC_CAPTAIN_TYRALIUS, 2.0f))

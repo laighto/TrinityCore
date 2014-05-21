@@ -52,22 +52,22 @@ enum CreatureIds
 {
     NPC_JAINA_INTRO                             = 37221,
     NPC_SYLVANAS_INTRO                          = 37223,
-    NPC_UTHER                                     = 37225,
+    NPC_UTHER                                   = 37225,
     NPC_THE_LICH_KING_INTRO                     = 37226,
     NPC_KORELN                                  = 37582,
-    NPC_LORALEN                                   = 37779,
+    NPC_LORALEN                                 = 37779,
     NPC_FROSTMOUNRE_ALTAR_BUNNY                 = 37704,
 
-    NPC_FALRIC                                    = 38112,
-    NPC_MARWYN                                    = 38113,
-    NPC_WAVE_MERCENARY                            = 38177,
-    NPC_WAVE_FOOTMAN                              = 38173,
-    NPC_WAVE_RIFLEMAN                             = 38176,
-    NPC_WAVE_PRIEST                               = 38175,
-    NPC_WAVE_MAGE                                 = 38172,
+    NPC_FALRIC                                  = 38112,
+    NPC_MARWYN                                  = 38113,
+    NPC_WAVE_MERCENARY                          = 38177,
+    NPC_WAVE_FOOTMAN                            = 38173,
+    NPC_WAVE_RIFLEMAN                           = 38176,
+    NPC_WAVE_PRIEST                             = 38175,
+    NPC_WAVE_MAGE                               = 38172,
 
     NPC_FROSTSWORN_GENERAL                      = 36723,
-    NPC_REFLECTION                                = 37068, // 37107 for tank only?
+    NPC_REFLECTION                              = 37068, // 37107 for tank only?
 
     NPC_JAINA_ESCAPE                            = 36955,
     NPC_SYLVANAS_ESCAPE                         = 37554,
@@ -75,7 +75,7 @@ enum CreatureIds
     NPC_ICE_WALL_TARGET                         = 37014,
 
     NPC_RAGING_GHOUL                            = 36940,
-    NPC_RISEN_WITCH_DOCTOR                        = 36941,
+    NPC_RISEN_WITCH_DOCTOR                      = 36941,
     NPC_LUMBERING_ABOMINATION                   = 37069,
 
     NPC_GUNSHIP_CANNON_HORDE                    = 37593,
@@ -87,13 +87,13 @@ enum CreatureIds
 
 enum GameObjectIds
 {
-    GO_FROSTMOURNE                                = 202302,
-    GO_ENTRANCE_DOOR                              = 201976,
+    GO_FROSTMOURNE                              = 202302,
+    GO_ENTRANCE_DOOR                            = 201976,
     GO_IMPENETRABLE_DOOR                        = 197341,
     GO_SHADOW_THRONE_DOOR                       = 197342,
     GO_ESCAPE_DOOR                              = 197343, // always open ?
 
-    GO_ICE_WALL                                   = 201385,
+    GO_ICE_WALL                                 = 201385,
     GO_CAVE_IN                                  = 201596,
 
     GO_THE_SKYBREAKER                           = 201598,
@@ -126,10 +126,10 @@ enum Actions
 
 enum InstanceEvents
 {
-    EVENT_SPAWN_WAVES                             = 1,
-    EVENT_NEXT_WAVE                               = 2,
-    EVENT_DO_WIPE                                 = 3,
-    EVENT_ADD_WAVE                                = 4,
+    EVENT_SPAWN_WAVES                           = 1,
+    EVENT_NEXT_WAVE                             = 2,
+    EVENT_DO_WIPE                               = 3,
+    EVENT_ADD_WAVE                              = 4,
     EVENT_SPAWN_ESCAPE_EVENT                    = 5
 };
 
@@ -193,7 +193,7 @@ struct boss_horAI : BossAI
     {
         switch (actionId)
         {
-            case ACTION_ENTER_COMBAT:  // called by InstanceScript when boss shall enter in combat.
+            case ACTION_ENTER_COMBAT: // called by InstanceScript when boss shall enter in combat.
                 me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_IMMUNE_TO_NPC);
                 me->SetReactState(REACT_AGGRESSIVE);
                 DoZoneInCombat(me, 150.0f);
@@ -224,12 +224,12 @@ class GameObjectDeleteDelayEvent : public BasicEvent
         {
             DeleteGameObject();
             return true;
-    }
+        }
 
         void Abort(uint64 /*execTime*/) override
-    {
+        {
             DeleteGameObject();
-    }
+        }
 
     private:
         Unit* _owner;

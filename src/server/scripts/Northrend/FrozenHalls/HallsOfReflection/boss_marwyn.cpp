@@ -50,80 +50,80 @@ enum Events
 class boss_marwyn : public CreatureScript
 {
     public:
-    boss_marwyn() : CreatureScript("boss_marwyn") { }
+        boss_marwyn() : CreatureScript("boss_marwyn") { }
 
-    struct boss_marwynAI : public boss_horAI
-    {
+        struct boss_marwynAI : public boss_horAI
+        {
             boss_marwynAI(Creature* creature) : boss_horAI(creature, DATA_MARWYN) { }
 
             void Reset() override
-        {
-            boss_horAI::Reset();
-        }
+            {
+                boss_horAI::Reset();
+            }
 
             void EnterCombat(Unit* /*who*/) override
-        {
-            Talk(SAY_AGGRO);
+            {
+                Talk(SAY_AGGRO);
                 DoZoneInCombat();
                 instance->SetBossState(DATA_MARWYN, IN_PROGRESS);
 
                 events.ScheduleEvent(EVENT_OBLITERATE, urand(8000, 13000));
-            events.ScheduleEvent(EVENT_WELL_OF_CORRUPTION, 13000);
-            events.ScheduleEvent(EVENT_CORRUPTED_FLESH, 20000);
+                events.ScheduleEvent(EVENT_WELL_OF_CORRUPTION, 13000);
+                events.ScheduleEvent(EVENT_CORRUPTED_FLESH, 20000);
                 events.ScheduleEvent(EVENT_SHARED_SUFFERING, urand(14000, 15000));
-        }
-
-            void JustDied(Unit* /*killer*/) override
-        {
-            Talk(SAY_DEATH);
-                events.Reset();
-                instance->SetBossState(DATA_MARWYN, DONE);
-        }
-
-            void KilledUnit(Unit* who) override
-        {
-                if (who->GetTypeId() == TYPEID_PLAYER)
-            Talk(SAY_SLAY);
-        }
-
-            void UpdateAI(uint32 diff) override
-        {
-            if (!UpdateVictim())
-                return;
-
-            events.Update(diff);
-
-            if (me->HasUnitState(UNIT_STATE_CASTING))
-                return;
-
-            switch (events.ExecuteEvent())
-            {
-                case EVENT_OBLITERATE:
-                        DoCastVictim(SPELL_OBLITERATE);
-                        events.ScheduleEvent(EVENT_OBLITERATE, urand(8000, 13000));
-                    break;
-                case EVENT_WELL_OF_CORRUPTION:
-                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100.0f, true))
-                            DoCast(target, SPELL_WELL_OF_CORRUPTION);
-                    events.ScheduleEvent(EVENT_WELL_OF_CORRUPTION, 13000);
-                    break;
-                case EVENT_CORRUPTED_FLESH:
-                    Talk(SAY_CORRUPTED_FLESH);
-                        DoCastAOE(SPELL_CORRUPTED_FLESH);
-                    events.ScheduleEvent(EVENT_CORRUPTED_FLESH, 20000);
-                    break;
-                case EVENT_SHARED_SUFFERING:
-                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 0.0f, true))
-                        DoCast(target, SPELL_SHARED_SUFFERING);
-                        events.ScheduleEvent(EVENT_SHARED_SUFFERING, urand(14000, 15000));
-                    break;
-                    default:
-                        break;
             }
 
-            DoMeleeAttackIfReady();
-        }
-    };
+            void JustDied(Unit* /*killer*/) override
+            {
+                Talk(SAY_DEATH);
+                events.Reset();
+                instance->SetBossState(DATA_MARWYN, DONE);
+            }
+
+            void KilledUnit(Unit* who) override
+            {
+                if (who->GetTypeId() == TYPEID_PLAYER)
+                    Talk(SAY_SLAY);
+            }
+
+            void UpdateAI(uint32 diff) override
+            {
+                if (!UpdateVictim())
+                    return;
+
+                events.Update(diff);
+
+                if (me->HasUnitState(UNIT_STATE_CASTING))
+                    return;
+
+                switch (events.ExecuteEvent())
+                {
+                    case EVENT_OBLITERATE:
+                        DoCastVictim(SPELL_OBLITERATE);
+                        events.ScheduleEvent(EVENT_OBLITERATE, urand(8000, 13000));
+                        break;
+                    case EVENT_WELL_OF_CORRUPTION:
+                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 100.0f, true))
+                            DoCast(target, SPELL_WELL_OF_CORRUPTION);
+                        events.ScheduleEvent(EVENT_WELL_OF_CORRUPTION, 13000);
+                        break;
+                    case EVENT_CORRUPTED_FLESH:
+                        Talk(SAY_CORRUPTED_FLESH);
+                        DoCastAOE(SPELL_CORRUPTED_FLESH);
+                        events.ScheduleEvent(EVENT_CORRUPTED_FLESH, 20000);
+                        break;
+                    case EVENT_SHARED_SUFFERING:
+                        if (Unit* target = SelectTarget(SELECT_TARGET_RANDOM, 0, 0.0f, true))
+                            DoCast(target, SPELL_SHARED_SUFFERING);
+                        events.ScheduleEvent(EVENT_SHARED_SUFFERING, urand(14000, 15000));
+                        break;
+                    default:
+                        break;
+                }
+
+                DoMeleeAttackIfReady();
+            }
+        };
 
         CreatureAI* GetAI(Creature* creature) const override
         {

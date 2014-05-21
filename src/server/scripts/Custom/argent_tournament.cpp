@@ -137,10 +137,12 @@ class the_grand_melee : public CreatureScript
                     switch (EventId)
                     {
                         case EVENT_MOVE:
-                            Position MovePos;
-                            me->GetFirstCollisionPosition(MovePos, frand(9.0f, 12.0f), frand(0, M_PI));
+                        {
+                            Position MovePos = me->GetPosition();
+                            me->GetFirstCollisionPosition(frand(9.0f, 12.0f), frand(0, M_PI));
                             me->GetMotionMaster()->MovePoint(POINT_FIRE, MovePos);
                             Events.ScheduleEvent(EVENT_MOVE, urand(7000, 10000));
+                        }
                             break;
                         case EVENT_CAST:
                             if (urand(0,4) == 4)

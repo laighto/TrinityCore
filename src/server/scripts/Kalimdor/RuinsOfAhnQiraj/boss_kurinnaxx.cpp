@@ -79,8 +79,7 @@ class boss_kurinnaxx : public CreatureScript
                 _JustDied();
 
                 //summon Lieutenant General Andorov
-                Position pos;
-                killer->GetPosition(&pos);
+                Position pos = killer->GetPosition();
                 instance->instance->SummonCreature(15471, pos);
 
                 if (Creature* Ossirian = me->GetMap()->GetCreature(instance->GetData64(DATA_OSSIRIAN)))
