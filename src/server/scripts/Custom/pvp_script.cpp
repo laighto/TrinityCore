@@ -243,8 +243,8 @@ public:
         }
 
         //Gift
-        if (roll_chance_f(10.0f))
-            player->SummonGameObject(600004, boss->GetPositionX()+0.1f, boss->GetPositionY()+0.1f, boss->GetPositionZ()+0.1f, 0, 0, 0, 0, 0, 0);
+//        if (roll_chance_f(10.0f))
+//            player->SummonGameObject(600004, boss->GetPositionX()+0.1f, boss->GetPositionY()+0.1f, boss->GetPositionZ()+0.1f, 0, 0, 0, 0, 0, 0);
     }
 
     void OnLogin(Player* player)
