@@ -768,7 +768,7 @@ public:
         {
             if (_instance)
             {
-                if (Creature* kelthuzad = Unit::GetCreature(*killer, _instance->GetData64(DATA_KELTHUZAD)))
+                if (Creature* kelthuzad = ObjectAccessor::GetCreature(*killer, _instance->GetData64(DATA_KELTHUZAD)))
                     kelthuzad->AI()->Talk(SAY_CAT_DIED);
                 //Temp hack. TO DO: implement cross-map voice and chat message from Kel'Thuzad
                 if (Creature* kelthuzadTemp = me->FindNearestCreature(TEMP_KELTHUZAD, 200.0f, true))
