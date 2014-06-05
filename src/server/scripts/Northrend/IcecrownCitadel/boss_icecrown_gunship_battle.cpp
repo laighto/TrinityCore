@@ -2302,7 +2302,7 @@ class spell_igb_rocket_artillery_explosion : public SpellScriptLoader
             void DamageGunship(SpellEffIndex /*effIndex*/)
             {
                 if (InstanceScript* instance = GetCaster()->GetInstanceScript())
-                    GetCaster()->CastCustomSpell(instance->GetData(DATA_TEAM_IN_INSTANCE) == HORDE ? SPELL_BURNING_PITCH_DAMAGE_A : SPELL_BURNING_PITCH_DAMAGE_H, SPELLVALUE_BASE_POINT0, 5000, NULL, TRIGGERED_FULL_MASK);
+                    GetCaster()->CastCustomSpell(instance->GetData(DATA_TEAM_IN_INSTANCE) == HORDE ? SPELL_BURNING_PITCH_DAMAGE_H : SPELL_BURNING_PITCH_DAMAGE_A, SPELLVALUE_BASE_POINT0, 5000, NULL, TRIGGERED_FULL_MASK);
             }
 
             void Register() override
