@@ -223,7 +223,7 @@ public:
         }
         // END WORLD MASS EVENT
         */
-        if (boss->isWorldBoss())
+        if (boss->isWorldBoss() && !player->IsGameMaster())
             sWorld->SendWorldText(LANG_BOSS_ANNOUNCER, player->GetName().c_str(), boss->GetNameForLocaleIdx(player->GetSession()->GetSessionDbLocaleIndex()).c_str());
             /*if (player->getGender() == GENDER_MALE)
             {
