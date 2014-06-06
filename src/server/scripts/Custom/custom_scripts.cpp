@@ -132,7 +132,7 @@ public:
  
     void OnCreatureKill(Player* player, Creature* boss)
     {
-        if (boss->isWorldBoss())
+        if (boss->isWorldBoss() && !player->IsGameMaster())
             sWorld->SendWorldText(LANG_BOSS_ANNOUNCER, player->GetName().c_str(), boss->GetNameForLocaleIdx(player->GetSession()->GetSessionDbLocaleIndex()).c_str());
 
         //Berserk
