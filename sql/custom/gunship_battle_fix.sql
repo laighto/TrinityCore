@@ -1,0 +1,2 @@
+UPDATE `creature_template` SET `exp` = 2, `VehicleId` = 554, `RegenHealth` = 0, `spell1` = 69399, `spell2` = 69401 WHERE entry = 36838;
+UPDATE `creature_template` SET `exp` = 2, `VehicleId` = 554, `RegenHealth` = 0, `spell1` = 70172, `spell2` = 70174 WHERE entry = 36839;
