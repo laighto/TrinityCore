@@ -382,9 +382,52 @@ public:
     }
 };
 
+class npc_editor : public CreatureScript
+{
+public:
+    npc_editor() : CreatureScript("npc_editor") { }
+
+    bool OnGossipHello(Player* player, Creature* creature) override
+    {
+        if (player->GetMoney() > 10000000)
+        {
+            //Load gossip menu option + locale from DB
+            player->PrepareGossipMenu(creature, 65530);
+            player->SendPreparedGossip(creature);
+        }
+        else
+            player->PlayerTalkClass->SendGossipMenu(11189, creature->GetGUID());
+
+        return true;
+    }
+
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) override
+    {
+        player->PlayerTalkClass->SendCloseGossip();
+
+        switch (action)
+        {
+        case 0:
+            CharacterDatabase.PExecute("UPDATE characters SET at_login=1 WHERE guid=%u;", player->GetGUIDLow());
+            creature->MonsterSay("PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
+            break;
+        case 1:
+            CharacterDatabase.PExecute("UPDATE characters SET at_login=64 WHERE guid=%u;", player->GetGUIDLow());
+            creature->MonsterSay("PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
+            break;
+        case 3:
+            CharacterDatabase.PExecute("UPDATE characters SET at_login=128 WHERE guid=%u;", player->GetGUIDLow());
+            creature->MonsterSay("PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
+            break;
+        }
+        return true;
+    }
+};
+
 void AddSC_pvp_script()
 {
     new mob_ressurect();
     new mod_afk();
     new Boss_Announcer();
+    new npc_editor();
 }
