@@ -26,3 +26,26 @@ INSERT INTO `trinity_string` (`entry`, `content_default`, `content_loc8`) VALUES
 (999978, 'Items has different subclass material!', 'Предметы сделаны из разных материалов!'),
 (999979, 'Player can\'t equip that item!', 'Игрок не может использовать этот предмет'),
 (999980, 'Items has different class!', 'Разный класс предметов!');
+
+DELETE FROM  `gossip_menu_option` WHERE `menu_id`=65500;
+INSERT INTO `gossip_menu_option` (`menu_id`, `id`, `option_icon`, `option_text`, `OptionBroadcastTextID`, `option_id`, `npc_option_npcflag`, `action_menu_id`, `action_poi_id`, `box_coded`, `box_money`, `box_text`, `BoxBroadcastTextID`) VALUES 
+(65500, 0, 0, 'Change Name', 965500, 1, 1, 0, 0, 0, 0, 'Expensive!', 0),
+(65500, 1, 0, 'Change Faction', 965501, 1, 1, 0, 0, 0, 0, 'Expensive!', 0);
+
+DELETE FROM  `locales_gossip_menu_option` WHERE `menu_id`=65500;
+INSERT INTO `locales_gossip_menu_option` (`menu_id`, `id`, `option_text_loc8`, `box_text_loc8`) VALUES 
+(65500, 0, 'Трансформировать предмет',  ''),
+(65500, 1, 'Сделать предмет обычным',  '');
+
+DELETE FROM `broadcast_text` WHERE `ID` IN (965500, 965501);
+INSERT INTO `broadcast_text` (`ID`, `MaleText`) VALUES 
+('965500', 'Transmorgrify'),
+('965501', 'Make item clean.');
+
+DELETE FROM `locales_broadcast_text` WHERE `ID` IN (965500, 965501);
+INSERT INTO `locales_broadcast_text` (`ID`, `MaleText_loc8`) VALUES 
+('965500', 'Трансформировать предмет'),
+('965501', 'Сделать предмет обычным');
+
+
+

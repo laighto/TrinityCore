@@ -26,3 +26,28 @@ INSERT INTO `locales_gossip_menu_option` (`menu_id`, `id`, `option_text_loc8`, `
 (7058, 3, 'Я хочу забыть Гоблинскую инженерию.', 'Вы действительно хотите забыть вашу специальность инженера и потерять все связанные рецепты?'),
 (7058, 4, 'Забыть двойную специализацыю.', 'Вы действительно хотите забыть двойную специализацыю?'),
 (7058, 5, 'Выучить двойную специализацыю.', '1000 золота');
+
+DELETE FROM `broadcast_text` WHERE `ID` IN (970580, 970581, 970582, 970583, 970584, 970585);
+INSERT INTO `broadcast_text` (`ID`, `MaleText`) VALUES 
+('970580', 'I am absolutely certain that i want to learn Gnomish engineer.'),
+('970581', 'I am absolutely certain that i want to learn Goblin engineer.'),
+('970582', 'I wish to unlearn Gnomish engineer.'),
+('970583', 'I wish to unlearn Goblin engineer.'),
+('970584', 'Revert to One Talent Specialization.'),
+('970585', 'Learn Dual Talent Specialization.');
+
+DELETE FROM `locales_broadcast_text` WHERE `ID` IN (970580, 970581, 970582, 970583, 970584, 970585);
+INSERT INTO `locales_broadcast_text` (`ID`, `MaleText_loc8`) VALUES 
+('970580', 'Я абсолютно уверен, что я хочу изучить Гномскую инженерию.'),
+('970581', 'Я абсолютно уверен, что я хочу изучить Гоблинскую инженерию.'),
+('970582', 'Я хочу забыть Гномкую инженерию.'),
+('970583', 'Я хочу забыть Гоблинскую инженерию.'),
+('970584', 'Забыть двойную специализацыю.'),
+('970585', 'Выучить двойную специализацыю.');
+
+UPDATE `gossip_menu_option` SET `OptionBroadcastTextID`='970580' WHERE `menu_id`='7058' AND `id`='0';
+UPDATE `gossip_menu_option` SET `OptionBroadcastTextID`='970581' WHERE `menu_id`='7058' AND `id`='1';
+UPDATE `gossip_menu_option` SET `OptionBroadcastTextID`='970582' WHERE `menu_id`='7058' AND `id`='2';
+UPDATE `gossip_menu_option` SET `OptionBroadcastTextID`='970583' WHERE `menu_id`='7058' AND `id`='3';
+UPDATE `gossip_menu_option` SET `OptionBroadcastTextID`='970584' WHERE `menu_id`='7058' AND `id`='4';
+UPDATE `gossip_menu_option` SET `OptionBroadcastTextID`='970585' WHERE `menu_id`='7058' AND `id`='5';
