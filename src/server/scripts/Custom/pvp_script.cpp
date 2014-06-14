@@ -1,8 +1,12 @@
 #include "ScriptMgr.h"
 #include "ScriptedCreature.h"
+#include "ScriptedGossip.h"
 #include "World.h"
 #include "Chat.h"
 #include "Language.h"
+#include "GossipDef.h"
+#include "SmartAI.h"
+#include "Player.h"
 
 const Position allyPositions[3] =
 {
@@ -58,11 +62,11 @@ public:
             killed->TeleportTo(0, allyPositions[rnd].GetPositionX(), allyPositions[rnd].GetPositionY(), allyPositions[rnd].GetPositionZ(), allyPositions[rnd].GetOrientation());
 
             //Frost
-            if (roll_chance_f(1.0f))
-            {
-                killer->AddItem(49426, 1);
-                sWorld->SendWorldText(12015, killer->GetName().c_str());
-            }
+          //  if (roll_chance_f(1.0f))
+          //  {
+           //     killer->AddItem(49426, 1);
+           //     sWorld->SendWorldText(12015, killer->GetName().c_str());
+            //}
 
         }
        /* else //Marry Xmas
@@ -71,8 +75,8 @@ public:
         }*/
 
         //Add ancient shard
-        if (roll_chance_f(1.0f) && killer->InBattleground())
-            killer->AddItem(23359, 1);
+        //if (roll_chance_f(1.0f) && killer->InBattleground())
+        //    killer->AddItem(23359, 1);
 
       /*  //WORLD MASS EVENT
         if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker)
@@ -387,40 +391,36 @@ class npc_editor : public CreatureScript
 public:
     npc_editor() : CreatureScript("npc_editor") { }
 
-    bool OnGossipHello(Player* player, Creature* creature) override
+    struct npc_editorAI : public ScriptedAI
     {
-        if (player->GetMoney() > 10000000)
+        npc_editorAI(Creature* creature) : ScriptedAI(creature) { }
+
+        void sGossipSelect(Player* player, uint32 /*menuId*/, uint32 gossipListId) override
         {
-            //Load gossip menu option + locale from DB
-            player->PrepareGossipMenu(creature, 65530);
-            player->SendPreparedGossip(creature);
+            player->PlayerTalkClass->SendCloseGossip();
+
+            PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_ADD_AT_LOGIN_FLAG);
+            switch (gossipListId)
+            {
+            case 0:
+                player->SetAtLoginFlag(AT_LOGIN_RENAME);
+                me->MonsterSay("Change NAME SET. PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
+                break;
+            case 1:
+                player->SetAtLoginFlag(AT_LOGIN_CHANGE_FACTION);
+                me->MonsterSay("CHANGE FACTION SET. PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
+                break;
+            case 2:
+                player->SetAtLoginFlag(AT_LOGIN_CHANGE_RACE);
+                me->MonsterSay("CHANGE RACE SET. PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
+                break;
+            }
         }
-        else
-            player->PlayerTalkClass->SendGossipMenu(11189, creature->GetGUID());
+    };
 
-        return true;
-    }
-
-    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) override
+    CreatureAI* GetAI(Creature* creature) const override
     {
-        player->PlayerTalkClass->SendCloseGossip();
-
-        switch (action)
-        {
-        case 0:
-            CharacterDatabase.PExecute("UPDATE characters SET at_login=1 WHERE guid=%u;", player->GetGUIDLow());
-            creature->MonsterSay("PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
-            break;
-        case 1:
-            CharacterDatabase.PExecute("UPDATE characters SET at_login=64 WHERE guid=%u;", player->GetGUIDLow());
-            creature->MonsterSay("PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
-            break;
-        case 3:
-            CharacterDatabase.PExecute("UPDATE characters SET at_login=128 WHERE guid=%u;", player->GetGUIDLow());
-            creature->MonsterSay("PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
-            break;
-        }
-        return true;
+        return new npc_editorAI(creature);
     }
 };
 
