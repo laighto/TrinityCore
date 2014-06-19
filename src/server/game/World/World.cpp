@@ -1301,6 +1301,7 @@ void World::LoadConfigSettings(bool reload)
     m_bool_configs[CONFIG_CHATLOG_LEXIS_ACTION_CUSTOM] = sConfigMgr->GetBoolDefault("ChatLog.Lexics.Action.Custom", false);
     m_int_configs[CONFIG_CHATLOG_LEXIS_ACTION_CUSTOM_MODE] = sConfigMgr->GetIntDefault("ChatLog.Lexics.Action.Custom.Mode", 0);
     m_int_configs[CONFIG_CHATLOG_LEXIS_ACTION_CUSTOM_SPELL] = sConfigMgr->GetIntDefault("ChatLog.Lexics.Action.Custom.Punish.Spell", 0);
+    m_bool_configs[CONFIG_CHANNEL_FACTION_ICON] = sConfigMgr->GetBoolDefault("Channel.Icon", false);
 
     //packet spoof punishment
     m_int_configs[CONFIG_PACKET_SPOOF_POLICY] = sConfigMgr->GetIntDefault("PacketSpoof.Policy", (uint32)WorldSession::DosProtection::POLICY_KICK);

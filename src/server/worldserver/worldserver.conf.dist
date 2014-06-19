@@ -3075,5 +3075,10 @@ AntiAfk = 0
 
 DalaranAntiAfk = 0
 
+# Channel faction icon
+# Enable/Disable showing faction icons in chat
+
+Channel.Icon = 0
+
 #
 ##############################################################################
