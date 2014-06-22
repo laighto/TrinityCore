@@ -344,6 +344,7 @@ bool consoleToUtf8(const std::string& conStr, std::string& utf8str);
 bool Utf8FitTo(const std::string& str, std::wstring search);
 void utf8printf(FILE* out, const char *str, ...);
 void vutf8printf(FILE* out, const char *str, va_list* ap);
+bool Utf8ToUpperOnlyLatin(std::string& utf8String);
 
 bool IsIPAddress(char const* ipaddress);
 
@@ -356,6 +357,7 @@ std::string GetAddressString(ACE_INET_Addr const& addr);
 uint32 CreatePIDFile(const std::string& filename);
 
 std::string ByteArrayToHexStr(uint8 const* bytes, uint32 length, bool reverse = false);
+void HexStrToByteArray(std::string const& str, uint8* out, bool reverse = false);
 #endif
 
 //handler for operations on large flags
@@ -866,14 +868,7 @@ class EventMap
         * @param Id of the event.
         * @return Time of next event.
         */
-        uint32 GetTimeUntilEvent(uint32 eventId) const
-        {
-            for (EventStore::const_iterator itr = _eventMap.begin(); itr != _eventMap.end(); ++itr)
-                if (eventId == (itr->second & 0x0000FFFF))
-                    return itr->first - _time;
-
-            return std::numeric_limits<uint32>::max();
-        }
+        uint32 GetTimeUntilEvent(uint32 eventId) const;
 
     private:
         /**

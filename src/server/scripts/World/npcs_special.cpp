@@ -185,7 +185,6 @@ public:
         }
 
         void MoveInLineOfSight(Unit* who) override
-
         {
             if (!SpawnAssoc)
                 return;
@@ -1518,7 +1517,10 @@ class npc_brewfest_reveler : public CreatureScript
 enum TrainingDummy
 {
     NPC_ADVANCED_TARGET_DUMMY                  = 2674,
-    NPC_TARGET_DUMMY                           = 2673
+    NPC_TARGET_DUMMY                           = 2673,
+
+    EVENT_TD_CHECK_COMBAT                      = 1,
+    EVENT_TD_DESPAWN                           = 2
 };
 
 class npc_training_dummy : public CreatureScript
@@ -1531,20 +1533,22 @@ public:
         npc_training_dummyAI(Creature* creature) : ScriptedAI(creature)
         {
             SetCombatMovement(false);
-            entry = creature->GetEntry();
         }
 
-        uint32 entry;
-        uint32 resetTimer;
-        uint32 despawnTimer;
+        EventMap _events;
+        std::unordered_map<uint64, time_t> _damageTimes;
 
         void Reset() override
         {
             me->SetControlled(true, UNIT_STATE_STUNNED);//disable rotate
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);//imune to knock aways like blast wave
 
-            resetTimer = 5000;
-            despawnTimer = 15000;
+            _events.Reset();
+            _damageTimes.clear();
+            if (me->GetEntry() != NPC_ADVANCED_TARGET_DUMMY && me->GetEntry() != NPC_TARGET_DUMMY)
+                _events.ScheduleEvent(EVENT_TD_CHECK_COMBAT, 1000);
+            else
+                _events.ScheduleEvent(EVENT_TD_DESPAWN, 15000);
         }
 
         void EnterEvadeMode() override
@@ -1564,37 +1568,52 @@ public:
                     caster->ToPlayer()->KilledMonsterCredit(44175, 0);
         }
 
-        void DamageTaken(Unit* /*doneBy*/, uint32& damage) override
+        void DamageTaken(Unit* doneBy, uint32& damage) override
         {
-            resetTimer = 5000;
+            me->AddThreat(doneBy, float(damage));    // just to create threat reference
+            _damageTimes[doneBy->GetGUID()] = time(NULL);
             damage = 0;
         }
 
         void UpdateAI(uint32 diff) override
         {
-            if (!UpdateVictim())
+            if (!me->IsInCombat())
                 return;
 
             if (!me->HasUnitState(UNIT_STATE_STUNNED))
                 me->SetControlled(true, UNIT_STATE_STUNNED);//disable rotate
 
-            if (entry != NPC_ADVANCED_TARGET_DUMMY && entry != NPC_TARGET_DUMMY)
+            _events.Update(diff);
+
+            if (uint32 eventId = _events.ExecuteEvent())
             {
-                if (resetTimer <= diff)
+                switch (eventId)
                 {
-                    EnterEvadeMode();
-                    resetTimer = 5000;
+                case EVENT_TD_CHECK_COMBAT:
+                {
+                    time_t now = time(NULL);
+                    for (std::unordered_map<uint64, time_t>::iterator itr = _damageTimes.begin(); itr != _damageTimes.end();)
+                    {
+                        // If unit has not dealt damage to training dummy for 5 seconds, remove him from combat
+                        if (itr->second < now - 5)
+                        {
+                            if (Unit* unit = ObjectAccessor::GetUnit(*me, itr->first))
+                                unit->getHostileRefManager().deleteReference(me);
+
+                            itr = _damageTimes.erase(itr);
+                        }
+                        else
+                            ++itr;
+                    }
+                    _events.ScheduleEvent(EVENT_TD_CHECK_COMBAT, 1000);
+                    break;
                 }
-                else
-                    resetTimer -= diff;
-                return;
-            }
-            else
-            {
-                if (despawnTimer <= diff)
-                    me->DespawnOrUnsummon();
-                else
-                    despawnTimer -= diff;
+                case EVENT_TD_DESPAWN:
+                    me->DespawnOrUnsummon(1);
+                    break;
+                default:
+                    break;
+                }
             }
         }
 
@@ -1617,22 +1636,23 @@ public:
     {
         npc_dummy_lowAI(Creature* creature) : ScriptedAI(creature)
         {
-            entry = creature->GetEntry();
+            SetCombatMovement(false);
         }
 
-        uint32 entry;
-        uint32 resetTimer;
-        uint32 despawnTimer;
+        EventMap _events;
+        std::unordered_map<uint64, time_t> _damageTimes;
 
         void Reset() override
         {
             me->SetControlled(true, UNIT_STATE_STUNNED);//disable rotate
             me->ApplySpellImmune(0, IMMUNITY_EFFECT, SPELL_EFFECT_KNOCK_BACK, true);//imune to knock aways like blast wave
 
-            resetTimer = 5000;
-            despawnTimer = 15000;
-
-            me->SetHealth(me->GetMaxHealth() * 0.20);
+            _events.Reset();
+            _damageTimes.clear();
+            if (me->GetEntry() != NPC_ADVANCED_TARGET_DUMMY && me->GetEntry() != NPC_TARGET_DUMMY)
+                _events.ScheduleEvent(EVENT_TD_CHECK_COMBAT, 1000);
+            else
+                _events.ScheduleEvent(EVENT_TD_DESPAWN, 15000);
         }
 
         void EnterEvadeMode() override
@@ -1643,56 +1663,69 @@ public:
             Reset();
         }
 
-        void SpellHit(Unit* caster, SpellInfo const* /*spell*/) override
+        void SpellHit(Unit* caster, const SpellInfo* spell) override
         {
+            //IMPLEMENTED questRewards Training skills on 3rd Level
+            if (caster->GetTypeId() == TYPEID_PLAYER)
+                if (spell->Id == 20271 || spell->Id == 100 || spell->Id == 2098 || spell->Id == 56641 || spell->Id == 5143 || spell->Id == 73899 || spell->Id == 348 || spell->Id == 5143)
+                    //if (caster->ToPlayer()->GetQuestStatus(27091) != QUEST_STATUS_COMPLETE || caster->ToPlayer()->GetQuestStatus(14013) != QUEST_STATUS_COMPLETE || caster->ToPlayer()->GetQuestStatus(25147) != QUEST_STATUS_COMPLETE)
+                    caster->ToPlayer()->KilledMonsterCredit(44175, 0);
+
             if (caster->GetTypeId() == TYPEID_PLAYER)
                 me->SetHealth(me->GetMaxHealth() * 0.20);
         }
 
-        void DamageTaken(Unit* /*doneBy*/, uint32& damage) override
+        void DamageTaken(Unit* doneBy, uint32& damage) override
         {
-            resetTimer = 5000;
+            me->AddThreat(doneBy, float(damage));    // just to create threat reference
+            _damageTimes[doneBy->GetGUID()] = time(NULL);
             damage = 0;
             me->SetHealth(me->GetMaxHealth() * 0.20);
         }
 
-        void EnterCombat(Unit* /*who*/) override
-        {
-            if (entry != NPC_ADVANCED_TARGET_DUMMY && entry != NPC_TARGET_DUMMY)
-                return;
-        }
-
         void UpdateAI(uint32 diff) override
         {
-            if (!UpdateVictim())
+            if (!me->IsInCombat())
                 return;
-            
+
             if (!me->HasUnitState(UNIT_STATE_STUNNED))
                 me->SetControlled(true, UNIT_STATE_STUNNED);//disable rotate
 
-            if (entry != NPC_ADVANCED_TARGET_DUMMY && entry != NPC_TARGET_DUMMY)
-            {
-                me->SetHealth(me->GetMaxHealth() * 0.20);
+            _events.Update(diff);
 
-                if (resetTimer <= diff)
-                {
-                    EnterEvadeMode();
-                    resetTimer = 5000;
-                }
-                else
-                    resetTimer -= diff;
-                return;
-            }
-            else
+            if (uint32 eventId = _events.ExecuteEvent())
             {
-                if (despawnTimer <= diff)
-                    me->DespawnOrUnsummon();
-                else
-                    despawnTimer -= diff;
+                switch (eventId)
+                {
+                case EVENT_TD_CHECK_COMBAT:
+                {
+                    time_t now = time(NULL);
+                    for (std::unordered_map<uint64, time_t>::iterator itr = _damageTimes.begin(); itr != _damageTimes.end();)
+                    {
+                        // If unit has not dealt damage to training dummy for 5 seconds, remove him from combat
+                        if (itr->second < now - 5)
+                        {
+                            if (Unit* unit = ObjectAccessor::GetUnit(*me, itr->first))
+                                unit->getHostileRefManager().deleteReference(me);
+
+                            itr = _damageTimes.erase(itr);
+                        }
+                        else
+                            ++itr;
+                    }
+                    _events.ScheduleEvent(EVENT_TD_CHECK_COMBAT, 1000);
+                    break;
+                }
+                case EVENT_TD_DESPAWN:
+                    me->DespawnOrUnsummon(1);
+                    break;
+                default:
+                    break;
+                }
             }
         }
-        void MoveInLineOfSight(Unit* /*who*/)  override
-            {return;}
+
+        void MoveInLineOfSight(Unit* /*who*/) override { }
     };
 
     CreatureAI* GetAI(Creature* creature) const override
