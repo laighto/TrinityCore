@@ -14,7 +14,7 @@ set(scripts_STAT_SRCS
   Custom/gmisland_protector.cpp
   Custom/pet_scale.cpp
   Custom/npc_transmogrify.cpp
-  Custom/pvp_script.cpp
+  Custom/custom_scripts.cpp
 )
 
 message("  -> Prepared: Custom")
