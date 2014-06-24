@@ -424,10 +424,28 @@ public:
     }
 };
 
+class code_manager : public CreatureScript
+{
+public:
+    code_manager() : CreatureScript("code_manager") { }
+
+
+    bool OnGossipSelectCode(Player* player, Creature* creature, uint32 sender, uint32 action, const char* code) override
+    {
+        player->PlayerTalkClass->SendCloseGossip();
+
+        sWorld->SendServerMessage(SERVER_MSG_STRING, code);
+        sWorld->SendWorldText(600000, code);
+
+        return true;
+    }
+};
+
 void AddSC_pvp_script()
 {
     new mob_ressurect();
     new mod_afk();
     new Boss_Announcer();
     new npc_editor();
+    new code_manager();
 }
