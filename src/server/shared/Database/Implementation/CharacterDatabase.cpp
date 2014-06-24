@@ -600,4 +600,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
     PrepareStatement(CHAR_UPD_CHAR_PET_SLOT_BY_ID, "UPDATE character_pet SET slot = ? WHERE owner = ? AND id = ?", CONNECTION_ASYNC);
     PrepareStatement(CHAR_DEL_CHAR_PET_BY_ID, "DELETE FROM character_pet WHERE id = ?", CONNECTION_ASYNC);
     PrepareStatement(CHAR_DEL_CHAR_PET_BY_SLOT, "DELETE FROM character_pet WHERE owner = ? AND (slot = ? OR slot > ?)", CONNECTION_ASYNC);
+
+    PrepareStatement(CHAR_SEL_CODE, "SELECT active, actionid, data0, data1, data2, data3 FROM code_manager WHERE code = ?", CONNECTION_SYNCH);
+    PrepareStatement(CHAR_UPD_CODE, "UPDATE code_manager SET active = 0, charguid = ?, characcount = ? WHERE code = ?", CONNECTION_ASYNC);
 }

@@ -41,8 +41,7 @@ INSERT INTO `gossip_menu_option` (`menu_id`, `id`, `option_icon`, `option_text`,
 (65535, 2, 6, 'AUCTION', 655352, 13, 2097152, 0, 0, 0, 0, NULL, 0),
 (65535, 3, 1, 'I want to browse your goods.', 655353, 3, 128, 0, 0, 0, 0, NULL, 0),
 (65535, 4, 3, 'Training Dual Talent switch.', 655354, 5, 16, 0, 0, 0, 0, NULL, 0),
-(65535, 5, 0, 'Stable Master', 655355, 14, 4194304, 0, 0, 0, 0, NULL, 0),
-(65535, 6, 0, 'Redeem a Code', 655356, 1, 1, 0, 0, 1, 0, NULL, 0);
+(65535, 5, 0, 'Stable Master', 655355, 14, 4194304, 0, 0, 0, 0, NULL, 0);
 
 DELETE FROM `locales_gossip_menu_option` WHERE `menu_id`='65535';
 INSERT INTO `locales_gossip_menu_option` (`menu_id`, `id`, `option_text_loc1`, `option_text_loc2`, `option_text_loc3`, `option_text_loc4`, `option_text_loc5`, `option_text_loc6`, `option_text_loc7`, `option_text_loc8`, `box_text_loc1`, `box_text_loc2`, `box_text_loc3`, `box_text_loc4`, `box_text_loc5`, `box_text_loc6`, `box_text_loc7`, `box_text_loc8`) VALUES
@@ -51,8 +50,7 @@ INSERT INTO `locales_gossip_menu_option` (`menu_id`, `id`, `option_text_loc1`, `
 (65535, 2, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'АУКЦИОН', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (65535, 3, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Покажи мне свои товары.', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
 (65535, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Обучение переключению дуалспека', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL),
-(65535, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Смотритель стойл', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Вы должны слезть с маунта! Уверены?'),
-(65535, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Погасить код', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+(65535, 5, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Смотритель стойл', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Вы должны слезть с маунта! Уверены?');
 
 DELETE FROM `broadcast_text` WHERE `ID` IN (655350, 655351, 655352, 655353, 655354, 655355);
 INSERT INTO `broadcast_text` (`ID`, `MaleText`) VALUES 
@@ -61,8 +59,7 @@ INSERT INTO `broadcast_text` (`ID`, `MaleText`) VALUES
 ('655352', 'AUCTION.'),
 ('655353', 'I want to browse your goods.'),
 ('655354', 'Training Dual Talent switch.'),
-('655355', 'Stable Master.'),
-('655356', 'Redeem a Code');
+('655355', 'Stable Master.');
 
 DELETE FROM `locales_broadcast_text` WHERE `ID` IN (655350, 655351, 655352, 655353, 655354, 655355);
 INSERT INTO `locales_broadcast_text` (`ID`, `MaleText_loc8`) VALUES 
@@ -71,7 +68,4 @@ INSERT INTO `locales_broadcast_text` (`ID`, `MaleText_loc8`) VALUES
 ('655352', 'Аукцион.'),
 ('655353', 'Покажи мне свои товары.'),
 ('655354', 'Обучение переключению дуалспека'),
-('655355', 'Смотритель стойл.'),
-('655356', 'Погасить код.');
-
-UPDATE creature_template SET ScriptNAme='code_manager' WHERE entry=99999;
+('655355', 'Смотритель стойл.');
