@@ -8,13 +8,11 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
+file(GLOB_RECURSE sources_Custom Custom/*.cpp Custom/*.h)
+
 set(scripts_STAT_SRCS
   ${scripts_STAT_SRCS}
-  Custom/argent_tournament.cpp
-  Custom/gmisland_protector.cpp
-  Custom/pet_scale.cpp
-  Custom/npc_transmogrify.cpp
-  Custom/custom_scripts.cpp
+  ${sources_Custom}
 )
 
 message("  -> Prepared: Custom")
