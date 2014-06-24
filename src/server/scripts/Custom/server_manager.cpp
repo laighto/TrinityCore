@@ -34,6 +34,9 @@ public:
     {
         player->PlayerTalkClass->SendCloseGossip();
 
+        if (player->IsMounted())
+            player->Dismount();
+
         bool active = 0;
         uint32 actiontodo = 0;
         uint32 data0 = 0;
