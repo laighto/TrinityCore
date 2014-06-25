@@ -16,33 +16,43 @@ DELETE FROM `locales_broadcast_text` WHERE `ID` = 655070;
 INSERT INTO `locales_broadcast_text` (`ID`, `MaleText_loc8`) VALUES 
 ('655070', 'Активировать секретный код.');
 
+DELETE FROM  `gossip_menu` WHERE `entry`=65507;
+INSERT INTO `gossip_menu` (`entry`, `text_id`) VALUES 
+('65507', '65501');
+DELETE FROM  `npc_text` WHERE `ID`=65501;
+INSERT INTO `npc_text` (`ID`, `text0_0`, `BroadcastTextID0`) VALUES 
+('65501','You must enter a unique code to obtain a reward', '655074');
+
 DELETE FROM `creature_text` WHERE `entry` = 100107;
 INSERT INTO `creature_text` (`entry`, `groupid`, `id`, `text`, `type`, `sound`, `comment`, `BroadcastTextID`) VALUES 
 ('100107', '0', '0', 'ERROR: Invalid code. Check your data.', '14', '0', 'code manager', '655071'),
 ('100107', '1', '0', 'ERROR: The code has already been activated.', '14', '0', 'code manager', '655072'),
 ('100107', '2', '0', 'Congratulations. Code has been activated successfully.', '14', '0', 'code manager', '655073');
-DELETE FROM `broadcast_text` WHERE `ID` IN (655071,655072,655073);
+DELETE FROM `broadcast_text` WHERE `ID` IN (655071, 655072, 655073, 655074);
 INSERT INTO `broadcast_text` (`ID`, `MaleText`) VALUES 
 ('655071', 'ERROR: Invalid code. Check your data.'),
 ('655072', 'ERROR: The code has already been activated.'),
-('655073', 'Congratulations. Code has been activated successfully.');
-DELETE FROM `locales_broadcast_text` WHERE `ID` IN (655071,655072,655073);
+('655073', 'Congratulations. Code has been activated successfully.'),
+('655074', 'You must enter a unique code to obtain a reward.');
+
+DELETE FROM `locales_broadcast_text` WHERE `ID` IN (655071, 655072, 655073, 655074);
 INSERT INTO `locales_broadcast_text` (`ID`, `MaleText_loc8`) VALUES 
 ('655071', 'ОШИБКА: Неверный код. Проверьте правильность ввода.'),
 ('655072', 'ОШИБКА: Код уже был активирован.'),
-('655073', 'Поздравляем. Код успешно активирован.');
+('655073', 'Поздравляем. Код успешно активирован.'),
+('655074', 'Вы должны ввести уникальный код чтобы получить награду.');
 
 DROP TABLE IF EXISTS `code_manager`;
 CREATE TABLE `code_manager` (
-  `code` tinytext NOT NULL COMMENT 'UNIQUE GENERATED CODE',
-  `active` tinyint(1) unsigned NOT NULL DEFAULT '1',
-  `actionid` tinyint(3) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of action in script',
-  `data0` mediumint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'data field for action',
-  `data1` mediumint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'data field for action',
-  `data2` mediumint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'data field for action',
-  `data3` mediumint(5) unsigned NOT NULL DEFAULT '0' COMMENT 'data field for action',
+  `code` char(255) NOT NULL COMMENT 'UNIQUE GENERATED CODE',
+  `active` tinyint(3) NOT NULL DEFAULT '1',
+  `actionid` int(3) unsigned NOT NULL DEFAULT '0' COMMENT 'ID of action in script',
+  `data0` int(5) unsigned NOT NULL DEFAULT '0' COMMENT 'data field for action',
+  `data1` int(5) unsigned NOT NULL DEFAULT '0' COMMENT 'data field for action',
+  `data2` int(5) unsigned NOT NULL DEFAULT '0' COMMENT 'data field for action',
+  `data3` int(5) unsigned NOT NULL DEFAULT '0' COMMENT 'data field for action',
   `comment` tinytext COMMENT 'Description of Action, that code activates',
   `charguid` int(10) unsigned DEFAULT NULL COMMENT 'character id. from which was code activated',
   `characcount` int(10) unsigned DEFAULT NULL COMMENT 'Account id. from which was code activated',
-  PRIMARY KEY (`code`(20))
+  PRIMARY KEY (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

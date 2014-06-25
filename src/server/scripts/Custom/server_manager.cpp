@@ -13,8 +13,8 @@ enum actionlist
     REWARD_SINGLE_ITEMS = 1,
     REWARD_ITEM_WITH_COUNT = 2,
     REWARD_ITEM_WITH_RANDOM_COUNT = 3,
-    REWARD_SPELLS_CAST = 4,
-
+    REWARD_SPELL_CAST = 4,
+    REWARD_CURRENCY = 5,
 };
 
 enum messages
@@ -32,24 +32,20 @@ public:
 
     bool OnGossipSelectCode(Player* player, Creature* creature, uint32 sender, uint32 action, const char* code) override
     {
-        player->PlayerTalkClass->SendCloseGossip();
-
-        if (player->IsMounted())
-            player->Dismount();
-
         bool active = 0;
         uint32 actiontodo = 0;
         uint32 data0 = 0;
         uint32 data1 = 0;
         uint32 data2 = 0;
         uint32 data3 = 0;
-
         std::string strcode(code);
+        //bool complete = 0;
+        CharacterDatabase.EscapeString(strcode);
 
         if (code)
         {
-           // sWorld->SendServerMessage(SERVER_MSG_STRING, strcode.c_str());
-           // QueryResult result = CharacterDatabase.PQuery("SELECT active, actionid, data0, data1, data2, data3 FROM code_manager WHERE code = %s", strcode.c_str());
+            // sWorld->SendServerMessage(SERVER_MSG_STRING, strcode.c_str());
+            // QueryResult result = CharacterDatabase.PQuery("SELECT active, actionid, data0, data1, data2, data3 FROM code_manager WHERE code = %s", strcode.c_str());
 
             PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CODE);
             stmt->setString(0, strcode);
@@ -70,6 +66,7 @@ public:
                 //sWorld->SendServerMessage(SERVER_MSG_STRING, "ERROR: Invalid code.");
                 //creature->MonsterSay("ERROR: Invalid code.", LANG_UNIVERSAL, 0);
                 creature->AI()->Talk(INVALID_CODE);
+                player->PlayerTalkClass->SendCloseGossip();
                 return true;
             }
         }
@@ -79,6 +76,7 @@ public:
             //sWorld->SendServerMessage(SERVER_MSG_STRING, "ERROR: Code is already activated.");
            // creature->MonsterSay("ERROR: Code is already activated.", LANG_UNIVERSAL, 0);
             creature->AI()->Talk(CODE_WAS_USED);
+            player->PlayerTalkClass->SendCloseGossip();
             return true;
         }
         else
@@ -123,16 +121,20 @@ public:
                     }
                     break;
                 }
-                case REWARD_SPELLS_CAST:
+                case REWARD_SPELL_CAST:
                 {
                     if (data0 > 0)
                         player->CastSpell(player, data0, false);
-                    if (data1 > 0)
-                        player->CastSpell(player, data1, false);
-                    if (data2 > 0)
-                        player->CastSpell(player, data2, false);
-                    if (data3 > 0)
-                        player->CastSpell(player, data3, false);
+                    break;
+                }
+                case REWARD_CURRENCY:
+                {
+                    if (data0 == 0 && data1 > 0)
+                        player->ModifyMoney(data1);
+                    if (data0 == 1 && data1 > 0)
+                        player->ModifyHonorPoints(data1);
+                    if (data0 == 2 && data1 > 0)
+                        player->ModifyArenaPoints(data1);
                     break;
                 }
                 default: 
@@ -150,7 +152,7 @@ public:
         }
         
         //sWorld->SendServerMessage(SERVER_MSG_STRING, code);
-
+        player->PlayerTalkClass->SendCloseGossip();
         return true;
     }
 };
