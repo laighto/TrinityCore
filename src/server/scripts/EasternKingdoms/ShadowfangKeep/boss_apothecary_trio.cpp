@@ -116,7 +116,7 @@ public:
     }*/
 
     //bool OnQuestReward(Player* player, Creature* creature, Quest const* quest, uint32 /*opt*/)
-    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action)
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 /*action*/)
     {
         //if (quest->GetQuestId() == 14488)
         // if (action == GOSSIP_ACTION_INFO_DEF + 1)
@@ -654,10 +654,10 @@ public:
     {
         npc_crazed_apothecaryAI(Creature* creature) : ScriptedAI(creature) { }
 
-        void MovementInform(uint32 type, uint32 id) override
+        void MovementInform(uint32 type, uint32 /*id*/) override
         {
             if (type != POINT_MOTION_TYPE)
-                return;
+                return; 
 
             DoZoneInCombat(me, 150.0f);
 

@@ -255,7 +255,7 @@ public:
     {
         //Recruit  A Friend System/ Player 'A' logs in. System should try to find online Player 'B' with account(B)==recruiter(A);
         std::string recruiterNameB;
-        uint32 online = 0;
+        //uint32 online = 0;
         uint64 recruiterGuidB = 0;
         uint64 recruiteridB = player->GetSession()->GetRecruiterId(); //Get recruiter AccID(B) For Loged in Player(A)
         uint64 recruitAccIdA = player->GetSession()->GetAccountId(); //Get Player(A) AccID(A)

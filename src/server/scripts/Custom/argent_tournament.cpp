@@ -75,7 +75,7 @@ class the_grand_melee : public CreatureScript
                 me->SetReactState(REACT_PASSIVE);
             }
          
-            void EnterCombat(Unit* who)
+            void EnterCombat(Unit* /*who*/)
             {
                 Events.ScheduleEvent(EVENT_MOVE, urand(5000, 6000));
                 Events.ScheduleEvent(EVENT_CAST, urand(1000, 2000));
@@ -211,7 +211,7 @@ class the_grand_melee : public CreatureScript
             return false;
         }*/
         
-        bool OnGossipSelect(Player* pPlayer, Creature* _Creature, uint32 /*uiSender*/, uint32 Action)
+        bool OnGossipSelect(Player* pPlayer, Creature* _Creature, uint32 /*uiSender*/, uint32 /*action*/)
         {
             if (!pPlayer)
                 return false;
@@ -319,13 +319,13 @@ public:
             me->SetVisible(true);
         }
        
-        void EnterCombat(Unit* who)
+        void EnterCombat(Unit* /*who*/)
         {
             SpellTimer= urand(TIMER_SPELL_MIN,TIMER_SPELL_MAX );
             MoviTimer = urand(TIMER_MoviTimer_MIN,TIMER_MoviTimer_MAX);
         }
        
-        void JustDied(Unit* Killer)
+        void JustDied(Unit* /*Killer*/)
         {
             me->MonsterSay(SAY_END, LANG_UNIVERSAL, 0);
             me->setFaction(35);
@@ -335,13 +335,13 @@ public:
             me->DespawnOrUnsummon(4000);
         }
        
-        void KilledUnit(Unit *victim)
+        void KilledUnit(Unit* /*victim*/)
         {
             Reset();
             EnterEvadeMode();
         }
        
-        void SpellHit(Unit *caster, SpellInfo const* spell)
+        void SpellHit(Unit* /*caster*/, SpellInfo const* spell)
         {
             if ((spell->Id == SHIELD_BREAKER)||(spell->Id == CHARGE))
             {
@@ -490,28 +490,28 @@ public:
         return false;
     }*/
 
-    bool OnGossipSelect(Player* pPlayer, Creature* pCreature, uint32 /*uiSender*/, uint32 uiAction)
+    bool OnGossipSelect(Player* player, Creature* creature, uint32 /*uiSender*/, uint32 /*action*/)
     {
-        if (!pPlayer)
+        if (!player)
             return false;
 
-        //pPlayer->PlayerTalkClass->ClearMenus();
+        //player->PlayerTalkClass->ClearMenus();
 
-        //pPlayer->CLOSE_GOSSIP_MENU();
-        pCreature->setFaction(14);
-        pCreature->SetReactState(REACT_AGGRESSIVE);
-        pCreature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE  | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
-        pCreature->MonsterSay(urand(0,1) ? SAY_START_1 : SAY_START_2, LANG_UNIVERSAL, 0);
-        pCreature->AI()->AttackStart(pPlayer->GetVehicleCreatureBase());
-        pCreature->AddThreat(pPlayer, 0.0f);
-        pCreature->SetInCombatWith(pPlayer);
+        //player->CLOSE_GOSSIP_MENU();
+        creature->setFaction(14);
+        creature->SetReactState(REACT_AGGRESSIVE);
+        creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE  | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
+        creature->MonsterSay(urand(0,1) ? SAY_START_1 : SAY_START_2, LANG_UNIVERSAL, 0);
+        creature->AI()->AttackStart(player->GetVehicleCreatureBase());
+        creature->AddThreat(player, 0.0f);
+        creature->SetInCombatWith(player);
 
         return true;
     }        
             
-    CreatureAI* GetAI(Creature* pCreature) const
+    CreatureAI* GetAI(Creature* creature) const
     {
-        return new among_the_championsAI (pCreature);
+        return new among_the_championsAI (creature);
     }
 };
 

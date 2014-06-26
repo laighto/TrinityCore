@@ -1656,7 +1656,7 @@ public:
             Reset();
         }
 
-        void SpellHit(Unit* caster, const SpellInfo* spell) override
+        void SpellHit(Unit* caster, const SpellInfo* /*spell*/) override
         {
             if (caster->GetTypeId() == TYPEID_PLAYER)
                 me->SetHealth(me->GetMaxHealth() * 0.20);

@@ -1298,13 +1298,14 @@ void Aura::HandleAuraSpecificMods(AuraApplication const* aurApp, Unit* caster, b
                     // but for unknown reason it won't proc if your target are dead
                     if (AuraEffect * auraEff = target->GetAuraEffect(SPELL_AURA_DUMMY, SPELLFAMILY_HUNTER, 3560, 1))
                     {
-                        uint32 spellId;
+                        uint32 spellId = 0;
                         switch (auraEff->GetId())
                         {
                             case 53228: spellId = 56654; break;
                             case 53232: spellId = 58882; break;
                         }
-                        target->CastSpell(target, spellId, true);
+                        if (spellId != 0)
+                            target->CastSpell(target, spellId, true);
                     }
                 }
                 // Animal Handler
@@ -1705,7 +1706,7 @@ void Aura::HandleAuraSpecificMods(AuraApplication const* aurApp, Unit* caster, b
                 else if (AuraEffect * auraEff = target->GetAuraEffectOfRankedSpell(1178, 0))
                 {
                     int32 value = auraEff->GetAmount();
-                    int32 mod;
+                    int32 mod = 1;
 
                     switch (auraEff->GetId())
                     {

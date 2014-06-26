@@ -21,7 +21,7 @@ class Reset_OnDuelEnd : public PlayerScript
     public:
         Reset_OnDuelEnd() : PlayerScript("Reset_OnDuelEnd") {}
 
-    void OnDuelEnd(Player *winner, Player *looser, DuelCompleteType type)
+    void OnDuelEnd(Player *winner, Player *looser, DuelCompleteType /*type*/)
     {
         // reset cooldowns in elewynn forest and durotar
         if (sWorld->getBoolConfig(CONFIG_DUEL_RESET_COOLDOWN) && 

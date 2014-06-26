@@ -460,7 +460,7 @@ void ChatLog::OnChat(Player* player, uint32 type, uint32 /*lang*/, std::string& 
     }
 }
 
-void ChatLog::OnChat(Player* player, uint32 type, uint32 lang, std::string& msg, Guild* guild)
+void ChatLog::OnChat(Player* player, uint32 type, uint32 /*lang*/, std::string& msg, Guild* guild)
 {
     std::string origMsg(msg);
     if (!_ChatCommon(CHAT_LOG_GUILD, player, msg))

@@ -50,7 +50,7 @@ public:
 
         Player* target;
         uint64 targetGuid;
-        uint64 recruiter = 0;
+        //uint64 recruiter = 0;
         std::string targetName;
         
         if (!handler->extractPlayerTarget((char*)args, &target, &targetGuid, &targetName))

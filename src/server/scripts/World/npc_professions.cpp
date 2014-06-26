@@ -1231,7 +1231,7 @@ class dummy_book : public GameObjectScript
             return true;
         }
 
-        bool OnGossipSelect(Player* player, GameObject* object, uint32 /*sender*/, uint32 action)
+        bool OnGossipSelect(Player* player, GameObject* /*object*/, uint32 /*sender*/, uint32 action)
         {
             switch (action)
             {

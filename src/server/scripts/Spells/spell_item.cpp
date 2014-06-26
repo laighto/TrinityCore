@@ -2598,7 +2598,7 @@ class spell_toss_your_luck : public SpellScriptLoader
             PrepareSpellScript(spell_toss_your_luck_SpellScript);
             uint8 side;
 
-            void HandleScript(SpellEffIndex effIndex)
+            void HandleScript(SpellEffIndex /*effIndex*/)
             {
                 Player* caster = GetCaster()->ToPlayer();
                 std::string PlayerName = caster->GetName();

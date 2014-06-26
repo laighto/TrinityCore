@@ -30,7 +30,7 @@ public:
     code_manager() : CreatureScript("code_manager") { }
 
 
-    bool OnGossipSelectCode(Player* player, Creature* creature, uint32 sender, uint32 action, const char* code) override
+    bool OnGossipSelectCode(Player* player, Creature* creature, uint32 /*sender*/, uint32 /*action*/, const char* code) override
     {
         bool active = 0;
         uint32 actiontodo = 0;
