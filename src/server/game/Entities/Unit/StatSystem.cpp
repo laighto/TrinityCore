@@ -1214,9 +1214,9 @@ void Guardian::UpdateResistances(uint32 school)
     {
         float value  = GetTotalAuraModValue(UnitMods(UNIT_MOD_RESISTANCE_START + school));
 
-        // hunter and warlock pets gain 80% of owner's resistance
+        // hunter and warlock pets gain 40% of owner's resistance
         if (IsPet())
-            value += float(CalculatePct(m_owner->GetResistance(SpellSchools(school)), 80));
+            value += float(CalculatePct(m_owner->GetResistance(SpellSchools(school)), 40));
 
         SetResistance(SpellSchools(school), int32(value));
     }
@@ -1230,7 +1230,7 @@ void Guardian::UpdateArmor()
     float bonus_armor = 0.0f;
     UnitMods unitMod = UNIT_MOD_ARMOR;
 
-    // hunter and warlock pets gain 75% of owner's armor value
+    // hunter and warlock pets gain 35% of owner's armor value
     if (IsPet())
         bonus_armor = float(CalculatePct(m_owner->GetArmor(), 75));
 

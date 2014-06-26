@@ -214,7 +214,7 @@ void Creature::DisappearAndDie()
     if (IsAlive())
     {
         setDeathState(JUST_DIED);
-        this->DespawnOrUnsummon();
+       // this->DespawnOrUnsummon();
     }
     RemoveCorpse(false);
 }
