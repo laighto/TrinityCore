@@ -262,15 +262,6 @@ struct BattlegroundScore
     uint32 DamageTaken;
     uint32 HealingTaken;
     /** World of Warcraft Armory **/
-    
-    struct KillStreakInfo
-    {
-        KillStreakInfo() : Private(0), Public(0), LastKillTime(0) {}
-
-        uint8 Private;
-        uint16 Public;
-        uint32 LastKillTime;
-    } KillStreak;
 };
 
 enum BGHonorMode
