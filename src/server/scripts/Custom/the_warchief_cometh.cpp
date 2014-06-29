@@ -29,7 +29,7 @@ class npc_w_mortuus : public CreatureScript
     public:
         npc_w_mortuus() : CreatureScript("npc_w_mortuus") { }
 
-        bool OnQuestAccept(Player* player, Creature* creature, const Quest* quest) override
+        bool OnQuestAccept(Player* /*player*/, Creature* /*creature*/, const Quest* quest) override
         {
             if (quest->GetQuestId() == QUEST_TWC)
             {

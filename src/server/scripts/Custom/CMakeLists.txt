@@ -8,16 +8,11 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
+file(GLOB_RECURSE sources_Custom Custom/*.cpp Custom/*.h)
+
 set(scripts_STAT_SRCS
   ${scripts_STAT_SRCS}
-  Custom/battle_for_gilneas.cpp
-  Custom/battle_for_gilneas.h
-  Custom/custom_scripts.cpp
-  Custom/custom_scripts.h
-  Custom/plants_vs_zombies.cpp
-  Custom/raider_jhash.cpp
-  Custom/the_warchief_cometh.cpp
-  Custom/the_warchief_cometh.h
+  ${sources_Custom}
 )
 
 message("  -> Prepared: Custom")

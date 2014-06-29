@@ -50,7 +50,7 @@ class npc_krennan_aranas : public CreatureScript
             return true;
         }
 
-        bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 /*action*/) override
+        bool OnGossipSelect(Player* player, Creature* /*creature*/, uint32 /*sender*/, uint32 /*action*/) override
         {
             player->PlayerTalkClass->SendCloseGossip();
             //creature->AI()->Talk(0);
