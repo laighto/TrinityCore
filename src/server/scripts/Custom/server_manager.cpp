@@ -310,9 +310,9 @@ public:
                     CharacterDatabase.Execute(stmt);
 
                     std::string subject = "Dark Portal Reward System";
-                    std::string text = "You have obtained Reward for vote activity. Please use this CODE in code manager:\n\n";
+                    std::string text = "You have obtained Reward for vote activity. Please use this CODE in DP Manager:\n\n";
                     text += code;
-                    text += "\n\n.Please REMEMBER this code or you will louse your reward!\nAlso you can share this code to other playersa";
+                    text += "\n\n.Please REMEMBER this code or you will lose your reward!\nAlso you can share this code to other players";
                     // Creature id of code manager
                     uint32 codemanager = 100107;
                     SQLTransaction trans = CharacterDatabase.BeginTransaction();
