@@ -297,7 +297,7 @@ public:
                         if (i == 3 || i == 8)
                             code += "-";
                     }
-                    sWorld->SendServerMessage(SERVER_MSG_STRING, code.c_str());
+                    //sWorld->SendServerMessage(SERVER_MSG_STRING, code.c_str());
 
                     stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_CODE);
                     stmt->setString(0, code);
