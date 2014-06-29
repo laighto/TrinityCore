@@ -536,6 +536,8 @@ enum CharacterDatabaseStatements
 
     CHAR_SEL_CODE,
     CHAR_UPD_CODE,
+    CHAR_SEL_ITEMPACK,
+    CHAR_INS_CODE,
 
     MAX_CHARACTERDATABASE_STATEMENTS
 };

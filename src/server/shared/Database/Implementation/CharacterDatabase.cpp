@@ -603,4 +603,6 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 
     PrepareStatement(CHAR_SEL_CODE, "SELECT active, actionid, data0, data1, data2, data3 FROM code_manager WHERE code = ?", CONNECTION_SYNCH);
     PrepareStatement(CHAR_UPD_CODE, "UPDATE code_manager SET active = 0, charguid = ?, characcount = ? WHERE code = ?", CONNECTION_ASYNC);
+    PrepareStatement(CHAR_SEL_ITEMPACK, "SELECT item, count FROM code_prepared_itempack WHERE packid = ?", CONNECTION_SYNCH);
+    PrepareStatement(CHAR_INS_CODE, "INSERT INTO code_manager (code, actionid, data0, data1, data2, data3, comment) VALUES (?, ?, ?, ?, ?, ?, ?)", CONNECTION_ASYNC);
 }

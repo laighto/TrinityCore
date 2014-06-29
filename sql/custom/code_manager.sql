@@ -42,6 +42,7 @@ INSERT INTO `locales_broadcast_text` (`ID`, `MaleText_loc8`) VALUES
 ('655073', 'Поздравляем. Код успешно активирован.'),
 ('655074', 'Вы должны ввести уникальный код чтобы получить награду.');
 
+
 DROP TABLE IF EXISTS `code_manager`;
 CREATE TABLE `code_manager` (
   `code` char(255) NOT NULL COMMENT 'UNIQUE GENERATED CODE',
@@ -55,4 +56,12 @@ CREATE TABLE `code_manager` (
   `charguid` int(10) unsigned DEFAULT NULL COMMENT 'character id. from which was code activated',
   `characcount` int(10) unsigned DEFAULT NULL COMMENT 'Account id. from which was code activated',
   PRIMARY KEY (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `code_prepared_itempack`;
+CREATE TABLE `code_prepared_itempack` (
+  `packid` int(10) unsigned NOT NULL,
+  `item` int(10) unsigned NOT NULL,
+  `count` int(10) unsigned NOT NULL DEFAULT '1',
+  PRIMARY KEY (`packid`,`item`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

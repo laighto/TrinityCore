@@ -114,4 +114,10 @@ void LoginDatabaseConnection::DoPrepareStatements()
 
     PrepareStatement(LOGIN_SET_RECRUITER, "UPDATE account SET recruiter = ? WHERE id = ?", CONNECTION_ASYNC);
     PrepareStatement(LOGIN_DELETE_RECRUITER, "UPDATE account SET recruiter = 0 WHERE id = ?", CONNECTION_ASYNC);
+
+    PrepareStatement(LOGIN_SEL_CODE_ACC_REW, "SELECT packid FROM code_account_rewarded WHERE accountid = ? ORDER BY packid DESC LIMIT 1", CONNECTION_SYNCH);
+    PrepareStatement(LOGIN_SEL_CODE_ACC_VOTES, "SELECT vote_count FROM account WHERE id = ?", CONNECTION_SYNCH);
+    PrepareStatement(LOGIN_UPD_CODE_ACC_REW, "UPDATE account SET vote_count = vote_count - ? WHERE id = ?", CONNECTION_ASYNC);
+    PrepareStatement(LOGIN_INS_CODE_ACC_REW, "INSERT INTO code_account_rewarded (accountid, packid) VALUES (?, ?)", CONNECTION_ASYNC);
+
 }

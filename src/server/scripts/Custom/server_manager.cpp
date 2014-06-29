@@ -1,3 +1,40 @@
+/*
+Script written by chaoua in 2014
+
+Code manager provides support rewards for customer codes 
+
+Database columns code_manager:
+`code` - unique key that can be ganerated as you wish
+`active` - 0 code is used or 1 code can be used
+
+`actionid` - Id of a command to do:
+`data0` - `data3 - data fields for action
+
+    REWARD_SINGLE_ITEMS = 1: 
+        data0-data3 - entry from item_tenplate
+    REWARD_ITEM_WITH_COUNT = : 
+        data0, data2 - entry from item_tenplate, data1, data3 - count of items
+    REWARD_ITEM_WITH_RANDOM_COUNT = 3: 
+        data0: entry from item_tenplate, data1 - minimal couont, data2 - maximum count
+    REWARD_SPELL_CAST = 4: 
+        data0 - spell Id from Spell.dbc
+    REWARD_CURRENCY = 5: 
+        data0=0 -> money, data0=1 -> honor points, data0=2 -> arena points, data1 - count of selected currency
+    REWARD_PREPARED_ITEMPACK = 6: 
+        data0 - Id od pack in code_prepared_itempack table
+
+`comment` - Description of Action, that code activates
+`charguid` - character id. from which was code activated
+`characcount` - Account id. from which was code activated
+
+
+code_prepared_itempack:
+`packid` - id of package
+`item` - entry from item_tenplate
+`count` - amount of item
+
+*/
+
 #include "ScriptMgr.h"
 #include "ScriptedCreature.h"
 #include "ScriptedGossip.h"
@@ -7,6 +44,9 @@
 #include "GossipDef.h"
 #include "SmartAI.h"
 #include "Player.h"
+#include "AccountMgr.h"
+#include "ObjectMgr.h"
+
 
 enum actionlist
 {
@@ -15,6 +55,7 @@ enum actionlist
     REWARD_ITEM_WITH_RANDOM_COUNT = 3,
     REWARD_SPELL_CAST = 4,
     REWARD_CURRENCY = 5,
+    REWARD_PREPARED_ITEMPACK = 6,
 };
 
 enum messages
@@ -23,6 +64,7 @@ enum messages
     CODE_WAS_USED = 1,
     SUCCESS_USE = 2,
 };
+
 
 class code_manager : public CreatureScript
 {
@@ -137,6 +179,34 @@ public:
                         player->ModifyArenaPoints(data1);
                     break;
                 }
+                case REWARD_PREPARED_ITEMPACK:
+                {
+                    if (data0 > 0)
+                    {
+                        PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_ITEMPACK);
+                        stmt->setUInt32(0, data0);
+                        PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+                        if (result)
+                        {
+                            do
+                            {
+                                Field* columns = result->Fetch();
+                                uint32 item = columns[0].GetUInt32();
+                                uint32 count = columns[1].GetUInt32();
+                                if (count != 0)
+                                    player->AddItem(item, count);
+                            }
+                            while (result->NextRow());
+                        }
+                        else
+                        {
+                            creature->MonsterSay("Code successfuly activated! But there is no Reward Packs!!!", LANG_UNIVERSAL, 0);
+                            return true;
+                        }
+                    }
+                    break;
+                }
                 default: 
                     break;
             }
@@ -157,7 +227,105 @@ public:
     }
 };
 
+class login_code_controller : public PlayerScript
+{
+public:
+    login_code_controller() : PlayerScript("login_code_controller") { }
+
+    void OnLogin(Player* player, bool /*firstLogin*/)
+    {
+        /*SELECT count of votes*/
+        PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_CODE_ACC_VOTES);
+        stmt->setUInt32(0, player->GetSession()->GetAccountId());
+        PreparedQueryResult result = LoginDatabase.Query(stmt);
+        if (result)
+        {
+            Field* columns = result->Fetch();
+            uint32 votecount = columns[0].GetUInt32();
+
+            if (votecount >= 5) /* account have points to get reward pack*/
+            {
+                stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_CODE_ACC_REW);
+                stmt->setUInt32(0, player->GetSession()->GetAccountId());
+                PreparedQueryResult result = LoginDatabase.Query(stmt);
+                
+                uint32 packid = 0;
+                PreparedStatement* stmta = LoginDatabase.GetPreparedStatement(LOGIN_UPD_CODE_ACC_REW);
+                PreparedStatement* stmtb = LoginDatabase.GetPreparedStatement(LOGIN_INS_CODE_ACC_REW);
+
+                if (result)
+                {
+                    Field* columns = result->Fetch();
+                    packid = columns[0].GetUInt32();
+
+                    /*Only 70 packs are available for now*/
+                    if (packid > 70)
+                        return;
+
+                    packid++;
+
+                    stmta->setUInt32(0, 5);
+                    stmta->setUInt32(1, player->GetSession()->GetAccountId());
+
+                    stmtb->setUInt32(0, player->GetSession()->GetAccountId());
+                    stmtb->setUInt32(1, packid);
+                }
+                else
+                {
+                    /*First reward*/
+                    packid = 1;
+
+                    stmta->setUInt32(0, 5);
+                    stmta->setUInt32(1, player->GetSession()->GetAccountId());
+
+                    stmtb->setUInt32(0, player->GetSession()->GetAccountId());
+                    stmtb->setUInt32(1, packid);
+                }
+
+                if (stmta && stmtb)
+                {
+                    LoginDatabase.Execute(stmta);
+                    LoginDatabase.Execute(stmtb);
+
+                    //Generating CODE format XXXX-XXXXX-XXXX
+                    std::string code = "";
+                    for (int i = 0; i< 13; i++)
+                    {
+                        int Char_Code;
+                        Char_Code = urand(48, 57);
+                        code += char(Char_Code);
+                        if (i == 3 || i == 8)
+                            code += "-";
+                    }
+                    sWorld->SendServerMessage(SERVER_MSG_STRING, code.c_str());
+
+                    stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_CODE);
+                    stmt->setString(0, code);
+                    stmt->setUInt32(1, REWARD_PREPARED_ITEMPACK);
+                    stmt->setUInt32(2, packid);
+                    stmt->setUInt32(3, 0);
+                    stmt->setUInt32(4, 0);
+                    stmt->setUInt32(5, 0);
+                    stmt->setString(6, "Vote Reward");
+                    CharacterDatabase.Execute(stmt);
+
+                    std::string subject = "Dark Portal Reward System";
+                    std::string text = "You have obtained Reward for vote activity. Please use this CODE in code manager:\n\n";
+                    text += code;
+                    text += "\n\n.Please REMEMBER this code or you will louse your reward!\nAlso you can share this code to other playersa";
+                    // Creature id of code manager
+                    uint32 codemanager = 100107;
+                    SQLTransaction trans = CharacterDatabase.BeginTransaction();
+                    MailDraft(subject, text).SendMailTo(trans, MailReceiver(player, GUID_LOPART(player->GetGUID())), MailSender(MAIL_CREATURE, codemanager));
+                    CharacterDatabase.CommitTransaction(trans);
+                }
+            }
+        }
+    }
+};
+
 void AddSC_server_manager()
 {
     new code_manager();
+    new login_code_controller();
 }
