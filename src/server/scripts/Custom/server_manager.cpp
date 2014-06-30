@@ -1,5 +1,5 @@
 /*
-Script written by chaoua in 2014
+Script written by chaosua in 2014
 
 Code manager provides support rewards for customer codes 
 
