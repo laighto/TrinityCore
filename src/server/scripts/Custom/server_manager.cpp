@@ -232,7 +232,103 @@ class login_code_controller : public PlayerScript
 public:
     login_code_controller() : PlayerScript("login_code_controller") { }
 
-    void OnLogin(Player* player, bool /*firstLogin*/)
+    uint32 GetUniquePackId(PreparedQueryResult result, uint32 data)
+    {
+        uint32 array_data[71] = { 0 };
+        uint32 packid = data;
+        uint32 data1 = 0;
+        uint32 data2 = 0;
+        uint32 counter = 0;
+        uint32 arraysize = 0;
+        bool need_to_generate = false;
+
+        do
+        {
+            Field* columns = result->Fetch();
+            array_data[arraysize] = columns[0].GetInt32();
+            arraysize++;
+        } while (result->NextRow());
+
+        if (packid <= 10 && arraysize < 10)
+        {
+            need_to_generate = true;
+            data1 = 2,
+            data2 = 10;
+        }
+        else if (packid <= 10 && arraysize == 10)
+        {
+            packid = urand(11, 20);
+        }
+        else if (packid <= 20 && arraysize < 20)
+        {
+            need_to_generate = true;
+            data1 = 11,
+            data2 = 20;
+        }
+        else if (packid <= 20 && arraysize == 20)
+        {
+            packid = urand(21, 30);
+        }
+        else if (packid <= 30 && arraysize < 30)
+        {
+            need_to_generate = true;
+            data1 = 21,
+            data2 = 30;
+        }
+        else if (packid <= 30 && arraysize == 30)
+        {
+            packid = urand(31, 40);
+        }
+        else if (packid <= 40 && arraysize < 40)
+        {
+            need_to_generate = true;
+            data1 = 31,
+            data2 = 40;
+        }
+        else if (packid <= 40 && arraysize == 40)
+        {
+            packid = urand(41, 50);
+        }
+        else if (packid <= 50 && arraysize < 50)
+        {
+            need_to_generate = true;
+            data1 = 41,
+            data2 = 50;
+        }
+        else if (packid <= 50 && arraysize == 50)
+        {
+            packid = urand(51, 60);
+        }
+        else if (packid <= 60 && arraysize < 60)
+        {
+            need_to_generate = true;
+            data1 = 51,
+            data2 = 60;
+        }
+        else if (packid <= 60 && arraysize == 60)
+        {
+            packid = urand(61, 70);
+        }
+
+        if (need_to_generate)
+        {
+            do
+            {
+                counter = 0;
+                packid = urand(data1, data2);
+
+                for (uint32 i = 0; i < arraysize; i++)
+                {
+                    if (packid == array_data[i])
+                        counter++;
+                }
+            } while (counter != 0);
+        }
+
+        return (packid);
+    }
+
+    void OnLogin(Player* player, bool /*firstLogin*/) override
     {
         /*SELECT count of votes*/
         PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_CODE_ACC_VOTES);
@@ -262,7 +358,11 @@ public:
                     if (packid > 70)
                         return;
 
-                    packid++;
+                    /* RANDOMIZSING */
+                    packid = GetUniquePackId(result, packid);
+
+                    if (packid == 0)
+                        return;
 
                     stmta->setUInt32(0, 5);
                     stmta->setUInt32(1, player->GetSession()->GetAccountId());
