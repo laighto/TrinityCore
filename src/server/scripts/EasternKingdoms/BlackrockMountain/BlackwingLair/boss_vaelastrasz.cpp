@@ -85,6 +85,12 @@ public:
             HasYelled = false;
         }
 
+        void JustDied(Unit* /*killer*/) override
+        {
+            if (GameObject* go = me->FindNearestGameObject(179364, 200.0f)) //open GO Portcullis
+                instance->HandleGameObject(go->GetGUID(), true);
+        }
+
         void EnterCombat(Unit* /*who*/) override
         {
             _EnterCombat();
@@ -115,12 +121,6 @@ public:
                 return;
 
             Talk(SAY_KILLTARGET, victim);
-        }
-
-        void JustDied(Unit* /*Killer*/) override
-        {
-            if (GameObject* go = me->FindNearestGameObject(179364, 100.0f)) //open GO Portcullis
-                instance->HandleGameObject(go->GetGUID(), true);
         }
 
         void UpdateAI(uint32 diff) override
