@@ -86,7 +86,7 @@ public:
                 instance->SetData(DATA_EGG_EVENT, NOT_STARTED);
 
             if (GameObject* object = me->FindNearestGameObject(176965, 200.0f)) //open GO Portcullis
-                instance->HandleGameObject(go->GetGUID(), true);
+                instance->HandleGameObject(object->GetGUID(), true);
         }
 
         void DoChangePhase()
