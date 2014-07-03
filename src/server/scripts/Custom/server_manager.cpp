@@ -252,7 +252,7 @@ public:
         if (packid <= 10 && arraysize < 10)
         {
             need_to_generate = true;
-            data1 = 2,
+            data1 = 1,
             data2 = 10;
         }
         else if (packid <= 10 && arraysize == 10)
@@ -373,7 +373,7 @@ public:
                 else
                 {
                     /*First reward*/
-                    packid = 1;
+                    packid = urand(1, 10);
 
                     stmta->setUInt32(0, 5);
                     stmta->setUInt32(1, player->GetSession()->GetAccountId());
