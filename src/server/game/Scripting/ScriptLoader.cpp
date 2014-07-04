@@ -32,6 +32,7 @@ void AddSC_argent_tournamet_custom();
 void AddSC_anticheat_commandscript();
 void AddSC_transmogrify_script();
 void AddSC_server_manager();
+void AddSC_an_innocent_disguise();
 
 // spells
 void AddSC_deathknight_spell_scripts();
@@ -732,6 +733,7 @@ void AddScripts()
     AddOutdoorPvPScripts();
     AddCustomScripts();
     AddSC_server_manager();
+    AddSC_an_innocent_disguise();
 #endif
 }
 
