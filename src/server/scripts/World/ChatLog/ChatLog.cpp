@@ -398,7 +398,7 @@ void ChatLog::OnChat(Player* player, uint32 type, uint32 lang, std::string& msg)
     _WriteLog(_logs[CHAT_LOG_CHAT], logStr, msg, origMsg);
 }
 
-void ChatLog::OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& msg, Player* receiver)
+void ChatLog::OnChat(Player* player, uint32 /*type*/, uint32 /*lang*/, std::string& msg, Player* receiver)
 {
     std::string origMsg(msg);
     if (!_ChatCommon(CHAT_LOG_WHISPER, player, msg))
@@ -412,7 +412,7 @@ void ChatLog::OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& 
     _WriteLog(_logs[CHAT_LOG_WHISPER], logStr, msg, origMsg);
 }
 
-void ChatLog::OnChat(Player* player, uint32 type, uint32 lang, std::string& msg, Group* group)
+void ChatLog::OnChat(Player* player, uint32 type, uint32 /*lang*/, std::string& msg, Group* group)
 {
     std::string origMsg(msg);
     std::string logStr;
@@ -464,7 +464,7 @@ void ChatLog::OnChat(Player* player, uint32 type, uint32 lang, std::string& msg,
     }
 }
 
-void ChatLog::OnChat(Player* player, uint32 type, uint32 lang, std::string& msg, Guild* guild)
+void ChatLog::OnChat(Player* player, uint32 type, uint32 /*lang*/, std::string& msg, Guild* guild)
 {
     std::string origMsg(msg);
     if (!_ChatCommon(CHAT_LOG_GUILD, player, msg))
@@ -482,7 +482,7 @@ void ChatLog::OnChat(Player* player, uint32 type, uint32 lang, std::string& msg,
     _WriteLog(_logs[CHAT_LOG_GUILD], logStr, msg, origMsg);
 }
 
-void ChatLog::OnChat(Player* player, uint32 /*type*/, uint32 lang, std::string& msg, Channel* channel)
+void ChatLog::OnChat(Player* player, uint32 /*type*/, uint32 /*lang*/, std::string& msg, Channel* channel)
 {
     std::string origMsg(msg);
     if (!_ChatCommon(CHAT_LOG_CHANNEL, player, msg))
