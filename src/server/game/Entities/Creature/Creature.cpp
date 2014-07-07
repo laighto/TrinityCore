@@ -2289,7 +2289,7 @@ void Creature::AllLootRemovedFromCorpse()
 
     // corpse skinnable, but without skinning flag, and then skinned, corpse will despawn next update
     if (loot.loot_type == LOOT_SKINNING)
-        m_corpseRemoveTime = time(NULL);
+        m_corpseRemoveTime = time(NULL) + m_corpseDelay * decayRate;
     else
         m_corpseRemoveTime = now + m_corpseDelay * decayRate;
 
