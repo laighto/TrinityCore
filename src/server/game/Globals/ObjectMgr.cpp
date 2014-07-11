@@ -1707,7 +1707,7 @@ void ObjectMgr::LoadCreatures()
         }
 
         // Skip spawnMask check for transport maps
-		if (!IsTransportMap(data.mapid) && data.spawnMask & ~spawnMasks[data.mapid])
+        if (!IsTransportMap(data.mapid) && data.spawnMask & ~spawnMasks[data.mapid])
             TC_LOG_ERROR("sql.sql", "Table `creature` have creature (GUID: %u Entry: %u) that have wrong spawn mask %u including not supported difficulty modes for map (Id: %u) spawnMasks[data.mapid]: %u.", guid, data.id, data.spawnMask, data.mapid, spawnMasks[data.mapid]);
 
         bool ok = true;
@@ -3384,6 +3384,61 @@ void ObjectMgr::LoadPlayerInfo()
             while (result->NextRow());
 
             TC_LOG_INFO("server.loading", ">> Loaded %u custom player create spells in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
+        }
+    }
+
+    // Load playercreate cast spell
+    TC_LOG_INFO("server.loading", "Loading Player Create Cast Spell Data...");
+    {
+        uint32 oldMSTime = getMSTime();
+
+        QueryResult result = WorldDatabase.PQuery("SELECT raceMask, classMask, spell FROM playercreateinfo_cast_spell");
+
+        if (!result)
+            TC_LOG_ERROR("server.loading", ">> Loaded 0 player create cast spells. DB table `playercreateinfo_cast_spell` is empty.");
+        else
+        {
+            uint32 count = 0;
+
+            do
+            {
+                Field* fields       = result->Fetch();
+                uint32 raceMask     = fields[0].GetUInt32();
+                uint32 classMask    = fields[1].GetUInt32();
+                uint32 spellId      = fields[2].GetUInt32();
+
+                if (raceMask != 0 && !(raceMask & RACEMASK_ALL_PLAYABLE))
+                {
+                    TC_LOG_ERROR("sql.sql", "Wrong race mask %u in `playercreateinfo_cast_spell` table, ignoring.", raceMask);
+                    continue;
+                }
+
+                if (classMask != 0 && !(classMask & CLASSMASK_ALL_PLAYABLE))
+                {
+                    TC_LOG_ERROR("sql.sql", "Wrong class mask %u in `playercreateinfo_cast_spell` table, ignoring.", classMask);
+                    continue;
+                }
+
+                for (uint32 raceIndex = RACE_HUMAN; raceIndex < MAX_RACES; ++raceIndex)
+                {
+                    if (raceMask == 0 || ((1 << (raceIndex - 1)) & raceMask))
+                    {
+                        for (uint32 classIndex = CLASS_WARRIOR; classIndex < MAX_CLASSES; ++classIndex)
+                        {
+                            if (classMask == 0 || ((1 << (classIndex - 1)) & classMask))
+                            {
+                                if (PlayerInfo* info = _playerInfo[raceIndex][classIndex])
+                                {
+                                    info->castSpells.push_back(spellId);
+                                    ++count;
+                                }
+                            }
+                        }
+                    }
+                }
+            } while (result->NextRow());
+
+            TC_LOG_INFO("server.loading", ">> Loaded %u player create cast spells in %u ms", count, GetMSTimeDiffToNow(oldMSTime));
         }
     }
 
@@ -6145,8 +6200,8 @@ void ObjectMgr::LoadAccessRequirements()
         _accessRequirementStore.clear();                                  // need for reload case
     }
 
-    //                                               0      1           2          3          4           5      6             7             8                      9     10
-    QueryResult result = WorldDatabase.Query("SELECT mapid, difficulty, level_min, level_max, item_level, item, item2, quest_done_A, quest_done_H, completed_achievement, quest_failed_text FROM access_requirement");
+    //                                                 0       1           2          3        4      5       6               7                8                   9
+    QueryResult result = WorldDatabase.Query("SELECT mapid, difficulty, level_min, level_max, item, item2, quest_done_A, quest_done_H, completed_achievement, quest_failed_text FROM access_requirement");
 
     if (!result)
     {
@@ -6166,17 +6221,15 @@ void ObjectMgr::LoadAccessRequirements()
         uint8 difficulty = fields[1].GetUInt8();
         uint32 requirement_ID = MAKE_PAIR32(mapid, difficulty);
 
-        AccessRequirement* ar = new AccessRequirement();
-
-        ar->levelMin = fields[2].GetUInt8();
-        ar->levelMax = fields[3].GetUInt8();
-        ar->item_level = fields[4].GetUInt16();
-        ar->item = fields[5].GetUInt32();
-        ar->item2 = fields[6].GetUInt32();
-        ar->quest_A = fields[7].GetUInt32();
-        ar->quest_H = fields[8].GetUInt32();
-        ar->achievement = fields[9].GetUInt32();
-        ar->questFailedText = fields[10].GetString();
+        AccessRequirement* ar   = new AccessRequirement();
+        ar->levelMin            = fields[2].GetUInt8();
+        ar->levelMax            = fields[3].GetUInt8();
+        ar->item                = fields[4].GetUInt32();
+        ar->item2               = fields[5].GetUInt32();
+        ar->quest_A             = fields[6].GetUInt32();
+        ar->quest_H             = fields[7].GetUInt32();
+        ar->achievement         = fields[8].GetUInt32();
+        ar->questFailedText     = fields[9].GetString();
 
         if (ar->item)
         {
@@ -9285,7 +9338,7 @@ void ObjectMgr::LoadPhaseInfo()
 
     uint32 oldMSTime = getMSTime();
 
-    //                                               0       1                   2       
+    //                                               0       1                   2
     QueryResult result = WorldDatabase.Query("SELECT id, worldmapareaswap, terrainswapmap FROM `phase_info`");
 
     if (!result)

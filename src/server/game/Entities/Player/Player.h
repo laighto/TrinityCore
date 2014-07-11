@@ -407,6 +407,7 @@ struct PlayerInfo
     uint16 displayId_f;
     PlayerCreateInfoItems item;
     PlayerCreateInfoSpells customSpells;
+    PlayerCreateInfoSpells castSpells;
     PlayerCreateInfoActions action;
     PlayerCreateInfoSkills skills;
 
@@ -928,7 +929,6 @@ struct AccessRequirement
 {
     uint8  levelMin;
     uint8  levelMax;
-    uint16 item_level;
     uint32 item;
     uint32 item2;
     uint32 quest_A;
