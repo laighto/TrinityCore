@@ -21,6 +21,13 @@ enum CustomSpell
     POWER_OF_FRIENDSHIP = 26664,
 };
 
+enum Customdata
+{
+    NPC_BOSS_GIFT = 911912,
+    FACTION_HOSTILE = 14,
+    REWARD_PREPARED_ITEMPACK = 6,
+};
+
 uint32 counter = 1;
 uint32 leader = 0;
 bool checker = false;
@@ -44,18 +51,18 @@ public:
             {
                 killer->CastSpell(killer, 15007, true);
                 if (Aura * aur = killer->GetAura(15007))
-                    aur->SetDuration(30*IN_MILLISECONDS); // �������� ����������
+                    aur->SetDuration(30*IN_MILLISECONDS); 
             }
 
             killed->CastSpell(killed, 48325, true);
             if (Aura * aur = killed->GetAura(48325))
-                aur->SetDuration(7*IN_MILLISECONDS); //  ������������ ���
+                aur->SetDuration(7*IN_MILLISECONDS); 
 
             if (sWorld->getBoolConfig(PvPEvent))
             {
                 killed->CastSpell(killed, 9454, true);
                 if (Aura * freeze = killed->GetAura(9454))
-                    freeze->SetDuration(300*IN_MILLISECONDS); //  ���������
+                    freeze->SetDuration(300*IN_MILLISECONDS); 
             }
 
             uint32 rnd = urand(0, 2);
@@ -161,10 +168,28 @@ class Boss_Announcer : public PlayerScript
 public:
     Boss_Announcer() : PlayerScript ("Boss_Announcer") {}
  
-    void OnCreatureKill(Player* player, Creature* boss)
+    void OnCreatureKill(Player* player, Creature* creature)
     {
-        if (boss->isWorldBoss() && player->GetSession()->GetSecurity() < 1)
-            sWorld->SendWorldText(LANG_BOSS_ANNOUNCER, player->GetName().c_str(), boss->GetNameForLocaleIdx(player->GetSession()->GetSessionDbLocaleIndex()).c_str());
+        if (creature->isWorldBoss() && player->GetSession()->GetSecurity() < 1)
+            sWorld->SendWorldText(LANG_BOSS_ANNOUNCER, player->GetName().c_str(), creature->GetNameForLocaleIdx(player->GetSession()->GetSessionDbLocaleIndex()).c_str());
+
+        // New event Pseudo Doppelganger
+        if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !creature->isWorldBoss() && roll_chance_i(5) && ((player->getLevel() - creature->getLevel()) <= 5))
+            if (Creature* miniboss = creature->SummonCreature(NPC_BOSS_GIFT, creature->GetPositionX() + 0.1f, creature->GetPositionY() + 0.1f, creature->GetPositionZ() + 0.1f, 0, TEMPSUMMON_TIMED_DESPAWN, 180000))
+            {
+                miniboss->setFaction(FACTION_HOSTILE);
+                miniboss->SetLevel(player->getLevel() + 1);
+                miniboss->SetMaxHealth(player->GetMaxHealth());
+                miniboss->SetArmor(player->GetArmor());
+                miniboss->SetStat(STAT_STRENGTH, player->GetStat(STAT_STRENGTH));
+                miniboss->SetStat(STAT_AGILITY, int32(player->GetStat(STAT_AGILITY) * 1.1));
+                miniboss->SetStat(STAT_STAMINA, int32(player->GetStat(STAT_STAMINA) * 1.1));
+                miniboss->SetStat(STAT_INTELLECT, player->GetStat(STAT_INTELLECT));
+                miniboss->SetStat(STAT_SPIRIT, player->GetStat(STAT_SPIRIT));
+                std::string str = "Dark ";
+                str += player->GetName();
+                miniboss->SetName(str);
+            }
 
 /*        //WORLD MASS EVENT
         if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker && ((player->getLevel() - boss->getLevel()) <= 5))
@@ -229,25 +254,6 @@ public:
             }
         }
         // END WORLD MASS EVENT
-*/
-
-/*            if (player->getGender() == GENDER_MALE)
-            {
-                char msg[250];
-                snprintf(msg, 250, "|CFF7BBEF7[Boss Announcer]|r:|cffff0000 %s |r and his group killed world boss |CFF18BE00[%s]|r !!!", player->GetName().c_str(),boss->GetName().c_str());
-                sWorld->SendServerMessage(SERVER_MSG_STRING, msg);
-                }
-*/
-
-/*        if (roll_chance_f(1.0f))
-        {
-            if ( (player->getLevel() - boss->getLevel()) <= 10 )
-            {
-                player->CastSpell(player, 26662, true);
-                if (Aura * bers = player->GetAura(26662))
-                    bers->SetDuration(8*IN_MILLISECONDS);
-            }
-        }
 */
 
 /*        //Gift
@@ -391,6 +397,72 @@ public:
     }
 };
 
+class code_generator : public ItemScript
+{
+public:
+    code_generator() : ItemScript("code_generator") { }
+
+    void SendCode(Player* player)
+    {
+        PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_CODE);
+
+        std::string code = "";
+        for (int i = 0; i< 13; i++)
+        {
+            int Char_Code;
+            Char_Code = urand(48, 57);
+            code += char(Char_Code);
+            if (i == 3 || i == 8)
+                code += "-";
+        }
+
+        /* RANDOMIZSING pack id from reserved for evenet 100-110*/
+        uint32 packid = urand(100, 110);
+
+        stmt->setString(0, code);
+        stmt->setUInt32(1, REWARD_PREPARED_ITEMPACK);
+        stmt->setUInt32(2, packid);
+        stmt->setUInt32(3, 0);
+        stmt->setUInt32(4, 0);
+        stmt->setUInt32(5, 0);
+        stmt->setString(6, "Doppelganger Event");
+        CharacterDatabase.Execute(stmt);
+
+        std::string subject;
+        std::string text;
+        if (player->GetSession()->GetSessionDbLocaleIndex() != 8)
+        {
+            subject = "Ancient paper";
+            text = "Ancient paper burned out, and in the ash you found a numbers. You can use it in DP Manager:\n\n";
+            text += code;
+            text += "\n\nREMEMBER this code or you will lose your reward!\nAlso you can share this code to other players";
+        }
+        else
+        {
+            subject = "Древняя бумага";
+            text = "Древняя бумага сгорела, и в пепле вы увидели цифры. Вы може использовать их у Менеджера ДП\n\n";
+            text += code;
+            text += "\n\nЗапомните этот код, иначе не сможете получить награду!\nВы можете предать этот код другому игроку.";
+        }
+
+        // Creature id of code manager
+        uint32 codemanager = 100107;
+
+        SQLTransaction trans = CharacterDatabase.BeginTransaction();
+        MailDraft(subject, text).SendMailTo(trans, MailReceiver(player, GUID_LOPART(player->GetGUID())), MailSender(MAIL_CREATURE, codemanager));
+        CharacterDatabase.CommitTransaction(trans);
+        player->Whisper(text, LANG_UNIVERSAL, player->GetGUID());
+    }
+
+    bool OnUse(Player* player, Item* /*item*/, SpellCastTargets const& /*targets*/) override
+    {
+        if (roll_chance_i(50))
+            SendCode(player);
+
+        return false;
+    }
+};
+
 class npc_editor : public CreatureScript
 {
 public:
@@ -434,4 +506,5 @@ void AddSC_pvp_script()
     new mod_afk();
     new Boss_Announcer();
     new npc_editor();
+    new code_generator();
 }

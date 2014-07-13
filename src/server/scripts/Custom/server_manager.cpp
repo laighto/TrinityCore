@@ -409,10 +409,23 @@ public:
                     stmt->setString(6, "Vote Reward");
                     CharacterDatabase.Execute(stmt);
 
-                    std::string subject = "Dark Portal Reward System";
-                    std::string text = "You have obtained Reward for vote activity. Please use this CODE in DP Manager:\n\n";
-                    text += code;
-                    text += "\n\n.Please REMEMBER this code or you will lose your reward!\nAlso you can share this code to other players";
+                    std::string subject;
+                    std::string text;
+                    if (player->GetSession()->GetSessionDbLocaleIndex() != 8)
+                    {
+                        subject = "Dark Portal Reward System";
+                        text = "You have obtained Reward for vote activity. Please use this CODE in DP Manager:\n\n";
+                        text += code;
+                        text += "\n\nPlease REMEMBER this code or you will lose your reward!\nAlso you can share this code to other players";
+                    }
+                    else
+                    {
+                        subject = "Dark Portal Система наград";
+                        text = "Вы получили код за активность в голосовании. Используйте его у Менеджера ДП для получения подарка.\n\n";
+                        text += code;
+                        text += "\n\nЗапомните этот код, иначе вы потеряете свою награду!\nТакже вы можете предать этот код другому игроку.";
+                    }
+
                     // Creature id of code manager
                     uint32 codemanager = 100107;
                     SQLTransaction trans = CharacterDatabase.BeginTransaction();
