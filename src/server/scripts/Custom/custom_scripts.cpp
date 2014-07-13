@@ -132,23 +132,8 @@ public:
  
     void OnCreatureKill(Player* player, Creature* boss)
     {
-        if (boss->isWorldBoss() && !player->IsGameMaster())
+        if (boss->isWorldBoss() && player->GetSession()->GetSecurity() < 1)
             sWorld->SendWorldText(LANG_BOSS_ANNOUNCER, player->GetName().c_str(), boss->GetNameForLocaleIdx(player->GetSession()->GetSessionDbLocaleIndex()).c_str());
-
-        //Berserk
-      /*  if (roll_chance_f(1.0f))
-        {
-            if ( (player->getLevel() - boss->getLevel()) <= 10 )
-            {
-                player->CastSpell(player, 26662, true);
-                if (Aura * bers = player->GetAura(26662))
-                    bers->SetDuration(8*IN_MILLISECONDS);
-            }
-        }*/
-
-        //Gift
-        //if (roll_chance_f(10.0f))
-         //   player->SummonGameObject(600004, boss->GetPositionX()+0.1f, boss->GetPositionY()+0.1f, boss->GetPositionZ()+0.1f, 0, 0, 0, 0, 0, 0);
     }
 
     void OnLogin(Player* player, bool /*firstLogin*/)
