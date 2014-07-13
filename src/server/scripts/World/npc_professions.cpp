@@ -353,32 +353,32 @@ void ProfessionUnlearnSpells(Player* player, uint32 type)
             player->RemoveSpell(26758);                     // Frozen Shadoweave Robe
             break;
         case SPELL_UNLEARN_GOBLIN_ENGINEER:
-            player->removeSpell(30565);                     // Foreman's Enchanted Helmet
-            player->removeSpell(30566);                     // Foreman's Reinforced Helmet
-            player->removeSpell(30563);                     // Goblin Rocket Launcher
-            player->removeSpell(56514);                     // Global Thermal Sapper Charge
-            player->removeSpell(36954);                     // Dimensional Ripper - Area 52
-            player->removeSpell(23486);                     // Dimensional Ripper - Everloo
-            player->removeSpell(72952);                     // Plans: Shatter Rounds
-            player->removeSpell(20222);                     // Goblin Engineer
+            player->RemoveSpell(30565);                     // Foreman's Enchanted Helmet
+            player->RemoveSpell(30566);                     // Foreman's Reinforced Helmet
+            player->RemoveSpell(30563);                     // Goblin Rocket Launcher
+            player->RemoveSpell(56514);                     // Global Thermal Sapper Charge
+            player->RemoveSpell(36954);                     // Dimensional Ripper - Area 52
+            player->RemoveSpell(23486);                     // Dimensional Ripper - Everloo
+            player->RemoveSpell(72952);                     // Plans: Shatter Rounds
+            player->RemoveSpell(20222);                     // Goblin Engineer
             player->RemoveRewardedQuest(3639);              //Prevent Reapply Spell 20222 on Logout
             break;
         case SPELL_UNLEARN_GNOMISH_ENGINEER:
-            player->removeSpell(30575);                     // Gnomish Battle Goggles
-            player->removeSpell(30574);                     // Gnomish Power Goggles
-            player->removeSpell(56473);                     // Gnomish X-Ray Specs
-            player->removeSpell(30569);                     // Gnomish Poultryizer
-            player->removeSpell(30563);                     // Ultrasafe Transporter - Toshley's Station
-            player->removeSpell(23489);                     // Ultrasafe Transporter - Gadgetzan
-            player->removeSpell(23129);                     // World Enlarger
-            player->removeSpell(72953);                     // Plans: Iceblade Arrow
-            player->removeSpell(20219);                     // Gnomish Engineer
+            player->RemoveSpell(30575);                     // Gnomish Battle Goggles
+            player->RemoveSpell(30574);                     // Gnomish Power Goggles
+            player->RemoveSpell(56473);                     // Gnomish X-Ray Specs
+            player->RemoveSpell(30569);                     // Gnomish Poultryizer
+            player->RemoveSpell(30563);                     // Ultrasafe Transporter - Toshley's Station
+            player->RemoveSpell(23489);                     // Ultrasafe Transporter - Gadgetzan
+            player->RemoveSpell(23129);                     // World Enlarger
+            player->RemoveSpell(72953);                     // Plans: Iceblade Arrow
+            player->RemoveSpell(20219);                     // Gnomish Engineer
             player->RemoveRewardedQuest(3643);              //Horde Prevent Reapply Spell 20219 on Logout
             player->RemoveRewardedQuest(3641);              //Allience Prevent Reapply Spell 20219 on Logout
             break;
         case SPELL_REVERT_TO_ONE_TALENT_SPEC:
-            player->removeSpell(63644);                     // Activate Secondary Spec
-            player->removeSpell(63645);                     // Activate Primary Spec
+            player->RemoveSpell(63644);                     // Activate Secondary Spec
+            player->RemoveSpell(63645);                     // Activate Primary Spec
             break;
         case SPELL_LEARN_DUAL_TALENT_SPEC:
             player->CastSpell(player, 63680, false);         // Teach Learn Talent Specialization Switches
