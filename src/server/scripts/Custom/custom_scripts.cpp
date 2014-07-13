@@ -163,6 +163,9 @@ public:
  
     void OnCreatureKill(Player* player, Creature* boss)
     {
+        if (boss->isWorldBoss() && player->GetSession()->GetSecurity() < 1)
+            sWorld->SendWorldText(LANG_BOSS_ANNOUNCER, player->GetName().c_str(), boss->GetNameForLocaleIdx(player->GetSession()->GetSessionDbLocaleIndex()).c_str());
+
 /*        //WORLD MASS EVENT
         if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker && ((player->getLevel() - boss->getLevel()) <= 5))
         {
@@ -226,17 +229,17 @@ public:
             }
         }
         // END WORLD MASS EVENT
-        */
-        if (boss->isWorldBoss() && !player->IsGameMaster())
-            sWorld->SendWorldText(LANG_BOSS_ANNOUNCER, player->GetName().c_str(), boss->GetNameForLocaleIdx(player->GetSession()->GetSessionDbLocaleIndex()).c_str());
-            /*if (player->getGender() == GENDER_MALE)
+*/
+
+/*            if (player->getGender() == GENDER_MALE)
             {
                 char msg[250];
                 snprintf(msg, 250, "|CFF7BBEF7[Boss Announcer]|r:|cffff0000 %s |r and his group killed world boss |CFF18BE00[%s]|r !!!", player->GetName().c_str(),boss->GetName().c_str());
                 sWorld->SendServerMessage(SERVER_MSG_STRING, msg);
-                }*/
+                }
+*/
 
-        if (roll_chance_f(1.0f))
+/*        if (roll_chance_f(1.0f))
         {
             if ( (player->getLevel() - boss->getLevel()) <= 10 )
             {
@@ -245,10 +248,12 @@ public:
                     bers->SetDuration(8*IN_MILLISECONDS);
             }
         }
+*/
 
-        //Gift
-//        if (roll_chance_f(10.0f))
-//            player->SummonGameObject(600004, boss->GetPositionX()+0.1f, boss->GetPositionY()+0.1f, boss->GetPositionZ()+0.1f, 0, 0, 0, 0, 0, 0);
+/*        //Gift
+        if (roll_chance_f(10.0f))
+            player->SummonGameObject(600004, boss->GetPositionX()+0.1f, boss->GetPositionY()+0.1f, boss->GetPositionZ()+0.1f, 0, 0, 0, 0, 0, 0);
+*/
     }
 
     void OnLogin(Player* player, bool /*firstLogin*/)
