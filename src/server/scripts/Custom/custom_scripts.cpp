@@ -174,12 +174,12 @@ public:
             sWorld->SendWorldText(LANG_BOSS_ANNOUNCER, player->GetName().c_str(), creature->GetNameForLocaleIdx(player->GetSession()->GetSessionDbLocaleIndex()).c_str());
 
         // New event Pseudo Doppelganger
-        if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !creature->isWorldBoss() && roll_chance_i(5) && ((player->getLevel() - creature->getLevel()) <= 5))
+        if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !creature->isWorldBoss() && roll_chance_i(3) && ((player->getLevel() - creature->getLevel()) <= 5))
             if (Creature* miniboss = creature->SummonCreature(NPC_BOSS_GIFT, creature->GetPositionX() + 0.1f, creature->GetPositionY() + 0.1f, creature->GetPositionZ() + 0.1f, 0, TEMPSUMMON_TIMED_DESPAWN, 180000))
             {
                 miniboss->setFaction(FACTION_HOSTILE);
                 miniboss->SetLevel(player->getLevel() + 1);
-                miniboss->SetMaxHealth(player->GetMaxHealth());
+                miniboss->SetMaxHealth(int32(player->GetMaxHealth() * 1.5));
                 miniboss->SetArmor(player->GetArmor());
                 miniboss->SetStat(STAT_STRENGTH, player->GetStat(STAT_STRENGTH));
                 miniboss->SetStat(STAT_AGILITY, int32(player->GetStat(STAT_AGILITY) * 1.1));
