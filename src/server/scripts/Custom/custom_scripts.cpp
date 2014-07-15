@@ -175,6 +175,7 @@ public:
 
         // New event Pseudo Doppelganger
         if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !creature->isWorldBoss() && roll_chance_i(3) && ((player->getLevel() - creature->getLevel()) <= 5))
+        {
             if (Creature* miniboss = creature->SummonCreature(NPC_BOSS_GIFT, creature->GetPositionX() + 0.1f, creature->GetPositionY() + 0.1f, creature->GetPositionZ() + 0.1f, 0, TEMPSUMMON_TIMED_DESPAWN, 180000))
             {
                 miniboss->setFaction(FACTION_HOSTILE);
@@ -190,6 +191,11 @@ public:
                 str += player->GetName();
                 miniboss->SetName(str);
             }
+        }
+
+        // Low chance to get Level UP
+        if (player->getLevel() < 80 && roll_chance_f(0.05f) && (player->getLevel() - creature->getLevel()) <= 5)
+            player->SetLevel(player->getLevel() + 1);
 
 /*        //WORLD MASS EVENT
         if (sWorld->getBoolConfig(CONFIG_WORLD_EVENT) && !checker && ((player->getLevel() - boss->getLevel()) <= 5))
