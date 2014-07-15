@@ -1237,8 +1237,10 @@ void World::LoadConfigSettings(bool reload)
     m_bool_configs[PvPEvent] = sConfigMgr->GetBoolDefault("PvPEvent", false);
     m_bool_configs[DalaranAntiAfk] = sConfigMgr->GetBoolDefault("DalaranAntiAfk", false);
     m_bool_configs[DalaranAntiAfkTP] = sConfigMgr->GetBoolDefault("DalaranAntiAfkTP", false);
+
     // Duel Reset Cooldown 
     m_bool_configs[CONFIG_DUEL_RESET_COOLDOWN] = sConfigMgr->GetBoolDefault("DuelResetCooldown", false);
+
     // Passive Anticheat
     m_bool_configs[CONFIG_ANTICHEAT_ENABLE] = sConfigMgr->GetBoolDefault("Anticheat.Enable", true);
     m_int_configs[CONFIG_ANTICHEAT_REPORTS_INGAME_NOTIFICATION] = sConfigMgr->GetIntDefault("Anticheat.ReportsForIngameWarnings", 70);
@@ -1255,6 +1257,11 @@ void World::LoadConfigSettings(bool reload)
 
     //World Event
     m_bool_configs[CONFIG_WORLD_EVENT] = sConfigMgr->GetBoolDefault("WorldEvent", false);
+
+    // damage checker
+    m_int_configs[CONFIG_DAMAGE_CHECKER_MAX_DAMAGE] = sConfigMgr->GetBoolDefault("DamageChecker.MaxDamage", 50000);
+    m_int_configs[CONFIG_DAMAGE_CHECKER_IMMUNE_MIN_GM_LEVEL] = sConfigMgr->GetBoolDefault("DamageChecker.ImmuneMinGMLevel", 1);
+    m_int_configs[CONFIG_DAMAGE_CHECKER_BAN_VALUE] = sConfigMgr->GetBoolDefault("DamageChecker.BanValue", 3600);
 
     // Wintergrasp battlefield
     m_bool_configs[CONFIG_WINTERGRASP_ENABLE] = sConfigMgr->GetBoolDefault("Wintergrasp.Enable", false);

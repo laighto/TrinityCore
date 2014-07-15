@@ -666,6 +666,22 @@ uint32 Unit::DealDamage(Unit* victim, uint32 damage, CleanDamage const* cleanDam
 
     TC_LOG_DEBUG("entities.unit", "DealDamageStart");
 
+    // damage checker
+    if (GetTypeId() == TYPEID_PLAYER
+        && sWorld->getIntConfig(CONFIG_DAMAGE_CHECKER_MAX_DAMAGE) > 0
+        && damage >= sWorld->getIntConfig(CONFIG_DAMAGE_CHECKER_MAX_DAMAGE)
+        && (uint8)ToPlayer()->GetSession()->GetSecurity() < sWorld->getIntConfig(CONFIG_DAMAGE_CHECKER_IMMUNE_MIN_GM_LEVEL))
+    {
+        // punishment
+        uint32 banTime = sWorld->getIntConfig(CONFIG_DAMAGE_CHECKER_BAN_VALUE);
+        if (banTime > 0)
+            sWorld->BanCharacter(ToPlayer()->GetName(), secsToTimeString(banTime, true).c_str(), "Maximal damage", "Damage Checker");
+
+        TC_LOG_ERROR("entities.unit", "Damage Checker: Player name '%s', damage %u", ToPlayer()->GetName(), damage);
+
+        damage = sWorld->getIntConfig(CONFIG_DAMAGE_CHECKER_MAX_DAMAGE);
+    }
+    
     uint32 health = victim->GetHealth();
     TC_LOG_DEBUG("entities.unit", "Unit " UI64FMTD " dealt %u damage to unit " UI64FMTD, GetGUID(), damage, victim->GetGUID());
 

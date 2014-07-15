@@ -3098,3 +3098,29 @@ AllowEnterRaidFrozenThrone = 0
 TransmogrifyPrice = 1
 #
 ##############################################################################
+
+###################################################################################################
+# DAMAGE CHECKER OPTIONS
+#
+#    DamageChecker.MaxDamage
+#        Maximum damage on the player.
+#        Default:    0 - disable
+
+DamageChecker.MaxDamage = 50000
+
+#
+#    DamageChecker.ImmuneMinGMLevel
+#        The min level of GM, to obtain immunity from the detector.
+#        Default:    1
+
+DamageChecker.ImmuneMinGMLevel = 1
+
+#
+#    DamageChecker.BanValue
+#        Ban-time for the character (in seconds). If the BanValue is 0 or less, then only get a log.
+#        Default:    3600
+
+DamageChecker.BanValue = 0
+
+#
+###################################################################################################
