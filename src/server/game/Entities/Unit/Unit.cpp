@@ -677,7 +677,7 @@ uint32 Unit::DealDamage(Unit* victim, uint32 damage, CleanDamage const* cleanDam
         if (banTime > 0)
             sWorld->BanCharacter(ToPlayer()->GetName(), secsToTimeString(banTime, true).c_str(), "Maximal damage", "Damage Checker");
 
-        TC_LOG_ERROR("entities.unit", "Damage Checker: Player name '%s', damage %u", ToPlayer()->GetName(), damage);
+        TC_LOG_ERROR("entities.unit", "Damage Checker: Player name %s, damage %u", ToPlayer()->GetName().c_str(), damage);
 
         damage = sWorld->getIntConfig(CONFIG_DAMAGE_CHECKER_MAX_DAMAGE);
     }

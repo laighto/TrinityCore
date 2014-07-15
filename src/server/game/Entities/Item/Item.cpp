@@ -1550,7 +1550,7 @@ FakeResult Item::SetFakeDisplay(uint32 iEntry)
             return FAKE_ERR_DIFF_PLAYER_CLASS;*/
 
     //General masks -1, 511, 2047, 28671, 32767, 8388607
-    if ((myTmpl->AllowableRace != otherTmpl->AllowableRace) && (otherTmpl->AllowableRace != -1) && (otherTmpl->AllowableRace != 511) &&
+    if ((myTmpl->AllowableRace != otherTmpl->AllowableRace) && (otherTmpl->AllowableRace != 511) &&
        (otherTmpl->AllowableRace !=  2047) && (otherTmpl->AllowableRace != 28671) && (otherTmpl->AllowableRace != 32767) && (otherTmpl->AllowableRace != 8388607))
             return FAKE_ERR_DIFF_RACE;
 
