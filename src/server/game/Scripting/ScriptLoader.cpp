@@ -25,14 +25,6 @@ void AddSC_example_escort();
 void AddSC_example_gossip_codebox();
 void AddSC_example_misc();
 void AddSC_example_commandscript();
-void AddSC_DuelReset();
-void AddSC_gmisland();
-void AddSC_pvp_script();
-void AddSC_argent_tournamet_custom();
-void AddSC_anticheat_commandscript();
-void AddSC_transmogrify_script();
-void AddSC_server_manager();
-void AddSC_an_innocent_disguise();
 
 // spells
 void AddSC_deathknight_spell_scripts();
@@ -50,8 +42,6 @@ void AddSC_quest_spell_scripts();
 void AddSC_item_spell_scripts();
 void AddSC_example_spell_scripts();
 void AddSC_holiday_spell_scripts();
-void AddSC_pet_scale();
-
 void AddSC_SmartScripts();
 
 //Commands
@@ -97,6 +87,17 @@ void AddSC_wp_commandscript();
 void AddSC_custom_commandscript();
 
 #ifdef SCRIPTS
+//custom scripts
+void AddSC_DuelReset();
+void AddSC_gmisland();
+void AddSC_pvp_script();
+void AddSC_argent_tournamet_custom();
+void AddSC_anticheat_commandscript();
+void AddSC_transmogrify_script();
+void AddSC_server_manager();
+void AddSC_an_innocent_disguise();
+void AddSC_pet_scale();
+
 //world
 void AddSC_areatrigger_scripts();
 void AddSC_emerald_dragons();
@@ -731,8 +732,6 @@ void AddScripts()
     AddBattlegroundScripts();
     AddOutdoorPvPScripts();
     AddCustomScripts();
-    AddSC_server_manager();
-    AddSC_an_innocent_disguise();
 #endif
 }
 
@@ -743,11 +742,6 @@ void AddExampleScripts()
     AddSC_example_gossip_codebox();
     AddSC_example_misc();
     AddSC_example_commandscript();
-    AddSC_DuelReset();
-    AddSC_gmisland();
-    AddSC_pvp_script();
-    AddSC_argent_tournamet_custom();
-    AddSC_transmogrify_script();
 }
 
 void AddSpellScripts()
@@ -767,7 +761,6 @@ void AddSpellScripts()
     AddSC_item_spell_scripts();
     AddSC_example_spell_scripts();
     AddSC_holiday_spell_scripts();
-    AddSC_pet_scale();
 }
 
 void AddCommandScripts()
@@ -1472,6 +1465,13 @@ void AddCustomScripts()
 {
 #ifdef SCRIPTS
     /* This is where custom scripts should be added. */
-
+    AddSC_server_manager();
+    AddSC_an_innocent_disguise();
+    AddSC_DuelReset();
+    AddSC_gmisland();
+    AddSC_pvp_script();
+    AddSC_argent_tournamet_custom();
+    AddSC_transmogrify_script();
+    AddSC_pet_scale();
 #endif
 }
