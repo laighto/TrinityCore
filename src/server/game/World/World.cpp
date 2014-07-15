@@ -1259,9 +1259,9 @@ void World::LoadConfigSettings(bool reload)
     m_bool_configs[CONFIG_WORLD_EVENT] = sConfigMgr->GetBoolDefault("WorldEvent", false);
 
     // damage checker
-    m_int_configs[CONFIG_DAMAGE_CHECKER_MAX_DAMAGE] = sConfigMgr->GetBoolDefault("DamageChecker.MaxDamage", 50000);
-    m_int_configs[CONFIG_DAMAGE_CHECKER_IMMUNE_MIN_GM_LEVEL] = sConfigMgr->GetBoolDefault("DamageChecker.ImmuneMinGMLevel", 1);
-    m_int_configs[CONFIG_DAMAGE_CHECKER_BAN_VALUE] = sConfigMgr->GetBoolDefault("DamageChecker.BanValue", 3600);
+    m_int_configs[CONFIG_DAMAGE_CHECKER_MAX_DAMAGE] = sConfigMgr->GetIntDefault("DamageChecker.MaxDamage", 50000);
+    m_int_configs[CONFIG_DAMAGE_CHECKER_IMMUNE_MIN_GM_LEVEL] = sConfigMgr->GetIntDefault("DamageChecker.ImmuneMinGMLevel", 1);
+    m_int_configs[CONFIG_DAMAGE_CHECKER_BAN_VALUE] = sConfigMgr->GetIntDefault("DamageChecker.BanValue", 3600);
 
     // Wintergrasp battlefield
     m_bool_configs[CONFIG_WINTERGRASP_ENABLE] = sConfigMgr->GetBoolDefault("Wintergrasp.Enable", false);
