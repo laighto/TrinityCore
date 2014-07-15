@@ -130,10 +130,14 @@ class Boss_Announcer : public PlayerScript
 public:
     Boss_Announcer() : PlayerScript ("Boss_Announcer") {}
  
-    void OnCreatureKill(Player* player, Creature* boss)
+    void OnCreatureKill(Player* player, Creature* creature)
     {
-        if (boss->isWorldBoss() && player->GetSession()->GetSecurity() < 1)
-            sWorld->SendWorldText(LANG_BOSS_ANNOUNCER, player->GetName().c_str(), boss->GetNameForLocaleIdx(player->GetSession()->GetSessionDbLocaleIndex()).c_str());
+        if (creature->isWorldBoss() && player->GetSession()->GetSecurity() < 1)
+            sWorld->SendWorldText(LANG_BOSS_ANNOUNCER, player->GetName().c_str(), creature->GetNameForLocaleIdx(player->GetSession()->GetSessionDbLocaleIndex()).c_str());
+
+        // Low chance to get Level UP
+        if (player->getLevel() < 85 && roll_chance_f(0.05f) && (player->getLevel() - creature->getLevel()) <= 5)
+            player->SetLevel(player->getLevel() + 1);
     }
 
     void OnLogin(Player* player, bool /*firstLogin*/)
