@@ -305,6 +305,44 @@ class npc_stonefathers_banner : public CreatureScript
     };
 };
 
+class npc_editor : public CreatureScript
+{
+public:
+    npc_editor() : CreatureScript("npc_editor") { }
+
+    struct npc_editorAI : public ScriptedAI
+    {
+        npc_editorAI(Creature* creature) : ScriptedAI(creature) { }
+
+        void sGossipSelect(Player* player, uint32 /*menuId*/, uint32 gossipListId) override
+        {
+            player->PlayerTalkClass->SendCloseGossip();
+
+            switch (gossipListId)
+            {
+            case 0:
+                player->SetAtLoginFlag(AT_LOGIN_RENAME);
+                me->MonsterSay("Change NAME SET. PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
+                break;
+            case 1:
+                player->SetAtLoginFlag(AT_LOGIN_CHANGE_FACTION);
+                me->MonsterSay("CHANGE FACTION SET. PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
+                break;
+            case 2:
+                player->SetAtLoginFlag(AT_LOGIN_CHANGE_RACE);
+                me->MonsterSay("CHANGE RACE SET. PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
+                break;
+            }
+        }
+    };
+
+    CreatureAI* GetAI(Creature* creature) const override
+    {
+        return new npc_editorAI(creature);
+    }
+};
+
+
 void AddSC_custom_script()
 {
     new mob_ressurect();
@@ -313,4 +351,5 @@ void AddSC_custom_script()
     new go_abandoned_outhouse();
     new channel_factions();
     new npc_stonefathers_banner();
+    new npc_editor();
 }
