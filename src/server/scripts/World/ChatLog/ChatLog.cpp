@@ -69,7 +69,7 @@ void ChatLogInfo::OpenFile(bool dateSplit, const std::string& date, bool utfHead
 
 void ChatLogInfo::WriteFile(const std::string& msg)
 {
-    ACE_Guard<ACE_Thread_Mutex> guard(_lock);
+    boost::lock_guard<boost::shared_mutex> guard(_lock);
     if (_file)
     {
         ChatLog::OutTimestamp(_file);
@@ -185,7 +185,7 @@ void ChatLog::_Initialize()
 
 void ChatLog::_OpenAllFiles()
 {
-    ACE_Guard<ACE_Thread_Mutex> guard(_lock);
+    boost::lock_guard<boost::shared_mutex> guard(_lock);
     std::string date;
     if (_dateSplit)
     {
@@ -216,7 +216,7 @@ void ChatLog::_OpenAllFiles()
 
 void ChatLog::_CloseAllFiles()
 {
-    ACE_Guard<ACE_Thread_Mutex> guard(_lock);
+    boost::lock_guard<boost::shared_mutex> guard(_lock);
     for (uint32 i = CHAT_LOG_CHAT; i <= CHAT_LOG_COUNT - 1; ++i)
     {
         if (_logs[i]->GetFile())

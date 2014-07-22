@@ -67,7 +67,7 @@ private:
     uint32 _flushLength;
     uint32 _writtenLength;
     ChatLogType _type;
-    ACE_Thread_Mutex _lock;
+    boost::shared_mutex _lock;
 
 public:
     ChatLogInfo(ChatLogType type, bool chat, bool lexics, uint32 flushLength);
@@ -75,7 +75,7 @@ public:
     void OpenFile(bool dateSplit, const std::string& date, bool utfHeader);
     void CloseFile()
     {
-        ACE_Guard<ACE_Thread_Mutex> guard(_lock);
+        boost::lock_guard<boost::shared_mutex> guard(_lock);
         if (_file)
         {
             fclose(_file);
@@ -158,8 +158,8 @@ private:
     uint32 _lexicsActionDuration;
 
     ChatLogInfo* _innormativeLog;
-    ACE_Thread_Mutex _lock;
+    boost::shared_mutex _lock;
 };
 
-#define sChatLog (*ACE_Singleton<ChatLog, ACE_Thread_Mutex>::instance())
+#define sChatLog ChatLog::instance()
 #endif
