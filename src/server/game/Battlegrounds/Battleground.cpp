@@ -1,20 +1,20 @@
 /*
-* Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
-* Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
-*
-* This program is free software; you can redistribute it and/or modify it
-* under the terms of the GNU General Public License as published by the
-* Free Software Foundation; either version 2 of the License, or (at your
-* option) any later version.
-*
-* This program is distributed in the hope that it will be useful, but WITHOUT
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-* more details.
-*
-* You should have received a copy of the GNU General Public License along
-* with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright (C) 2008-2014 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "ArenaScore.h"
 #include "Battleground.h"
@@ -407,7 +407,7 @@ inline void Battleground::_ProcessProgress(uint32 diff)
     {
         uint32 newtime = m_PrematureCountDownTimer - diff;
         // announce every minute
-        if (newtime >(MINUTE * IN_MILLISECONDS))
+        if (newtime > (MINUTE * IN_MILLISECONDS))
         {
             if (newtime / (MINUTE * IN_MILLISECONDS) != m_PrematureCountDownTimer / (MINUTE * IN_MILLISECONDS))
                 PSendMessageToAll(LANG_BATTLEGROUND_PREMATURE_FINISH_WARNING, CHAT_MSG_SYSTEM, NULL, (uint32)(m_PrematureCountDownTimer / (MINUTE * IN_MILLISECONDS)));
@@ -676,16 +676,27 @@ void Battleground::RewardHonorToTeam(uint32 Honor, uint32 TeamID)
             // Reward Emblem of Frost
             // uint32 countitem = urand(0, 10);
             // if (countitem == 1)
-            //     player->AddItem(49426, countitem);
+            // player->AddItem(49426, countitem);
         }
 }
 
 void Battleground::RewardReputationToTeam(uint32 faction_id, uint32 Reputation, uint32 TeamID)
 {
-    if (FactionEntry const* factionEntry = sFactionStore.LookupEntry(faction_id))
+    FactionEntry const* factionEntry = sFactionStore.LookupEntry(faction_id);
+    if (!factionEntry)
+        return;
+
         for (BattlegroundPlayerMap::const_iterator itr = m_Players.begin(); itr != m_Players.end(); ++itr)
-            if (Player* player = _GetPlayerForTeam(TeamID, itr, "RewardReputationToTeam"))
-                player->GetReputationMgr().ModifyReputation(factionEntry, Reputation);
+    {
+        Player* player = _GetPlayerForTeam(TeamID, itr, "RewardReputationToTeam");
+        if (!player)
+            continue;
+
+        uint32 repGain = Reputation;
+        AddPct(repGain, player->GetTotalAuraModifier(SPELL_AURA_MOD_REPUTATION_GAIN));
+        AddPct(repGain, player->GetTotalAuraModifierByMiscValue(SPELL_AURA_MOD_FACTION_REPUTATION_GAIN, faction_id));
+        player->GetReputationMgr().ModifyReputation(factionEntry, repGain);
+    }
 }
 
 void Battleground::UpdateWorldState(uint32 Field, uint32 Value)
