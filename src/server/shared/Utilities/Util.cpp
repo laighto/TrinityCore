@@ -16,6 +16,7 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "CompilerDefs.h"
 #include "Util.h"
 #include "Common.h"
 #include "utf8.h"
@@ -24,7 +25,7 @@
 #include <stdarg.h>
 #include <boost/thread/tss.hpp>
 
-#if PLATFORM == PLATFORM_UNIX
+#if COMPILER == COMPILER_GNU
   #include <sys/socket.h>
   #include <netinet/in.h>
   #include <arpa/inet.h>
