@@ -5628,7 +5628,7 @@ bool Unit::HandleDummyAuraProc(Unit* victim, uint32 damage, AuraEffect* triggere
                 triggered_spell_id = 29442;
                 break;
             }
-            // Arcane Potency 
+            // Arcane Potency
             if (dummySpell->SpellIconID == 2120)
             {
                 if (!procSpell)
@@ -15453,8 +15453,6 @@ void Unit::Kill(Unit* victim, bool durabilityLoss)
         if (creature)
         {
             Loot* loot = &creature->loot;
-            if (creature->loot.loot_type == LOOT_PICKPOCKETING)
-                creature->ResetPickPocketRefillTimer();
 
             loot->clear();
             if (uint32 lootid = creature->GetCreatureTemplate()->lootid)

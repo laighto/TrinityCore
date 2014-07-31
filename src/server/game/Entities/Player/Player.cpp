@@ -2974,14 +2974,6 @@ void Player::GiveXP(uint32 xp, Unit* victim, float group_rate)
 
     sScriptMgr->OnGivePlayerXP(this, xp, victim);
 
-    // Favored experience increase START
-    uint32 zone = GetZoneId();
-    float favored_exp_mult = 0;
-    if ((HasAura(32096) || HasAura(32098)) && (zone == 3483 || zone == 3562 || zone == 3836 || zone == 3713 || zone == 3714))
-        favored_exp_mult = 0.05f; // Thrallmar's Favor and Honor Hold's Favor
-    xp = uint32(xp * (1 + favored_exp_mult));
-    // Favored experience increase END
-
     // XP to money conversion processed in Player::RewardQuest
     if (level >= sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL))
         return;
@@ -8957,18 +8949,27 @@ void Player::SendLoot(uint64 guid, LootType loot_type)
         {
             if (loot->loot_type != LOOT_PICKPOCKETING)
             {
-                creature->StartPickPocketRefillTimer();
-                loot->clear();
+                if (creature->CanGeneratePickPocketLoot())
+                {
+                    creature->StartPickPocketRefillTimer();
+                    loot->clear();
 
-                if (uint32 lootid = creature->GetCreatureTemplate()->pickpocketLootId)
-                    loot->FillLoot(lootid, LootTemplates_Pickpocketing, this, true);
+                    if (uint32 lootid = creature->GetCreatureTemplate()->pickpocketLootId)
+                        loot->FillLoot(lootid, LootTemplates_Pickpocketing, this, true);
 
-                // Generate extra money for pick pocket loot
-                const uint32 a = urand(0, creature->getLevel()/2);
-                const uint32 b = urand(0, getLevel()/2);
-                loot->gold = uint32(10 * (a + b) * sWorld->getRate(RATE_DROP_MONEY));
-                permission = OWNER_PERMISSION;
-            }
+                    // Generate extra money for pick pocket loot
+                    const uint32 a = urand(0, creature->getLevel() / 2);
+                    const uint32 b = urand(0, getLevel() / 2);
+                    loot->gold = uint32(10 * (a + b) * sWorld->getRate(RATE_DROP_MONEY));
+                    permission = OWNER_PERMISSION;
+                }
+                else
+                {
+                    permission = NONE_PERMISSION;
+                    SendLootError(guid, LOOT_ERROR_ALREADY_PICKPOCKETED);
+                    return;
+                }
+            } // else - still has pickpocket loot generated & not fully taken
         }
         else
         {
@@ -9047,8 +9048,6 @@ void Player::SendLoot(uint64 guid, LootType loot_type)
         }
     }
 
-    SetLootGUID(guid);
-
     // LOOT_INSIGNIA and LOOT_FISHINGHOLE unsupported by client
     switch (loot_type)
     {
@@ -9061,19 +9060,33 @@ void Player::SendLoot(uint64 guid, LootType loot_type)
     // need know merged fishing/corpse loot type for achievements
     loot->loot_type = loot_type;
 
-    WorldPacket data(SMSG_LOOT_RESPONSE, (9+50));           // we guess size
-    data << uint64(guid);
-    data << uint8(loot_type);
-    data << LootView(*loot, this, permission);
-
-    SendDirectMessage(&data);
-
-    // add 'this' player as one of the players that are looting 'loot'
     if (permission != NONE_PERMISSION)
+    {
+        SetLootGUID(guid);
+
+        WorldPacket data(SMSG_LOOT_RESPONSE, (9 + 50));           // we guess size
+        data << uint64(guid);
+        data << uint8(loot_type);
+        data << LootView(*loot, this, permission);
+        SendDirectMessage(&data);
+
+        // add 'this' player as one of the players that are looting 'loot'
         loot->AddLooter(GetGUID());
+    }
+    else
+        SendLootError(GetLootGUID(), LOOT_ERROR_DIDNT_KILL);
 
     if (loot_type == LOOT_CORPSE && !IS_ITEM_GUID(guid))
         SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_LOOTING);
+}
+
+void Player::SendLootError(uint64 guid, LootError error)
+{
+    WorldPacket data(SMSG_LOOT_RESPONSE, 10);
+    data << uint64(guid);
+    data << uint8(LOOT_NONE);
+    data << uint8(error);
+    SendDirectMessage(&data);
 }
 
 void Player::SendNotifyLootMoneyRemoved()
