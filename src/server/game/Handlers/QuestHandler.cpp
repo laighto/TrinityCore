@@ -581,9 +581,6 @@ void WorldSession::HandleQuestgiverCompleteQuest(WorldPacket& recvData)
             _player->PlayerTalkClass->SendQuestGiverOfferReward(quest, guid, true);
     }
 
-    if (object)
-    if (Creature* creature = object->ToCreature())
-        sScriptMgr->OnQuestComplete(_player, creature, quest);
 }
 
 void WorldSession::HandleQuestgiverQuestAutoLaunch(WorldPacket& /*recvPacket*/)
