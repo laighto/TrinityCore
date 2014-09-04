@@ -601,6 +601,12 @@ void CharacterDatabaseConnection::DoPrepareStatements()
     PrepareStatement(CHAR_DEL_CHAR_PET_BY_ID, "DELETE FROM character_pet WHERE id = ?", CONNECTION_ASYNC);
     PrepareStatement(CHAR_DEL_CHAR_PET_BY_SLOT, "DELETE FROM character_pet WHERE owner = ? AND (slot = ? OR slot > ?)", CONNECTION_ASYNC);
 
+    // PvPstats
+    PrepareStatement(CHAR_SEL_PVPSTATS_MAXID, "SELECT MAX(id) FROM pvpstats_battlegrounds", CONNECTION_SYNCH);
+    PrepareStatement(CHAR_INS_PVPSTATS_BATTLEGROUND, "INSERT INTO pvpstats_battlegrounds (id, winner_faction, bracket_id, type, date) VALUES (?, ?, ?, ?, NOW())", CONNECTION_ASYNC);
+    PrepareStatement(CHAR_INS_PVPSTATS_PLAYER, "INSERT INTO pvpstats_players (battleground_id, character_guid, score_killing_blows, score_deaths, score_honorable_kills, score_bonus_honor, score_damage_done, score_healing_done, attr_1, attr_2, attr_3, attr_4, attr_5) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", CONNECTION_ASYNC);
+
+
     PrepareStatement(CHAR_SEL_CODE, "SELECT active, actionid, data0, data1, data2, data3 FROM code_manager WHERE code = ?", CONNECTION_SYNCH);
     PrepareStatement(CHAR_UPD_CODE, "UPDATE code_manager SET active = 0, charguid = ?, characcount = ? WHERE code = ?", CONNECTION_ASYNC);
     PrepareStatement(CHAR_SEL_ITEMPACK, "SELECT item, count FROM code_prepared_itempack WHERE packid = ?", CONNECTION_SYNCH);
