@@ -284,10 +284,11 @@ public:
 
             switch (sayStep)
             {
-                case 1: me->MonsterSay(SAY_SAVED1, LANG_UNIVERSAL, 0); sayStep++; break;
-                case 2: me->MonsterSay(SAY_SAVED2, LANG_UNIVERSAL, 0); sayStep++; break;
-                case 3: me->MonsterSay(SAY_SAVED3, LANG_UNIVERSAL, 0); sayStep++; break;
-                default:                                                          break;
+                case 1: me->Say(SAY_SAVED1, LANG_UNIVERSAL, 0); sayStep++; break;
+                case 2: me->Say(SAY_SAVED2, LANG_UNIVERSAL, 0); sayStep++; break;
+                case 3: me->Say(SAY_SAVED3, LANG_UNIVERSAL, 0); sayStep++; break;
+                default:
+                    break;
             }
         }
 
@@ -301,11 +302,12 @@ public:
 
             switch (urand(0, 6))
             {
-                case 0: me->MonsterSay(SAY_DEATH1, LANG_UNIVERSAL, 0); break;
-                case 1: me->MonsterSay(SAY_DEATH2, LANG_UNIVERSAL, 0); break;
-                case 2: me->MonsterSay(SAY_DEATH3, LANG_UNIVERSAL, 0); break;
-                case 3: me->MonsterSay(SAY_DEATH4, LANG_UNIVERSAL, 0); break;
-                default:                                               break;
+                case 0: me->Say(SAY_DEATH1, LANG_UNIVERSAL, 0); break;
+                case 1: me->Say(SAY_DEATH2, LANG_UNIVERSAL, 0); break;
+                case 2: me->Say(SAY_DEATH3, LANG_UNIVERSAL, 0); break;
+                case 3: me->Say(SAY_DEATH4, LANG_UNIVERSAL, 0); break;
+                default:
+                    break;
             }
         }
     };
@@ -374,7 +376,7 @@ public:
             else if (saveCount > 25)
             {
                 // award Quest
-                me->MonsterYell(SAY_COMPLETE, LANG_UNIVERSAL, 0);
+                me->Yell(SAY_COMPLETE, LANG_UNIVERSAL, 0);
                 pPriest->CompleteQuest(QUEST_BALANCE_OF_LIGHT_AND_SHADOW);
                 eventActive = false;
                pPriest = NULL;
@@ -533,13 +535,14 @@ public:
                         {
                             switch (waveCount)
                             {
-                                case 0: p->MonsterYell(SAY_SPAWN1, LANG_UNIVERSAL, 0); break;
-                                case 1: p->MonsterYell(SAY_SPAWN2, LANG_UNIVERSAL, 0); break;
+                                case 0: p->Yell(SAY_SPAWN1, LANG_UNIVERSAL, 0); break;
+                                case 1: p->Yell(SAY_SPAWN2, LANG_UNIVERSAL, 0); break;
                                 //case 2:                                                break;
-                                case 3: p->MonsterYell(SAY_SPAWN3, LANG_UNIVERSAL, 0); break;
+                                case 3: p->Yell(SAY_SPAWN3, LANG_UNIVERSAL, 0); break;
                                 //case 4:                                                break;
                                 //case 5:                                                break;
-                                default:                                               break;
+                                default:
+                                    break;
                             }
                         }
 

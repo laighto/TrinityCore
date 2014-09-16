@@ -201,7 +201,7 @@ public:
                         }
                         else
                         {
-                            creature->MonsterSay("Code successfuly activated! But there is no Reward Packs!!!", LANG_UNIVERSAL, 0);
+                            creature->Say("Code successfuly activated! But there is no Reward Packs!!!", LANG_UNIVERSAL, 0);
                             return true;
                         }
                     }

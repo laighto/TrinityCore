@@ -88,7 +88,7 @@ class the_grand_melee : public CreatureScript
                     Damage = 0;
 
                     me->CastSpell(me, SPELL_YELLOW_ROSE_FIREWORK , true);
-                    me->MonsterSay(GRAND_MELEE_SAY_END, LANG_UNIVERSAL, 0);
+                    me->Say(GRAND_MELEE_SAY_END, LANG_UNIVERSAL, 0);
                     me->setFaction(FACTION_FRIENDLY);
                     me->DespawnOrUnsummon(4000);
 
@@ -101,7 +101,7 @@ class the_grand_melee : public CreatureScript
                 if (DamageDone > Victim->GetHealth())
                 {
                     DamageDone = Victim->GetHealth() - 1;
-                    me->MonsterSay(GRAND_MELEE_SAY_VICTORY, LANG_UNIVERSAL, 0);
+                    me->Say(GRAND_MELEE_SAY_VICTORY, LANG_UNIVERSAL, 0);
                     EnterEvadeMode();
                 }
             }
@@ -219,7 +219,7 @@ class the_grand_melee : public CreatureScript
             _Creature->setFaction(FACTION_HOSTILE);
             _Creature->SetReactState(REACT_AGGRESSIVE);
             _Creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
-            _Creature->MonsterSay(urand(0,1) ? GRAND_MELEE_SAY_START_1 : GRAND_MELEE_SAY_START_2, LANG_UNIVERSAL, 0);
+            _Creature->Say(urand(0,1) ? GRAND_MELEE_SAY_START_1 : GRAND_MELEE_SAY_START_2, LANG_UNIVERSAL, 0);
             _Creature->AI()->AttackStart(pPlayer->GetVehicleCreatureBase());
 
             //pPlayer->CLOSE_GOSSIP_MENU();
@@ -327,7 +327,7 @@ public:
        
         void JustDied(Unit* /*Killer*/)
         {
-            me->MonsterSay(SAY_END, LANG_UNIVERSAL, 0);
+            me->Say(SAY_END, LANG_UNIVERSAL, 0);
             me->setFaction(35);
             me->SetHealth(1);
             pTarget->CastSpell(pTarget, MOUNTED_MELEE_VICTORY, true);
@@ -501,7 +501,7 @@ public:
         creature->setFaction(14);
         creature->SetReactState(REACT_AGGRESSIVE);
         creature->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE  | UNIT_FLAG_NOT_ATTACKABLE_1 | UNIT_FLAG_IMMUNE_TO_PC | UNIT_FLAG_NOT_SELECTABLE);
-        creature->MonsterSay(urand(0,1) ? SAY_START_1 : SAY_START_2, LANG_UNIVERSAL, 0);
+        creature->Say(urand(0,1) ? SAY_START_1 : SAY_START_2, LANG_UNIVERSAL, 0);
         creature->AI()->AttackStart(player->GetVehicleCreatureBase());
         creature->AddThreat(player, 0.0f);
         creature->SetInCombatWith(player);

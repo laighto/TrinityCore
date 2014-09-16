@@ -457,7 +457,7 @@ public:
         SQLTransaction trans = CharacterDatabase.BeginTransaction();
         MailDraft(subject, text).SendMailTo(trans, MailReceiver(player, GUID_LOPART(player->GetGUID())), MailSender(MAIL_CREATURE, codemanager));
         CharacterDatabase.CommitTransaction(trans);
-        player->Whisper(text, LANG_UNIVERSAL, player->GetGUID());
+        player->Whisper(text, LANG_UNIVERSAL, player);
     }
 
     bool OnUse(Player* player, Item* /*item*/, SpellCastTargets const& /*targets*/) override
@@ -486,15 +486,15 @@ public:
             {
             case 0:
                 player->SetAtLoginFlag(AT_LOGIN_RENAME);
-                me->MonsterSay("Change NAME SET. PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
+                me->Say("Change NAME SET. PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
                 break;
             case 1:
                 player->SetAtLoginFlag(AT_LOGIN_CHANGE_FACTION);
-                me->MonsterSay("CHANGE FACTION SET. PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
+                me->Say("CHANGE FACTION SET. PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
                 break;
             case 2:
                 player->SetAtLoginFlag(AT_LOGIN_CHANGE_RACE);
-                me->MonsterSay("CHANGE RACE SET. PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
+                me->Say("CHANGE RACE SET. PLEASE RELOGIN NOW", LANG_UNIVERSAL, 0);
                 break;
             }
         }

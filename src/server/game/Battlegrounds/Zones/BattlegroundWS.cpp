@@ -235,7 +235,7 @@ void BattlegroundWS::AddPlayer(Player* player)
     {
         player->SetDisplayId(24191); //Lich King model
         player->Yell("The Lich King must always exist...!", LANG_UNIVERSAL);
-        player->Whisper("You can find Frostmourne in your bag ...", LANG_UNIVERSAL, player->GetGUID());
+        player->Whisper("You can find Frostmourne in your bag ...", LANG_UNIVERSAL, player);
         player->AddItem(ITEM_FROSTMOURNE_ID, 1);
         lichGUID = player->GetGUID();
         lich_exists = true;
@@ -799,7 +799,7 @@ void BattlegroundWS::HandleKillPlayer(Player* player, Player* killer)
         player->DeMorph();
         player->DestroyItemCount(ITEM_FROSTMOURNE_ID, 1, true, true);
         player->Yell("The Lich King must always exist...!", LANG_UNIVERSAL);
-        player->Whisper("You can find Frostmourne in your bag ...", LANG_UNIVERSAL, killer->GetGUID());
+        player->Whisper("You can find Frostmourne in your bag ...", LANG_UNIVERSAL, killer);
         killer->SetDisplayId(24191); //Lich King model
         killer->AddItem(ITEM_FROSTMOURNE_ID, 1);
         lichGUID = killer->GetGUID();
