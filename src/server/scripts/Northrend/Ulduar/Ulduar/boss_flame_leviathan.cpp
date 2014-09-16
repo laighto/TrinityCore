@@ -226,14 +226,12 @@ class boss_flame_leviathan : public CreatureScript
         {
             boss_flame_leviathanAI(Creature* creature) : BossAI(creature, BOSS_LEVIATHAN), vehicle(creature->GetVehicleKit())
             {
+                Initialize();
+                _pursueTarget = 0;
             }
 
-            void InitializeAI() override
+            void Initialize()
             {
-                ASSERT(vehicle);
-                if (!me->isDead())
-                    Reset();
-
                 ActiveTowersCount = 4;
                 Shutdown = 0;
                 ActiveTowers = false;
@@ -243,6 +241,15 @@ class boss_flame_leviathan : public CreatureScript
                 towerOfFrost = false;
                 Shutout = true;
                 Unbroken = true;
+            }
+
+            void InitializeAI() override
+            {
+                ASSERT(vehicle);
+                if (!me->isDead())
+                    Reset();
+
+                Initialize();
 
                 DoCast(SPELL_INVIS_AND_STEALTH_DETECT);
 
@@ -635,13 +642,19 @@ class boss_flame_leviathan_defense_cannon : public CreatureScript
         {
             boss_flame_leviathan_defense_cannonAI(Creature* creature) : ScriptedAI(creature)
             {
+                Initialize();
+            }
+
+            void Initialize()
+            {
+                NapalmTimer = 5 * IN_MILLISECONDS;
             }
 
             uint32 NapalmTimer;
 
             void Reset() override
             {
-                NapalmTimer = 5*IN_MILLISECONDS;
+                Initialize();
                 DoCast(me, AURA_STEALTH_DETECTION);
             }
 
@@ -782,14 +795,20 @@ class npc_mechanolift : public CreatureScript
         {
             npc_mechanoliftAI(Creature* creature) : PassiveAI(creature)
             {
+                Initialize();
                 ASSERT(me->GetVehicleKit());
+            }
+
+            void Initialize()
+            {
+                MoveTimer = 0;
             }
 
             uint32 MoveTimer;
 
             void Reset() override
             {
-                MoveTimer = 0;
+                Initialize();
                 me->GetMotionMaster()->MoveRandom(50);
             }
 
@@ -957,9 +976,15 @@ public:
     {
         npc_mimirons_infernoAI(Creature* creature) : npc_escortAI(creature)
         {
+            Initialize();
             me->SetFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
             me->CastSpell(me, AURA_DUMMY_YELLOW, true);
             me->SetReactState(REACT_PASSIVE);
+        }
+
+        void Initialize()
+        {
+            infernoTimer = 2000;
         }
 
         void WaypointReached(uint32 /*waypointId*/) override
@@ -969,7 +994,7 @@ public:
 
         void Reset() override
         {
-            infernoTimer = 2000;
+            Initialize();
         }
 
         uint32 infernoTimer;
@@ -1048,14 +1073,20 @@ class npc_freyas_ward : public CreatureScript
         {
             npc_freyas_wardAI(Creature* creature) : ScriptedAI(creature)
             {
+                Initialize();
                 me->CastSpell(me, AURA_DUMMY_GREEN, true);
+            }
+
+            void Initialize()
+            {
+                summonTimer = 5000;
             }
 
             uint32 summonTimer;
 
             void Reset() override
             {
-                summonTimer = 5000;
+                Initialize();
             }
 
             void UpdateAI(uint32 diff) override
@@ -1091,14 +1122,20 @@ class npc_freya_ward_summon : public CreatureScript
         {
             npc_freya_ward_summonAI(Creature* creature) : ScriptedAI(creature)
             {
+                Initialize();
                 creature->GetMotionMaster()->MoveRandom(100);
+            }
+
+            void Initialize()
+            {
+                lashTimer = 5000;
             }
 
             uint32 lashTimer;
 
             void Reset() override
             {
-                lashTimer = 5000;
+                Initialize();
             }
 
             void UpdateAI(uint32 diff) override
@@ -1528,11 +1565,11 @@ class spell_auto_repair : public SpellScriptLoader
                 if (!vehicle)
                     return;
 
-                Player* driver = vehicle->GetPassenger(0) ? vehicle->GetPassenger(0)->ToPlayer() : NULL;
+                Unit* driver = vehicle->GetPassenger(0);
                 if (!driver)
                     return;
 
-                driver->MonsterTextEmote(EMOTE_REPAIR, driver, true);
+                driver->TextEmote(EMOTE_REPAIR, driver, true);
 
                 InstanceScript* instance = driver->GetInstanceScript();
                 if (!instance)

@@ -779,7 +779,7 @@ public:
                     }
                     else
                     {
-                        me->MonsterTextEmote(EMOTE_UNABLE_TO_FIND, NULL);
+                        me->TextEmote(EMOTE_UNABLE_TO_FIND);
                         EnterEvadeMode();
                         return;
                     }

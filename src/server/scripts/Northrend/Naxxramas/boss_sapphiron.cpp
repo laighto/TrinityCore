@@ -90,9 +90,19 @@ class boss_sapphiron : public CreatureScript
         struct boss_sapphironAI : public BossAI
         {
             boss_sapphironAI(Creature* creature) :
-                BossAI(creature, BOSS_SAPPHIRON), _phase(PHASE_NULL),
-                _map(me->GetMap())
-            { }
+                BossAI(creature, BOSS_SAPPHIRON), _map(me->GetMap())
+            {
+                Initialize();
+                _iceboltCount = 0;
+            }
+
+            void Initialize()
+            {
+                _phase = PHASE_NULL;
+
+                _canTheHundredClub = true;
+                _checkFrostResistTimer = 5 * IN_MILLISECONDS;
+            }
 
             void InitializeAI() override
             {
@@ -115,10 +125,7 @@ class boss_sapphiron : public CreatureScript
                 if (_phase == PHASE_FLIGHT)
                     ClearIceBlock();
 
-                _phase = PHASE_NULL;
-
-                _canTheHundredClub = true;
-                _checkFrostResistTimer = 5 * IN_MILLISECONDS;
+                Initialize();
             }
 
             void EnterCombat(Unit* /*who*/) override
@@ -375,7 +382,7 @@ class boss_sapphiron : public CreatureScript
 
                     for (IceBlockMap::const_iterator itr = _iceblocks.begin(); itr != _iceblocks.end(); ++itr)
                     {
-                        if (GameObject* go = GameObject::GetGameObject(*me, itr->second))
+                        if (GameObject* go = ObjectAccessor::GetGameObject(*me, itr->second))
                         {
                             if (go->IsInBetween(me, target, 2.0f)
                                 && me->GetExactDist2d(target->GetPositionX(), target->GetPositionY()) - me->GetExactDist2d(go->GetPositionX(), go->GetPositionY()) < 5.0f)

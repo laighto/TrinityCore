@@ -470,10 +470,13 @@ public:
 
     virtual uint32 GetPrematureWinner();
 
+        // because BattleGrounds with different types and same level range has different m_BracketId
+        uint8 GetUniqueBracketId() const;
+
     bool lich_exists;
     uint64 lichGUID;
     uint64 m_StartTimearmory;
-protected:
+    protected:
     // this method is called, when BG cannot spawn its own spirit guide, or something is wrong, It correctly ends Battleground
     void EndNow();
     void PlayerAddedToBGCheckIfBGIsRunning(Player* player);
@@ -514,7 +517,7 @@ protected:
 
     ArenaTeamScore _arenaTeamScores[BG_TEAMS_COUNT];
 
-private:
+    private:
     // Battleground
     BattlegroundTypeId m_TypeID;
     BattlegroundTypeId m_RandomTypeID;
