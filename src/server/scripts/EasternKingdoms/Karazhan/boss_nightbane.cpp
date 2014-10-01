@@ -159,9 +159,15 @@ public:
 
         void HandleTerraceDoors(bool open)
         {
+<<<<<<< HEAD
                 instance->HandleGameObject(instance->GetData64(DATA_MASTERS_TERRACE_DOOR_1), open);
                 instance->HandleGameObject(instance->GetData64(DATA_MASTERS_TERRACE_DOOR_2), open);
             }
+=======
+            instance->HandleGameObject(instance->GetGuidData(DATA_MASTERS_TERRACE_DOOR_1), open);
+            instance->HandleGameObject(instance->GetGuidData(DATA_MASTERS_TERRACE_DOOR_2), open);
+        }
+>>>>>>> 4ed3254aa84a24d92df378e48b1e0d2d9affd01d
 
         void EnterCombat(Unit* /*who*/) override
         {

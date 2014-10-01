@@ -79,22 +79,30 @@ public:
 
     struct instance_shadowfang_keep_InstanceMapScript : public InstanceScript
     {
-        instance_shadowfang_keep_InstanceMapScript(Map* map) : InstanceScript(map) { }
+        instance_shadowfang_keep_InstanceMapScript(Map* map) : InstanceScript(map)
+        {
+            SetHeaders(DataHeader);
+            memset(&m_auiEncounter, 0, sizeof(m_auiEncounter));
+
+            uiPhase = 0;
+            uiTimer = 0;
+        }
 
         uint32 m_auiEncounter[MAX_ENCOUNTER];
         std::string str_data;
 
-        uint64 uiAshGUID;
-        uint64 uiAdaGUID;
-        uint64 uiArchmageArugalGUID;
+        ObjectGuid uiAshGUID;
+        ObjectGuid uiAdaGUID;
+        ObjectGuid uiArchmageArugalGUID;
 
-        uint64 DoorCourtyardGUID;
-        uint64 DoorSorcererGUID;
-        uint64 DoorArugalGUID;
+        ObjectGuid DoorCourtyardGUID;
+        ObjectGuid DoorSorcererGUID;
+        ObjectGuid DoorArugalGUID;
 
         uint8 uiPhase;
         uint16 uiTimer;
 
+<<<<<<< HEAD
         uint64 fryeGUID;
         uint64 hummelGUID;
         uint64 baxterGUID;
@@ -122,6 +130,8 @@ public:
             baxterGUID = 0;
         }
 
+=======
+>>>>>>> 4ed3254aa84a24d92df378e48b1e0d2d9affd01d
         void OnCreatureCreate(Creature* creature) override
         {
             switch (creature->GetEntry())
@@ -143,17 +153,17 @@ public:
                 case GO_COURTYARD_DOOR:
                     DoorCourtyardGUID = go->GetGUID();
                     if (m_auiEncounter[0] == DONE)
-                        HandleGameObject(0, true, go);
+                        HandleGameObject(ObjectGuid::Empty, true, go);
                     break;
                 case GO_SORCERER_DOOR:
                     DoorSorcererGUID = go->GetGUID();
                     if (m_auiEncounter[2] == DONE)
-                        HandleGameObject(0, true, go);
+                        HandleGameObject(ObjectGuid::Empty, true, go);
                     break;
                 case GO_ARUGAL_DOOR:
                     DoorArugalGUID = go->GetGUID();
                     if (m_auiEncounter[3] == DONE)
-                        HandleGameObject(0, true, go);
+                        HandleGameObject(ObjectGuid::Empty, true, go);
                     break;
             }
         }

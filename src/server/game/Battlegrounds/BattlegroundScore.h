@@ -19,6 +19,7 @@
 #define TRINITY_BATTLEGROUND_SCORE_H
 
 #include "WorldPacket.h"
+#include "ObjectGuid.h"
 
 enum ScoreType
 {
@@ -59,9 +60,15 @@ struct BattlegroundScore
     friend class Battleground;
 
     protected:
+<<<<<<< HEAD
         BattlegroundScore(uint64 playerGuid) : PlayerGuid(playerGuid), KillingBlows(0), Deaths(0),
             HonorableKills(0), BonusHonor(0), DamageDone(0), HealingDone(0), DamageTaken(0), HealingTaken(0) {}
         
+=======
+        BattlegroundScore(ObjectGuid playerGuid) : PlayerGuid(playerGuid), KillingBlows(0), Deaths(0),
+            HonorableKills(0), BonusHonor(0), DamageDone(0), HealingDone(0) { }
+
+>>>>>>> 4ed3254aa84a24d92df378e48b1e0d2d9affd01d
         virtual ~BattlegroundScore() { }
 
         virtual void UpdateScore(uint32 type, uint32 value)
@@ -131,7 +138,7 @@ struct BattlegroundScore
         virtual uint32 GetAttr4() const { return 0; }
         virtual uint32 GetAttr5() const { return 0; }
 
-        uint64 PlayerGuid;
+        ObjectGuid PlayerGuid;
 
         // Default score, present in every type
         uint32 KillingBlows;

@@ -83,12 +83,16 @@ class boss_kurinnaxx : public CreatureScript
             void JustDied(Unit* killer) override
             {
                 _JustDied();
+<<<<<<< HEAD
 
                 //summon Lieutenant General Andorov
                 Position pos = killer->GetPosition();
                 instance->instance->SummonCreature(15471, pos);
 
                 if (Creature* Ossirian = me->GetMap()->GetCreature(instance->GetData64(DATA_OSSIRIAN)))
+=======
+                if (Creature* Ossirian = me->GetMap()->GetCreature(instance->GetGuidData(DATA_OSSIRIAN)))
+>>>>>>> 4ed3254aa84a24d92df378e48b1e0d2d9affd01d
                     sCreatureTextMgr->SendChat(Ossirian, SAY_KURINAXX_DEATH, NULL, CHAT_MSG_ADDON, LANG_ADDON, TEXT_RANGE_ZONE);
             }
 
